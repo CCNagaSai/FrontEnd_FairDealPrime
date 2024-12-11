@@ -1,0 +1,1164 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    margin-top: 50px;
+  }
+  
+  h1 {
+    margin-bottom: 20px;
+  }
+  
+  .game-area {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  
+  .roulette-section {
+    margin-right: 50px;
+  }
+  
+  .roulette-wheel {
+    margin: 20px auto;
+    width: 200px;
+    height: 200px;
+    border: 100px solid black;
+    border-radius: 50%;
+    position: relative;
+  }
+  
+  .wheel {
+    width: 100%;
+    height: 100%;
+    background: conic-gradient(
+      red 0deg 30deg,
+      black 30deg 60deg,
+      red 60deg 90deg,
+      black 90deg 120deg,
+      red 120deg 150deg,
+      black 150deg 180deg,
+      red 180deg 210deg,
+      black 210deg 240deg,
+      red 240deg 270deg,
+      black 270deg 300deg,
+      red 300deg 330deg,
+      black 330deg 360deg
+    );
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 4s ease-out;
+  }
+  
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+  
+  #result {
+    margin-top: 20px;
+    font-size: 20px;
+  }
+  
+  .table-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .roulette-table {
+    border-collapse: collapse;
+  }
+  
+  .roulette-table td {
+    width: 70px;
+    height: 70px;
+    text-align: center;
+    vertical-align: middle;
+    border: 5px solid #000;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .zero {
+    background-color: green;
+    color: white;
+  }
+
+  .number49{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 54px;
+    right: -13px;
+  }
+
+  .number50{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -1px;
+    right: -15px;
+  }
+
+  .number51{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -80px;
+    right: -19px;
+  }
+
+  .number52{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -3px;
+    right: -15px;
+  }
+
+  .number53{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -3px;
+    right: -15px;
+  }
+
+  .number54{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -3px;
+    right: -18px;
+  }
+
+  .number55{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -3px;
+    right: -23px;
+  }
+
+  .number56{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -3px;
+    right: -19px;
+  }
+
+
+  .number57{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -3px;
+    right: -19px;
+  }
+
+  .number58{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 10px;
+    right: -21px;
+  }
+
+  .number59{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 10px;
+    right: -27px;
+  }
+
+
+  .number60{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -2px;
+    right: -15px;
+  }
+
+  .number61{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -2px;
+    right: -19px;
+  }
+
+  .number62{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -2px;
+    right: -15px;
+  }
+
+  .number63{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -1px;
+    right: -15px;
+  }
+
+  .number64{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -1px;
+    right: -15px;
+  }
+
+  .number65{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -1px;
+    right: -15px;
+  }
+
+  .number66{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -1px;
+    right: -15px;
+  }
+
+  .number67{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 10px;
+    right: -22px;
+  }
+
+  .number68{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 10px;
+    right: -22px;
+  }
+
+  .number69{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 10px;
+    right: -22px;
+  }
+
+  .number70{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 10px;
+    right: -22px;
+  }
+
+  .number71{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -2px;
+    right: -17px;
+  }
+
+  .number72{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -2px;
+    right: -17px;
+  }
+
+  .number73{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: -2px;
+    right: -18px;
+  }
+
+  .number74{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 3px;
+    right: -12px;
+  }
+
+  .number75{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 2px;
+    right: -18px;
+  }
+
+  .number76{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 3px;
+    right: -18px;
+  }
+
+  .number77{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 3px;
+    right: -22px;
+  }
+
+  .number78{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 3px;
+    right: -22px;
+  }
+
+  
+  .number79{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 3px;
+    right: -22px;
+  }
+
+  .number80{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 3px;
+    right: -22px;
+  }
+
+  .number81{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 3px;
+    right: -22px;
+  }
+
+  .number82{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 3px;
+    right: -22px;
+  }
+
+  .number83{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 3px;
+    right: -22px;
+  }
+
+  .number84{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 3px;
+    right: -17px;
+  }
+
+  .number85{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 19px;
+    right: 18px;
+  }
+
+
+  .number86{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 20px;
+    right: 16px;
+  }
+
+  .number87{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 20px;
+    right: 16px;
+  }
+
+  .number88{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 20px;
+    right: 16px;
+  }
+
+  .number89{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 20px;
+    right: 16px;
+  }
+
+  .number90{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 20px;
+    right: 16px;
+  }
+
+  .number91{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 20px;
+    right: 16px;
+  }
+
+  .number92{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 20px;
+    right: 16px;
+  }
+
+  .number93{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 20px;
+    right: 16px;
+  }
+
+  .number94{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 32px;
+    right: 16px;
+  }
+
+  .number95{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 32px;
+    right: 16px;
+  }
+
+  .number96{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 21px;
+    right: 16px;
+  }
+
+  .number97{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 22px;
+    right: 22px;
+  }
+
+  .number98{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 22px;
+    right: 22px;
+  }
+
+  .number99{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 22px;
+    right: 22px;
+  }
+
+  .number100{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 22px;
+    right: 22px;
+  }
+
+
+  .number101{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top:34px;
+    right: 15px;
+  }
+
+  .number102{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 34px;
+    right: 15px;
+  }
+
+
+  .number103{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 34px;
+    right: 10px;
+  }
+
+  .number104{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 34px;
+    right:17px;
+  }
+
+  .number105{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 24px;
+    right: 17px;
+  }
+
+  .number106{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 24px;
+    right:17px;
+  }
+
+
+  .number107{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 24px;
+    right: 17px;
+  }
+
+  .number108{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    margin-top: 34px;
+    right: 10px;
+  }
+
+  .number109{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -17px;
+    top:53px;
+
+  }
+
+  .number110{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -12px;
+    top:53px;
+
+  }
+
+  .number111{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -17px;
+    top:53px;
+
+  }
+
+  .number112{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -12px;
+    top:53px;
+
+  }
+
+  .number113{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -12px;
+    top:53px;
+
+  }
+
+  .number114{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -12px;
+    top:53px;
+
+  }
+
+  .number115{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -10px;
+    top:55px;
+
+  }
+
+  
+  .number116{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -10px;
+    top:55px;
+
+  }
+
+  .number117{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -10px;
+    top:55px;
+
+  }
+
+  .number118{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -10px;
+    top:55px;
+
+  }
+
+  .number119{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -15px;
+    top:55px;
+
+  }
+
+
+  .number120{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -15px;
+    top:58px;
+
+  }
+
+  .number121{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -10px;
+    top:56px;
+
+  }
+
+  .number122{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -10px;
+    top:56px;
+
+  }
+
+  .number123{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -15px;
+    top:56px;
+
+  }
+
+  .number124{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -14px;
+    top:56px;
+
+  }
+
+  .number125{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -17px;
+    top:56px;
+
+  }
+
+  .number126{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -14px;
+    top:56px;
+
+  }
+
+  .number127{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -16px;
+    top:56px;
+  }
+
+  .number128{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -14px;
+    top:56px;
+  }
+
+  
+  .number129{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -16px;
+    top:56px;
+  }
+
+  .number130{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -14px;
+    top:56px;
+  }
+
+  .number131{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -12px;
+    top:125px;
+  }
+
+
+  .number132{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -12px;
+    top:51px;
+  }
+
+  .number133{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: 22px;
+    top:55px;
+  }
+
+  .number134{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: 22px;
+    top:55px;
+  }
+
+  .number135{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: 22px;
+    top:55px;
+  }
+
+  .number136{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: 22px;
+    top:55px;
+  }
+
+  .number137{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: 22px;
+    top:55px;
+  }
+
+  .number138{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: 22px;
+    top:55px;
+  }
+
+  .number139{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: 22px;
+    top:55px;
+  }
+
+  .number140{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: 22px;
+    top:55px;
+  }
+
+  .number141{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: 22px;
+    top:55px;
+  }
+
+  .number142{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: 22px;
+    top:55px;
+  }
+
+  .number143{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: 22px;
+    top:55px;
+  }
+
+  .number144{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: 22px;
+    top:55px;
+  }
+
+  .number145{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -13px;
+    top:55px;
+  }
+
+
+  .number146{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -13px;
+    top:55px;
+  }
+
+  .number147{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -13px;
+    top:55px;
+  }
+
+  .number148{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -13px;
+    top:55px;
+  }
+
+  .number149{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -13px;
+    top:55px;
+  }
+
+  
+  .number150{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -13px;
+    top:55px;
+  }
+
+  .number151{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -13px;
+    top:55px;
+  }
+
+  .number152{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -13px;
+    top:55px;
+  }
+
+  .number153{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -13px;
+    top:55px;
+  }
+
+  .number154{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -13px;
+    top:55px;
+  }
+
+  .number155{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -13px;
+    top:55px;
+  }
+
+  .number4coner{
+    position: absolute;
+    z-index: 9;
+    background-color: blue;
+    border-radius: 100px;
+    right: -12px;
+    top:-12px;
+
+  }
+
+  .Chipsbet{
+    background-color: rgb(13, 50, 216);
+    border-radius: 100px;
+  }
+
+  .Conerbet{
+    background-color: rgb(216, 186, 13);
+    border-radius: 100px;
+    
+  }
+
+
+  .red {
+    background-color: red;
+    color: white;
+  }
+  
+  .black {
+    background-color: black;
+    color: white;
+  }
+  
+  .odd{
+    background-color: white;
+  }
+
+  .even{
+    background-color: white;
+  }
+
+  .low{
+    background-color: white;
+  }
+
+  .high{
+    background-color: white;
+  }
+
+  .first-dozen{
+    background-color: white;
+  }
+
+  .second-dozen{
+    background-color: white;
+  }
+
+  .third-dozen{
+    background-color: white;
+  }
+  
+  .first-column{
+    background-color: white;
+  }
+
+  .second-column{
+    background-color: white;
+  }
+
+  .third-column{
+    background-color: white;
+  }
+  
+
+
+  
