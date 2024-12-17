@@ -33,14 +33,13 @@ function Layout({ bg, overlay, children }) {
     //   return false
     // }
 
-    if(url[1] != "/signin"){
-      window.location.href =    'http://fairdealprime.com:5175/signin';//"http://192.168.0.203:5175/signin" //
+    // if(url[1] != "/signin"){
+    //   window.location.href =    'http://fairdealprime.com:5175/signin';//"http://192.168.0.203:5175/signin" //
       
-      return false
-    }
+    //   return false
+    // }
     //return (<Router><Login/></Router>)
   }
-
 
 
   const [sidebar, setSidebar] = useState(true);

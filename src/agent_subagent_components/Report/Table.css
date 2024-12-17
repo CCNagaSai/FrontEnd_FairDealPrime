@@ -1,0 +1,84 @@
+/* table.css */
+
+/* Table Container */
+.table-container {
+    overflow-x: auto; /* Enable horizontal scrolling on smaller screens */
+    margin-top: 30px;
+  }
+  
+  /* Table Styles */
+  table {
+    width: 100%; /* Ensure the table takes the full width of its container */
+    border-collapse: collapse; /* Ensures borders are merged */
+    margin: 20px 0; /* Add spacing around the table */
+  }
+  
+  table, th, td {
+    border: 1px solid #ddd; /* Border for the table and cells */
+  }
+  
+  td {
+    padding: 8px 12px; /* Cell padding for data */
+    text-align: left; /* Align text to the left in cells */
+  }
+  
+  th {
+    padding: 8px 12px; /* Padding for table headers */
+    background-color: #e6e7ff; /* Light blue background for headers */
+    color: blue; /* Blue text color for headers */
+  }
+  
+  /* Pagination Styling */
+  .pagination {
+    margin-top: 20px; /* Add top margin to pagination */
+    text-align: end; /* Align pagination to the right */
+    color: rgb(143, 143, 143); /* Light gray color for pagination text */
+  }
+  
+  .pagination button {
+    padding: 10px; /* Padding for pagination buttons */
+    margin: 0 5px; /* Margin between buttons */
+    background-color: #ffffff; /* White background for buttons */
+    color: rgb(198, 197, 197); /* Light gray text color for buttons */
+    border: none; /* Remove default button borders */
+    cursor: pointer; /* Pointer cursor on hover */
+    border: 1px solid rgb(185, 184, 184); /* Border color for buttons */
+    border-radius: 8px; /* Rounded corners for buttons */
+  }
+  
+  .pagination button:hover {
+    background-color: #0056b3; /* Background color on hover */
+    color: white; /* Change text color on hover */
+  }
+  .totals-heading {
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: blue;
+  }
+
+  /* Mobile View (Responsive) */
+  @media (max-width: 768px) {
+    .table-container {
+      overflow-x: auto; /* Ensure horizontal scrolling on mobile */
+      
+    }
+  
+    table {
+      min-width: 600px; /* Ensure the table is wide enough to scroll */
+    }
+  
+    td, th {
+      font-size: 12px; /* Reduce font size on mobile */
+      padding: 6px 10px; /* Adjust padding on mobile */
+    }
+  
+    .pagination {
+      text-align: center; /* Center the pagination on mobile */
+    }
+  
+    .pagination button {
+      padding: 8px; /* Smaller padding for pagination buttons on mobile */
+    }
+  }
+  

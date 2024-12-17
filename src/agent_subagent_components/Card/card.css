@@ -1,0 +1,45 @@
+.card {
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    color: #fff; /* White text color */
+    width: 300px;
+    justify-content: space-between;
+}
+
+.icon-container {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.icon-container i {
+    font-size: 24px;
+}
+
+.content {
+    text-align: center;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.value {
+    font-size: 24px;
+    text-align: end;
+}
+.cardborder {
+    width: 300px;       /* Same width as the card */
+    height: 140px;      /* Increased height for the container */
+   /* Aligns the card to the bottom */
+    border: 2px solid blue;
+    border-radius: 10px;
+  }

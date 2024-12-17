@@ -49,7 +49,20 @@ import Playeredit from './pages/PlayerUpdate'
 
 import CoinManagement from './pages/CoinManagement'
 
-import AgentDashboard from "./pages/agentdashboard";
+// import AgentDashboard from "./pages/agentdashboard";
+import Reportpointfile from "./agent_subagent_components/agentdashboard"
+import { 
+  Agentdashboard,
+  AgentSearchUsers,
+  AgentPartnerAdjustment,
+  AgentKickoffUsers,
+  AgentCreateUser,
+  AgentChangePassword,
+  AgentTurnover,
+  AgentPointFile,
+  AgentInpoint,
+ } from "./Agent/AgentTabs";
+
 import ShopDashboard from "./pages/shopdashboard";
 
 import AgentManagement from "./pages/agentManagement";
@@ -111,10 +124,10 @@ const router = createBrowserRouter([
         path: "/dashboard",
         element: <Dashboard />,
       },
-      {
-        path: "/agentdashboard",
-        element: <AgentDashboard />,
-      },
+      // {
+      //   path: "/agentdashboard",
+      //   element: <AgentDashboard />,
+      // },
       {
         path: "/shopdashboard",
         element: <ShopDashboard />,
@@ -277,6 +290,52 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "/agentdashboard",
+    element: <Agentdashboard />,
+  },
+  {
+    path: "/agent/Turn-over",
+    element: <AgentTurnover />,
+  },
+  {
+    path: "/agent/search-users",
+    element: <AgentSearchUsers />,
+  },
+  {
+    path: "/agent/balance-adjustment",
+    element: <AgentPartnerAdjustment />,
+  },
+
+  {
+    path: "/agent/gamehistory",
+    element: <AgentSearchUsers />,
+  },
+  {
+    path: "/agent/outpoint",
+    element: <AgentSearchUsers />,
+  },
+  {
+    path: "/agent/inpoint",
+    element: <AgentInpoint />,
+  },
+  {
+    path: "/agent/pointfile",
+    element: <AgentPointFile />,
+  },
+  {
+    path: "/agent/change-password",
+    element: <AgentChangePassword />,
+  },
+  {
+    path: "/agent/create-user",
+    element: <AgentCreateUser />,
+  },
+  {
+    path: "/agent/kickoff-users",
+    element: <AgentKickoffUsers />,
+  },
+
   {
     path: "/signIn",
     element: <SignIn />,

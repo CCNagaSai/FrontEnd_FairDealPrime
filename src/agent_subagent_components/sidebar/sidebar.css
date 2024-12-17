@@ -1,0 +1,78 @@
+/* Sidebar container */
+.sidebar {
+    width: 210px;
+    background-color: #e6ebff; /* Light background */
+    color: #ffffff; /* White text */
+    height: 90vh;
+    top: 10%;
+    left: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    border-right: 2px solid #e6e6e6; /* Light border for separation */
+    font-family: sans-serif;
+    border-radius: 6px;
+}
+
+/* Sidebar heading */
+.sidebar-heading {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #ffffff; /* White text for title */
+    background-color: #0024b3; /* Dark blue for title */
+    padding: 6px;
+    border-top-right-radius: 6px;
+}
+
+/* Menu list */
+.menu-list {
+    list-style-type: none;
+    padding: 0; /* Remove extra padding */
+    margin: 0;
+}
+
+/* Main menu items */
+.menu-list > li {
+    margin-bottom: 3px;
+}
+
+.menu-list > li strong {
+    font-size: 1rem;
+    text-transform: capitalize;
+    cursor: default;
+    color: #0024b3; /* Dark blue for main menu items */
+    margin-left: 10px;
+}
+
+/* Sub-menu items */
+.menu-list li ul {
+    list-style-type: none;
+    padding: 0; /* Remove padding for alignment */
+}
+
+.menu-list li ul li {
+    margin-bottom: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    border-bottom: 2px solid #fafafa; /* Full-width bottom border */
+    color: #000000; /* Black text for submenu items */
+    padding: 5px 8px 5px 25px; /* Add left padding to shift text */
+    margin: 0; /* Ensure no margin shifts the border */
+    width: 100%; /* Ensure the item spans full sidebar width */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* Hover effect for sub-menu items */
+.menu-list li ul li:hover {
+    color: #ffa500; /* Yellow hover effect for submenu */
+}
+
+/* Active menu link */
+.menu-list li ul li.active {
+    font-weight: bold;
+    color: #ffa500; /* Highlight active item */
+}
+
+/* Add spacing between sub-menus */
+.menu-list > li ul {
+    margin-top: 5px;
+}
