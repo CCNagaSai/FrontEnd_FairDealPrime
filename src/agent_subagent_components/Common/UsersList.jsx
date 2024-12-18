@@ -50,8 +50,8 @@ const UsersList = () => {
           headers: {
           "Content-Type": "application/json",
           token: token, // Send token from cookies
-        },
-      });
+          },
+        });
         
 
         const result = await response.json(); // Parse the JSON
