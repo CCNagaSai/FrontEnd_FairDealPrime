@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import Cookies from 'universal-cookie';
+import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 
 const UsersList = () => {
   const navigate = useNavigate();
-  
+
   // State
   const [data, setData] = useState([]); // Initially empty data
   const [loading, setLoading] = useState(true); // Loading state
@@ -24,9 +24,9 @@ const UsersList = () => {
 
   useEffect(() => {
     // Get id and type from cookies
-    idRef.current = cookies.get('LoginUserId');
-    typeRef.current = cookies.get('name');
-    tokenRef.current = cookies.get('token')
+    idRef.current = cookies.get("LoginUserId");
+    typeRef.current = cookies.get("name");
+    tokenRef.current = cookies.get("token");
   }, []);
 
   useEffect(() => {
@@ -42,20 +42,24 @@ const UsersList = () => {
         if (!id || !type) {
           throw new Error("Missing id or type from cookies");
         }
-        // http://localhost:9999/admin/user/agent/UserList?Id=6718bffe61e6243a540d457f&type=Agent
-        const response = await fetch(
-          `http://93.127.194.87:9999/admin/user/agent/UserList?Id=${id}&type=${type}`
-        , {
-          method: "GET",
-          headers: {
-          "Content-Type": "application/json",
-          token: token, // Send token from cookies
-        },
-      });
-        
 
-        const result = await response.json(); // Parse the JSON
-        setData(result.data || []); // Set the data
+        const response = await fetch(
+          `http://93.127.194.87:9999/admin/user/agent/UserList?Id=${id}&type=${type}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              token: token, // Send token from cookies
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        setData(result.userList || []); // Correctly set the userList array
       } catch (err) {
         console.error("Error fetching user data:", err.message);
         setError("Failed to load user data. Please try again.");
@@ -78,7 +82,8 @@ const UsersList = () => {
   };
 
   const handleSort = (key) => {
-    const direction = sortConfig.key === key && sortConfig.direction === "asc" ? "desc" : "asc";
+    const direction =
+      sortConfig.key === key && sortConfig.direction === "asc" ? "desc" : "asc";
     const sortedData = [...data].sort((a, b) => {
       if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
       if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
@@ -98,6 +103,7 @@ const UsersList = () => {
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const displayedData = data.slice(startIndex, startIndex + itemsPerPage);
+  console.log(data, "cccccccc");
 
   if (loading) {
     return <div>Loading...</div>;
@@ -125,19 +131,36 @@ const UsersList = () => {
           <table className="user-table w-full border-collapse text-sm sm:text-base">
             <thead>
               <tr>
-                <th onClick={() => handleSort("player")} className="px-2 sm:px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-700">
+                <th
+                  onClick={() => handleSort("username")}
+                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-700"
+                >
                   Player
                 </th>
-                <th onClick={() => handleSort("points")} className="px-2 sm:px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-700">
-                  Points
+                <th
+                  onClick={() => handleSort("chips")}
+                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-700"
+                >
+                  Chips
                 </th>
-                <th onClick={() => handleSort("lastLogin")} className="px-2 sm:px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-700">
+                <th
+                  onClick={() => handleSort("lastLoginDate")}
+                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-700"
+                >
                   Last Login
                 </th>
-                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">Lock Status</th>
-                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">Locked By</th>
-                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">Status</th>
-                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">Action</th>
+                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
+                  Lock Status
+                </th>
+                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
+                  Locked By
+                </th>
+                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
+                  Status
+                </th>
+                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -147,18 +170,22 @@ const UsersList = () => {
                     onClick={handleRedirect}
                     className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline"
                   >
-                    {row.player}
+                    {row.username || "N/A"}
                   </td>
-                  <td className="px-2 sm:px-4 py-2">{row.points}</td>
-                  <td className="px-2 sm:px-4 py-2">{row.lastLogin}</td>
+                  <td className="px-2 sm:px-4 py-2">{row.chips || 0}</td>
+                  <td className="px-2 sm:px-4 py-2">
+                    {row.lastLoginDate || "N/A"}
+                  </td>
                   <td
-                    onClick={() => handleLockRedirect(row.lockStatus)}
+                    onClick={() => handleLockRedirect(row.status)}
                     className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline"
                   >
-                    {row.lockStatus}
+                    {row.status ? "Active" : "Inactive"}
                   </td>
-                  <td className="px-2 sm:px-4 py-2">{row.lockedBy}</td>
-                  <td className="px-2 sm:px-4 py-2">{row.status}</td>
+                  <td className="px-2 sm:px-4 py-2">{row.name || "N/A"}</td>
+                  <td className="px-2 sm:px-4 py-2">
+                    {row.isVIP ? "VIP" : "Regular"}
+                  </td>
                   <td className="px-2 sm:px-4 py-2">TRANSFER POINTS</td>
                 </tr>
               ))}

@@ -1,17 +1,15 @@
 import ProtoTypes from "prop-types";
 import { Link } from "react-router-dom";
-import React, { useContext, useEffect, useState, useRef } from 'react';
-import offerContext from '../../context/offerContext'
+import React, { useContext, useEffect, useState, useRef } from "react";
+import offerContext from "../../context/offerContext";
 import ModeToggler from "./ModeToggler";
 function ProfilePopup({ active }) {
-
-  const context = useContext(offerContext)
-  const { LogoutClick } = context
+  const context = useContext(offerContext);
+  const { LogoutClick } = context;
 
   const logout = async () => {
-    await LogoutClick()
-
-  }
+    await LogoutClick();
+  };
 
   return (
     <div className="profile-wrapper text-left">
@@ -20,13 +18,13 @@ function ProfilePopup({ active }) {
           filter: `drop-shadow(12px 12px 40px rgba(0, 0, 0, 0.08))`,
           display: active ? "block" : "none",
         }}
-        className={`profile-box transition-all origin-top absolute right-0 top-[81px] hidden w-[300px] overflow-hidden rounded-lg bg-white dark:bg-darkblack-600 ${active ? " block introAnimation" : "hidden"
-          } `}
+        className={`profile-box transition-all origin-top absolute right-0 top-[81px] hidden w-[300px] overflow-hidden rounded-lg bg-white dark:bg-darkblack-600 ${
+          active ? " block introAnimation" : "hidden"
+        } `}
       >
         <div className="relative w-full px-3 py-2">
           <div>
             <ul>
-
               <li className="w-full">
                 <Link to="/signin">
                   <div className="flex items-center space-x-[18px] rounded-lg p-[14px] text-success-300">
@@ -57,19 +55,15 @@ function ProfilePopup({ active }) {
                 </Link>
               </li>
               <li className="w-full">
-              
-                  <div className="flex items-center space-x-[18px] rounded-lg p-[14px] text-success-300">
-                   
-                    <div className="flex-1">
-                     
-                        <ModeToggler/>
-                    </div>
+                <div className="flex items-center space-x-[18px] rounded-lg p-[14px] text-success-300">
+                  <div className="flex-1">
+                    <ModeToggler />
                   </div>
+                </div>
               </li>
             </ul>
           </div>
           <div className="my-[14px] h-[1px] w-full bg-bgray-300"></div>
-
         </div>
       </div>
     </div>

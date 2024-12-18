@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./CreateUser.css";
 
-import Cookies from 'universal-cookie';
+import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
-const CreateUser = () => {
+const CreateUser = ({ method }) => {
   const [selectedGames, setSelectedGames] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [agentId, setAgentId] = useState(""); // State for storing agentId
@@ -35,25 +35,27 @@ const CreateUser = () => {
 
   useEffect(() => {
     // Get agentId and token from cookies
-    const storedAgentId = cookies.get('LoginUserId'); // Fetch loginUserID from cookies
-    const storedToken = cookies.get('token');        // Fetch token from cookies
-  
-    console.log("Retrieved loginUserID (Agent ID) from cookies:", storedAgentId);
+    const storedAgentId = cookies.get("LoginUserId"); // Fetch loginUserID from cookies
+    const storedToken = cookies.get("token"); // Fetch token from cookies
+
+    console.log(
+      "Retrieved loginUserID (Agent ID) from cookies:",
+      storedAgentId
+    );
     console.log("Retrieved token from cookies:", storedToken);
-  
+
     if (storedAgentId) {
       setAgentId(storedAgentId); // Set the agentId in state
     } else {
       console.warn("No loginUserID found in cookies");
     }
-  
+
     if (storedToken) {
       setToken(storedToken); // Set the token in state
     } else {
       console.warn("No token found in cookies");
     }
   }, []);
-  
 
   const handleGameSelection = (game) => {
     if (selectedGames.includes(game)) {
@@ -96,27 +98,32 @@ const CreateUser = () => {
 
     console.log("Payload:", payload);
 
-    try {
-      const response = await fetch("http://93.127.194.87:9999/admin/user/AddUser", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          token: token, // Send token from cookies
-        },
-        body: JSON.stringify(payload),
-      });
+    {
+      try {
+        const response = await fetch(
+          "http://93.127.194.87:9999/admin/user/AddUser",
+          {
+            method: method,
+            headers: {
+              "Content-Type": "application/json",
+              token: token, // Send token from cookies
+            },
+            body: JSON.stringify(payload),
+          }
+        );
 
-      const result = await response.json();
+        const result = await response.json();
 
-      if (response.ok) {
-        alert("User created successfully!");
-        console.log("API Response:", result);
-      } else {
-        alert("Error creating user: " + result.message);
+        if (response.ok) {
+          alert("User created successfully!");
+          console.log("API Response:", result);
+        } else {
+          alert("Error creating user: " + result.message);
+        }
+      } catch (error) {
+        console.error("API Error:", error);
+        alert("Failed to connect to the server.");
       }
-    } catch (error) {
-      console.error("API Error:", error);
-      alert("Failed to connect to the server.");
     }
   };
 

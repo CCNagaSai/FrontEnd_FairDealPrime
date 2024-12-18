@@ -1,10 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from "react";
+import offerContext from "../context/offerContext";
+import ProtoTypes from "prop-types";
 
-const Topbar = () => {
+const Topbar = ({ active }) => {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null); // Ref for the menu
   const buttonRef = useRef(null); // Ref for the hamburger button
+
+  const context = useContext(offerContext);
+  const { LogoutClick } = context;
+
+  const logout = async () => {
+    await LogoutClick();
+  };
 
   // Update the current time every second
   useEffect(() => {
@@ -20,17 +29,19 @@ const Topbar = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        menuRef.current && !menuRef.current.contains(event.target) &&
-        buttonRef.current && !buttonRef.current.contains(event.target)
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
       ) {
         setIsMenuOpen(false); // Close the menu if clicked outside
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -53,13 +64,17 @@ const Topbar = () => {
             Balance: <span className="text-red-500 font-bold">0</span>
           </p>
           <p>
-            Position: <span className="text-red-500 font-bold">SUPER AGENT</span>
+            Position:{" "}
+            <span className="text-red-500 font-bold">SUPER AGENT</span>
           </p>
           <p className="text-xs text-gray-500">{currentTime}</p>
         </div>
 
         <div className="flex flex-row items-center mt-4 space-y-0">
-          <button className="bg-blue-500 hover:bg-blue-700 ml-3 text-white font-bold py-1 px-3 rounded text-xs">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 ml-3 text-white font-bold py-1 px-3 rounded text-xs"
+            onClick={logout}
+          >
             LOGOUT
           </button>
           <button className="bg-blue-500 hover:bg-blue-700 ml-3 text-white font-bold py-1 px-3 rounded text-xs">
@@ -74,11 +89,13 @@ const Topbar = () => {
         onClick={() => setIsMenuOpen(!isMenuOpen)} // Toggle menu state on click
         type="button"
         className="inline-flex items-center mt-4 p-2 w-10 h-10 justify-center z-50 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 absolute right-1"
-        aria-expanded={isMenuOpen ? 'true' : 'false'}
+        aria-expanded={isMenuOpen ? "true" : "false"}
       >
         <span className="sr-only">Open main menu</span>
         <svg
-          className={`w-5 h-5 ${isMenuOpen ? 'rotate-180' : 'rotate-0'} transition-transform`}
+          className={`w-5 h-5 ${
+            isMenuOpen ? "rotate-180" : "rotate-0"
+          } transition-transform`}
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 17 14"
@@ -97,7 +114,11 @@ const Topbar = () => {
       <div
         ref={menuRef} // Attach ref to the menu container
         id="navbar-user"
-        className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} w-full mt-[320px] z-40 flex flex-col items-center space-y-4 absolute left-8 transition-all duration-300 ease-in-out transform ${isMenuOpen ? 'translate-y-0' : '-translate-y-6'}`}
+        className={`md:hidden ${
+          isMenuOpen ? "block" : "hidden"
+        } w-full mt-[320px] z-40 flex flex-col items-center space-y-4 absolute left-8 transition-all duration-300 ease-in-out transform ${
+          isMenuOpen ? "translate-y-0" : "-translate-y-6"
+        }`}
       >
         <ul className="flex flex-col font-medium p-4 border border-gray-100 rounded-lg bg-gray-50 dark:bg-gray-800">
           <li>
@@ -112,7 +133,8 @@ const Topbar = () => {
           </li>
           <li>
             <p className="font-bold text-[18px] py-2 px-3">
-              Position: <span className="text-red-500 font-bold">SUPER AGENT</span>
+              Position:{" "}
+              <span className="text-red-500 font-bold">SUPER AGENT</span>
             </p>
           </li>
           <li>
@@ -132,6 +154,10 @@ const Topbar = () => {
       </div>
     </div>
   );
+};
+Topbar.propTypes = {
+  active: ProtoTypes.bool,
+  handlePopup: ProtoTypes.func,
 };
 
 export default Topbar;
