@@ -52,7 +52,6 @@ import Reportpointfile from "./agent_subagent_components/agentdashboard";
 import {
   Agentdashboard,
   AgentSearchUsers,
-  AgentSearchAgents,
   AgentPartnerAdjustment,
   AgentKickoffUsers,
   AgentCreateUser,
@@ -294,10 +293,6 @@ const router = createBrowserRouter([
   {
     path: "/agent/search-users",
     element: <AgentSearchUsers />,
-  },
-  {
-    path: "/agent/search-agents",
-    element: <AgentSearchAgents />,
   },
   {
     path: "/agent/balance-adjustment",
