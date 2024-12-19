@@ -7,7 +7,10 @@ const PartnerAdjustment = () => {
     <div className="partner-adjustment-container">
       <h1 className="partner-adjustment-heading">Partner Adjustment</h1>
 
-      <form className="partner-adjustment-form" style={{ maxWidth: "600px", margin: "0 auto" }}>
+      <form
+        className="partner-adjustment-form"
+        style={{ maxWidth: "600px", margin: "0 auto" }}
+      >
         <div className="form-group">
           <label htmlFor="type">Type:</label>
           <select id="type" name="type">
@@ -42,15 +45,14 @@ const PartnerAdjustment = () => {
           </select>
         </div>
         <div className="form-group">
-  <label htmlFor="transaction-amount">Amount:</label>
-  <input
-    type="text"
-    id="transaction-amount"
-    name="transaction-amount"
-    placeholder="Enter amount"
-  />
-</div>
-
+          <label htmlFor="transaction-amount">Amount:</label>
+          <input
+            type="text"
+            id="transaction-amount"
+            name="transaction-amount"
+            placeholder="Enter amount"
+          />
+        </div>
 
         <div className="form-group">
           <label htmlFor="transaction-password">Transaction Password:</label>
@@ -67,12 +69,8 @@ const PartnerAdjustment = () => {
         </div>
 
         <div className="button-group">
-          <button className="btn btn-submit">
-            Submit
-          </button>
-          <button className="btn btn-clear">
-            Clear
-          </button>
+          <button className="btn btn-submit">Submit</button>
+          <button className="btn btn-clear">Clear</button>
         </div>
       </form>
     </div>
@@ -80,6 +78,3 @@ const PartnerAdjustment = () => {
 };
 
 export default PartnerAdjustment;
-
-
-

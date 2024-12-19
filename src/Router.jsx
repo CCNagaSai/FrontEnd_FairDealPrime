@@ -35,25 +35,24 @@ import GameLogic from "./pages/gameLogic";
 import BotList from "./pages/Bot";
 import BotUpdate from "./pages/BotUpdate";
 import Deposit from "./pages/Deposit";
-import PayoutPendding from './pages/Payoutpendding'
-import SocialURL from './pages/SocialURL'
-import NoitceText from './pages/NoticeText'
-import NotificationList from './pages/Notification'
-import BannerList from './pages/Banner'
-import Botadd from './pages/Botadd'
-import PlayerAdd from './pages/Playeradd'
-import Mail from './pages/Mail'
-import Playeredit from './pages/PlayerUpdate'
+import PayoutPendding from "./pages/Payoutpendding";
+import SocialURL from "./pages/SocialURL";
+import NoitceText from "./pages/NoticeText";
+import NotificationList from "./pages/Notification";
+import BannerList from "./pages/Banner";
+import Botadd from "./pages/Botadd";
+import PlayerAdd from "./pages/Playeradd";
+import Mail from "./pages/Mail";
+import Playeredit from "./pages/PlayerUpdate";
 
-
-
-import CoinManagement from './pages/CoinManagement'
+import CoinManagement from "./pages/CoinManagement";
 
 // import AgentDashboard from "./pages/agentdashboard";
-import Reportpointfile from "./agent_subagent_components/agentdashboard"
-import { 
+import Reportpointfile from "./agent_subagent_components/agentdashboard";
+import {
   Agentdashboard,
   AgentSearchUsers,
+  AgentSearchAgents,
   AgentPartnerAdjustment,
   AgentKickoffUsers,
   AgentCreateUser,
@@ -61,35 +60,29 @@ import {
   AgentTurnover,
   AgentPointFile,
   AgentInpoint,
- } from "./Agent/AgentTabs";
+} from "./Agent/AgentTabs";
 
 import ShopDashboard from "./pages/shopdashboard";
 
 import AgentManagement from "./pages/agentManagement";
-import Agentdit from './pages/AgentUpdate'
-import AgentAdd from './pages/agentadd'
-
+import Agentdit from "./pages/AgentUpdate";
+import AgentAdd from "./pages/agentadd";
 
 import ShopManagement from "./pages/ShopManagment";
-import ShopAdd from './pages/shopadd'
-import Shopdit from './pages/ShopUpdate'
+import ShopAdd from "./pages/shopadd";
+import Shopdit from "./pages/ShopUpdate";
 
+import Commission from "./pages/commission";
+import GamebetInfo from "./pages/playingtabledata";
 
-import Commission from './pages/commission'
-import GamebetInfo from './pages/playingtabledata'
+import BetHistoryinfo from "./pages/BetHistory";
 
+import Chnagepwd from "./pages/Chnagepwd";
+import SubAgentTranscation from "./pages/SubAgentTranscation";
+import AgentTranscation from "./pages/AgentTranscation";
+import AdminTranscation from "./pages/AdminTranscation";
 
-import BetHistoryinfo from './pages/BetHistory'
-
-
-import Chnagepwd from './pages/Chnagepwd'
-import SubAgentTranscation from './pages/SubAgentTranscation'
-import AgentTranscation from './pages/AgentTranscation'
-import AdminTranscation from './pages/AdminTranscation'
-
-import TableTranscation from './pages/tableManagment'
-
-
+import TableTranscation from "./pages/tableManagment";
 
 const router = createBrowserRouter([
   {
@@ -140,7 +133,7 @@ const router = createBrowserRouter([
         path: "/home-4",
         element: <Analytics />,
       },
-      
+
       {
         path: "/gamehistory",
         element: <GameHistory />,
@@ -301,6 +294,10 @@ const router = createBrowserRouter([
   {
     path: "/agent/search-users",
     element: <AgentSearchUsers />,
+  },
+  {
+    path: "/agent/search-agents",
+    element: <AgentSearchAgents />,
   },
   {
     path: "/agent/balance-adjustment",

@@ -1,18 +1,25 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import offerContext from "../context/offerContext";
 import ProtoTypes from "prop-types";
+import Cookies from "universal-cookie";
 
 const Topbar = ({ active }) => {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null); // Ref for the menu
   const buttonRef = useRef(null); // Ref for the hamburger button
-
+  const Navigate = useNavigate();
+  const cookies = new Cookies();
   const context = useContext(offerContext);
   const { LogoutClick } = context;
 
   const logout = async () => {
     await LogoutClick();
+    cookies.remove("logintype", { path: "/" });
+    cookies.remove("name", { path: "/" });
+    cookies.remove("email", { path: "/" });
+    Navigate("/signin");
   };
 
   // Update the current time every second

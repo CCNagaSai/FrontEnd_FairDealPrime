@@ -18,13 +18,13 @@ const UsersList = () => {
   const itemsPerPage = 5;
 
   // Store id and type using useRef
-  const idRef = useRef(null);
+  const agentIdRef = useRef(null);
   const typeRef = useRef(null);
   const tokenRef = useRef(null);
 
   useEffect(() => {
     // Get id and type from cookies
-    idRef.current = cookies.get("LoginUserId");
+    agentIdRef.current = cookies.get("LoginUserId");
     typeRef.current = cookies.get("name");
     tokenRef.current = cookies.get("token");
   }, []);
@@ -35,16 +35,16 @@ const UsersList = () => {
         setLoading(true);
         setError(null);
 
-        const id = idRef.current;
+        const agentId = agentIdRef.current;
         const type = typeRef.current;
         const token = tokenRef.current;
 
-        if (!id || !type) {
+        if (!agentId || !type) {
           throw new Error("Missing id or type from cookies");
         }
 
         const response = await fetch(
-          `http://93.127.194.87:9999/admin/user/agent/UserList?Id=${id}&type=${type}`,
+          `http://93.127.194.87:9999/admin/user/UserList?Id=${agentId}&type=${type}`,
           {
             method: "GET",
             headers: {
@@ -141,7 +141,7 @@ const UsersList = () => {
                   onClick={() => handleSort("chips")}
                   className="px-2 sm:px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-700"
                 >
-                  Points
+                  Chips
                 </th>
                 <th
                   onClick={() => handleSort("lastLoginDate")}
