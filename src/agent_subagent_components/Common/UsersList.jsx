@@ -58,8 +58,8 @@ const UsersList = () => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const result = await response.json();
-        setData(result.userList || []); // Correctly set the userList array
+        const result = await response.json(); // Parse the JSON
+        setData(result.userList || []); // Set the data
       } catch (err) {
         console.error("Error fetching user data:", err.message);
         setError("Failed to load user data. Please try again.");

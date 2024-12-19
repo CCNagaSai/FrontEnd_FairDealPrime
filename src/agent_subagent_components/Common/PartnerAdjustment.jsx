@@ -14,7 +14,7 @@ const PartnerAdjustment = () => {
             <option value="" disabled selected>
               Select
             </option>
-            <option value="type1">Refer Agent</option>
+            <option value="type1">sub Agent</option>
             <option value="type2">User</option>
           </select>
           <small>Please select type</small>

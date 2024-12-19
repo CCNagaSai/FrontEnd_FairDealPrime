@@ -99,7 +99,7 @@ function PlayerInfo({ UserId, UserName, name, totalPlayPoints, totalWonPoints, e
         </p>
       </td>
 
-      {cookies.get('name') == "Super Admin" || cookies.get('name') == "Shop" ? <td className="px-6 py-5 xl:px-0">
+      {cookies.get('name') == "Super Admin" || cookies.get('name') == "Agent" || cookies.get('name') == "Shop" ? <td className="px-6 py-5 xl:px-0">
         <div className="flex justify-center">
           <button styles={{
             "margin": "1px",
