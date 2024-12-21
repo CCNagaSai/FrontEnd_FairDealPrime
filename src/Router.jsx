@@ -50,18 +50,32 @@ import Playeredit from './pages/PlayerUpdate'
 import CoinManagement from './pages/CoinManagement'
 
 // import AgentDashboard from "./pages/agentdashboard";
-import Reportpointfile from "./agent_subagent_components/agentdashboard"
-import { 
-  Agentdashboard,
-  AgentSearchUsers,
-  AgentPartnerAdjustment,
-  AgentKickoffUsers,
-  AgentCreateUser,
-  AgentChangePassword,
-  AgentTurnover,
-  AgentPointFile,
-  AgentInpoint,
- } from "./Agent/AgentTabs";
+// import Reportpointfile from "./agent_subagent_components/agentdashboard"
+// import { 
+//   Agentdashboard,
+//   AgentSearchUsers,
+//   AgentPartnerAdjustment,
+//   AgentKickoffUsers,
+//   AgentCreateUser,
+//   AgentChangePassword,
+//   AgentTurnover,
+//   AgentPointFile,
+//   AgentInpoint,
+//  } from "./Agent/AgentTabs";
+
+ import {
+  SubAgentdash,
+  SubAgentSearchUsers,
+  SubAgentBalanceAdjustment,
+  SubAgentKickoffUsers,
+  SubAgentCreateUser,
+  SubAgentChangePassword,
+  SubAgentPointFile,
+  SubAgentInPoint,
+  SubAgentOutPoint,
+  SubAgentGameHistory,
+  SubAgentTurnOver,
+ } from "./New_Dashboards/SubAgent/SubAgentTabs"
 
 import ShopDashboard from "./pages/shopdashboard";
 
@@ -128,10 +142,10 @@ const router = createBrowserRouter([
       //   path: "/agentdashboard",
       //   element: <AgentDashboard />,
       // },
-      {
-        path: "/shopdashboard",
-        element: <ShopDashboard />,
-      },
+      // {
+      //   path: "/shopdashboard",
+      //   element: <ShopDashboard />,
+      // },
       {
         path: "/home-3",
         element: <Statistics />,
@@ -291,49 +305,102 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/agentdashboard",
-    element: <Agentdashboard />,
-  },
-  {
-    path: "/agent/Turn-over",
-    element: <AgentTurnover />,
-  },
-  {
-    path: "/agent/search-users",
-    element: <AgentSearchUsers />,
-  },
-  {
-    path: "/agent/balance-adjustment",
-    element: <AgentPartnerAdjustment />,
-  },
+    path: "/",
+    children: [
+    // {
+    //   path: "/agentdashboard",
+    //   element: <Agentdashboard />,
+    // },
+    {
+      path: "/shopdashboard",
+      element: <SubAgentdash />,
+    },
+    // {
+    //   path: "/agent/Turn-over",
+    //   element: <AgentTurnover />,
+    // },
+    
+    {
+      path: "/sub-agent/Turn-over",
+      element: <SubAgentTurnOver />,
+    },
+    // {
+    //   path: "/agent/search-users",
+    //   element: <AgentSearchUsers />,
+    // },
+    {
+      path: "/sub-agent/search-users",
+      element: <SubAgentSearchUsers />,
+    },
+    // {
+    //   path: "/agent/balance-adjustment",
+    //   element: <AgentPartnerAdjustment />,
+    // },
+    {
+      path: "/sub-agent/balance-adjustment",
+      element: <SubAgentBalanceAdjustment />,
+    },
 
-  {
-    path: "/agent/gamehistory",
-    element: <AgentSearchUsers />,
-  },
-  {
-    path: "/agent/outpoint",
-    element: <AgentSearchUsers />,
-  },
-  {
-    path: "/agent/inpoint",
-    element: <AgentInpoint />,
-  },
-  {
-    path: "/agent/pointfile",
-    element: <AgentPointFile />,
-  },
-  {
-    path: "/agent/change-password",
-    element: <AgentChangePassword />,
-  },
-  {
-    path: "/agent/create-user",
-    element: <AgentCreateUser />,
-  },
-  {
-    path: "/agent/kickoff-users",
-    element: <AgentKickoffUsers />,
+
+    // {
+    //   path: "/agent/gamehistory",
+    //   element: <AgentSearchUsers />,
+    // },
+    {
+      path: "/sub-agent/gamehistory",
+      element: <SubAgentGameHistory />,
+    },
+    // {
+    //   path: "/agent/outpoint",
+    //   element: <AgentSearchUsers />,
+    // },
+    {
+      path: "/sub-agent/outpoint",
+      element: <SubAgentOutPoint />,
+    },
+    // {
+    //   path: "/agent/inpoint",
+    //   element: <AgentInpoint />,
+    // },
+    {
+      path: "/sub-agent/inpoint",
+      element: <SubAgentInPoint />,
+    },
+    // {
+    //   path: "/agent/pointfile",
+    //   element: <AgentPointFile />,
+    // },
+    {
+      path: "/sub-agent/pointfile",
+      element: <SubAgentPointFile />,
+    },
+    // {
+    //   path: "/agent/change-password",
+    //   element: <AgentChangePassword />,
+    // },
+    
+    {
+      path: "/sub-agent/change-password",
+      element: <SubAgentChangePassword />,
+    },
+    // {
+    //   path: "/agent/create-user",
+    //   element: <AgentCreateUser />,
+    // },
+    {
+      path: "/sub-agent/create-user",
+      element: <SubAgentCreateUser />,
+    },
+    // {
+    //   path: "/agent/kickoff-users",
+    //   element: <AgentKickoffUsers />,
+    // },
+
+    {
+      path: "/sub-agent/kickoff-users",
+      element: <SubAgentKickoffUsers />,
+    },
+    ],
   },
 
   {
