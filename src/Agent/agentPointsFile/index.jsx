@@ -5,6 +5,7 @@ import Sidebar from "../../agent_subagent_components/sidebar/sidebar"; // Adjust
 import Reportpointfile from "../../agent_subagent_components/Reportpointfile";
 import Topbar from "../../agent_subagent_components/Topbar";
 import PlayerTab from "../../component/AgentManagement/PlayerTab";
+import AgentTranscation from "./agentsTransaction";
 
 const AgentPointFile = ({ pageSize }) => {
   return (
@@ -12,14 +13,18 @@ const AgentPointFile = ({ pageSize }) => {
       <Topbar />
       <div className="app">
         <Sidebar />
-        <div className="main-content">
-          <Reportpointfile />
-          <div className="w-full rounded-lg bg-white px-[24px] py-[20px] dark:bg-darkblack-600">
-            <div className="flex flex-col space-y-5">
-              <PlayerTab pageSize={pageSize} />
-            </div>
+        {/* <div className="main-content"> */}
+        {/* <Reportpointfile /> */}
+        <main className="w-full xl:px-12 px-6 pb-6 xl:pb-12 sm:pt-[156px] pt-[100px]">
+          {/* write your code here */}
+
+          <div className="2xl:flex 2xl:space-x-[48px]">
+            <section className="2xl:w-100 w-full 2xl:mb-0 mb-6">
+              <AgentTranscation pageSize={9} />
+            </section>
           </div>
-        </div>
+        </main>
+        {/* </div> */}
       </div>
     </div>
   );

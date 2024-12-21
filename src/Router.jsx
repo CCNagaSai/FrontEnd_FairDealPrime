@@ -1,4 +1,8 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 import Home from "./pages/home";
 import HomeTwo from "./pages/homeTwo";
 import Statistics from "./pages/statistics";
@@ -80,8 +84,16 @@ import Chnagepwd from "./pages/Chnagepwd";
 import SubAgentTranscation from "./pages/SubAgentTranscation";
 import AgentTranscation from "./pages/AgentTranscation";
 import AdminTranscation from "./pages/AdminTranscation";
-
 import TableTranscation from "./pages/tableManagment";
+import Cookies from "universal-cookie";
+
+// Function to validate `logintype`
+const isAuthenticated = () => {
+  const cookies = new Cookies();
+  const logintype = cookies.get("logintype");
+  console.log("Logintype:", logintype);
+  return !!logintype;
+};
 
 const router = createBrowserRouter([
   {
@@ -284,7 +296,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/agentdashboard",
-    element: <Agentdashboard />,
+    element: isAuthenticated() ? (
+      <Agentdashboard />
+    ) : (
+      <Navigate to="/signIn" replace />
+    ),
   },
   {
     path: "/agent/Turn-over",
