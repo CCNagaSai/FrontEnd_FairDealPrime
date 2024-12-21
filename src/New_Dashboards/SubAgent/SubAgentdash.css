@@ -1,0 +1,38 @@
+/* Ensure the full layout covers the entire screen */
+.app {
+  display: flex;
+  flex-direction: column; /* Stack Topbar and main content vertically */
+  height: 100vh;
+}
+
+/* Style for the Topbar */
+.Header {
+  text-align: center;
+  padding: 20px;
+  width: 100%; /* Full width for Topbar */
+}
+
+/* Container for Sidebar and Main Content */
+.content {
+  display: flex;
+  flex: 1; /* Allow this section to grow and fill the available space */
+}
+
+.Left {
+  background-color: #f4f4f4;  /* Sidebar background color */
+  height: 100vh;  /* Ensure the Sidebar takes full height */
+}
+
+.Right {
+  flex-grow: 1;  /* Main content takes the remaining space */
+  padding: 20px;
+  background-color: #fff;
+  border: 2px solid rgb(42, 42, 255);
+  overflow-y: auto;  /* Allow scrolling in main content */
+}
+
+/* Optional: For the overall layout's alignment and spacing */
+.app > .Left, .app > .Right {
+  display: flex;
+  flex-direction: column; /* Stack the Header with Left or Right content */
+}
