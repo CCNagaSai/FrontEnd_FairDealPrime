@@ -1,0 +1,128 @@
+/* General styles */
+.view-users-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .view-users-title {
+    color: #0047ab; /* Blue color */
+    font-weight: bold;
+    font-size: 24px;
+    text-align: left; /* Left align */
+    border-bottom: 2px solid #0047ab; /* Full-width underline */
+    margin-bottom: 20px;
+    padding-bottom: 5px;
+  }
+  
+  .user-search-section {
+    background-color: #e6f7ff; /* Light blue background */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .search-box {
+    margin-bottom: 10px; /* Add spacing between input and buttons */
+  }
+  
+  .search-box label {
+    font-weight: bold;
+  }
+  
+  .search-box input {
+    padding: 8px;
+    width: 100%; /* Full-width input */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+  }
+  
+  .buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+  }
+  
+  .buttons .btn {
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .btn{
+    color: black;
+  }
+  .user-summary {
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+  }
+  
+  .user-table-container {
+    margin-top: 10px;
+    overflow-x: auto;
+  }
+  
+  .user-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .user-table th,
+  .user-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    cursor: pointer; /* Indicates clickable column headers */
+  }
+  
+  .sort-icon {
+    font-size: 12px;
+    margin-left: 5px;
+    cursor: pointer;
+  }
+  
+  .no-data {
+    text-align: center;
+    color: #666;
+  }
+  
+  .pagination {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .pagination button {
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .blue-box {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .blue-box:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Responsive adjustments */
+  @media screen and (max-width: 768px) {
+    .user-summary {
+      flex-direction: column;
+      gap: 5px;
+      text-align: left;
+    }
+  
+    .pagination {
+      justify-content: flex-start;
+    }
+  }
+  

@@ -1,16 +1,86 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
+import offerContext from '../../context/offerContext';
 import Cookies from "universal-cookie";
+import { useNavigate } from 'react-router-dom';
 
 const Topbar = () => {
+
+  const cookies = new Cookies();
+  const context = useContext(offerContext)
+  // const { LogoutClick } = context
+  const navigate = useNavigate();
+
+  const LogoutClick = async () => {
+    console.log("Logging out...");
+    cookies.remove('token');
+    cookies.remove('email');
+    cookies.remove('name');
+    cookies.remove('LoginUserId');
+    cookies.remove('logintype');
+    console.log("Cookies removed");
+
+    // If you have any additional checks for completion:
+    if (!cookies.get('token') && !cookies.get('email')) {
+        console.log('Logout successful, cookies removed');
+    }
+
+    return true; // Ensure this returns true after completing the logout
+}
+  const logout = async () => {
+    await LogoutClick();
+    navigate('/signin'); 
+
+  }
+
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const cookies = new Cookies();
+  const [balance, setBalance] = useState(0);
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
-
   const userName = cookies.get("email") || "Guest";
-  const balance = cookies.get("chips") || 0;
   const position = cookies.get("name") || "User";
+  const agentId = cookies.get("LoginUserId"); 
+  const token = cookies.get("token"); 
+
+  console.log("aaaa", agentId);
+
+  // Fetch the balance based on position
+  useEffect(() => {
+    const fetchBalance = async () => {
+      let apiUrl = "";
+
+      if (position === "Shop" && agentId) {
+        // Use the Shop API endpoint
+        apiUrl = `http://93.127.194.87:9999/admin/shop/agentBalance?subAgentId=${agentId}`;
+      } else if (position === "Agent" && agentId) {
+        // Use the Agent API endpoint
+        apiUrl = `http://93.127.194.87:9999/admin/agent/agentBalance?agentId=${agentId}`;
+      }
+
+      if (apiUrl && token) {
+        try {
+          const response = await fetch(apiUrl, {
+            method: "GET",
+            headers: {
+              token: token, // Add the token to the request headers
+              "Content-Type": "application/json", // Optional, if needed by the API
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            setBalance(data.agent.chips || 0); // Assuming the API returns balance
+          } else {
+            console.error("Failed to fetch balance");
+          }
+        } catch (error) {
+          console.error("Error fetching balance:", error);
+        }
+      }
+    };
+
+    fetchBalance();
+  }, [position, agentId, token]); // Added token as a dependency
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -61,7 +131,8 @@ const Topbar = () => {
         </div>
 
         <div className="flex flex-row items-center gap-2 lg:gap-4 mt-4">
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs"
+          onClick={logout}>
             LOGOUT
           </button>
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
@@ -78,9 +149,7 @@ const Topbar = () => {
         className="inline-flex items-center mt-4 p-2 w-10 h-10 justify-center z-50 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none"
       >
         <svg
-          className={`w-5 h-5 ${
-            isMenuOpen ? "rotate-180" : "rotate-0"
-          } transition-transform`}
+          className={`w-5 h-5 ${isMenuOpen ? "rotate-180" : "rotate-0"} transition-transform`}
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 17 14"
@@ -123,7 +192,8 @@ const Topbar = () => {
           </li>
           <li>
             <div className="flex gap-2 items-center">
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs">
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs"
+              onClick={logout}>
                 LOGOUT
               </button>
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs">
