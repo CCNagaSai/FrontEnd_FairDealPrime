@@ -26,9 +26,33 @@ const SubAgentInPointTable = ({ backendData }) => {
             .map((entry, index) => {
               const dateOnly = entry.createdAt.split('T')[0]; // Extract date
               const isPositive = entry.trnxAmount > 0;
-              const receiver = isPositive ? entry.adminname || 'N/A' : entry.username || 'N/A';
-              const sender = isPositive ? entry.username || 'N/A' : entry.adminname || 'N/A';
               const inAmount = isPositive ? `₹${entry.trnxAmount}` : ''; // Show in "In" if positive
+              
+              // Determine sender and receiver based on trnxTypeTxt
+            let sender = '';
+            let receiver = '';
+
+            switch (entry.trnxTypeTxt) {
+              case 'Agent Addeed Chips':
+                receiver = entry.name || 'N/A'; // Subagent is receiver
+                sender = entry.adminname || 'N/A'; // Agent is sender
+                break;
+              case 'Agent duduct Chips':
+                receiver = entry.adminname || 'N/A'; // Subagent is receiver
+                sender = entry.name || 'N/A'; // Agent is sender
+                break;
+              case 'Add Chips to User':
+                receiver = entry.username || 'N/A'; // Agent is receiver
+                sender = entry.adminname || 'N/A'; // User is sender
+                break;
+              case 'User Deduct Chips Added':
+                receiver = entry.adminname || 'N/A'; // User is receiver
+                sender = entry.username || 'N/A'; // Agent is sender
+                break;
+              default:
+                receiver = 'N/A';
+                sender = 'N/A';
+            }
 
               return (
                 <tr key={entry._id}>

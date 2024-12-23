@@ -73,13 +73,7 @@ const ASubAgentsList = () => {
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
-  const handleRedirect = () => {
-    navigate("/SearchUsers");
-  };
 
-  const handleLockRedirect = (lockStatus) => {
-    navigate("/UserLockStatus", { state: { lockStatus } });
-  };
 
   const handleSort = (key) => {
     const direction =
@@ -116,7 +110,7 @@ const ASubAgentsList = () => {
   return (
     <div className="user-list-container font-sans p-4 sm:p-6 bg-gray-100">
       <h1 className="view-users-heading text-xl sm:text-2xl text-blue-500 text-left border-b-4 border-blue-500 pb-2 mb-6">
-        View Users
+        View Sub Agents
       </h1>
 
       <div className="user-details bg-white p-4 sm:p-6 rounded-md shadow-md">
@@ -166,15 +160,13 @@ const ASubAgentsList = () => {
               {displayedData.map((row, index) => (
                 <tr key={index} className="hover:bg-gray-100">
                   <td
-                    onClick={handleRedirect}
-                    className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline"
+                    className="px-2 sm:px-4 py-2"
                   >
                     {row.name || "N/A"}
                   </td>
                   <td className="px-2 sm:px-4 py-2">{row.chips || 0}</td>
                   <td
-                    onClick={() => handleLockRedirect(row.status)}
-                    className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline"
+                    className="px-2 sm:px-4 py-2 text-blue-500 hover:underline"
                   >
                     {row.status ? "Active" : "Inactive"}
                   </td>

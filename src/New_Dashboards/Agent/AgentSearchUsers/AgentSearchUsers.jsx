@@ -13,8 +13,8 @@ const AUsersList = ( {onUserClick} ) => {
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
-  const [selectedType, setSelectedType] = useState(""); // Type to pass to the modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedType, setSelectedType] = useState(""); 
   const [selectedUser, setSelectedUser] = useState("");
 
   // Pagination state
@@ -176,7 +176,7 @@ const AUsersList = ( {onUserClick} ) => {
         <div className="user-summary text-sm sm:text-lg font-bold mb-4">
           <span>
             TOTAL USERS: ({data.length}) TOTAL POINTS: (
-            {data.reduce((sum, item) => sum + item.points, 0)})
+            {data.reduce((sum, item) => sum + item.chips, 0)})
           </span>
         </div>
 

@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
-  const [type, setType] = useState(prefilledType || ""); // Default to prefilled value
+  const [type, setType] = useState(prefilledType || "");
   const [selectedUser, setSelectedUser] = useState(prefilledUser || "");
   const [users, setUsers] = useState([]);
   // const [type, setType] = useState(""); // New field for Type (User/Sub Agent)
@@ -20,7 +20,7 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
   const id = cookies.get("LoginUserId");
   const token = cookies.get("token");
   const logintype = cookies.get("logintype")
-  const name = cookies.get("name")
+  const email = cookies.get("email")
 
   // Fetch users or subagents based on selected type
   useEffect(() => {
@@ -77,7 +77,7 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
       money: amount,
       type: adjustType === "add" ? "Deposit" : "Deduct",
       userId: selectedUser,
-      adminname: name,
+      adminname: email,
       adminid: id,
     };
 

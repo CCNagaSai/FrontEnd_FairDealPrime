@@ -25,9 +25,33 @@ const SubAgentOutPointTable = ({ backendData }) => {
             .filter(entry => entry.trnxAmount < 0) // Only include rows where "Out" has a value
             .map((entry, index) => {
               const dateOnly = entry.createdAt.split('T')[0]; // Extract date
-              const receiver = entry.username || 'N/A'; // For negative amounts, receiver is the username
-              const sender = entry.adminname || 'N/A'; // For negative amounts, sender is the adminname
               const outAmount = `₹${Math.abs(entry.trnxAmount)}`; // Show the absolute value in "Out"
+              
+              // Determine sender and receiver based on trnxTypeTxt
+            let sender = '';
+            let receiver = '';
+
+            switch (entry.trnxTypeTxt) {
+              case 'Agent Addeed Chips':
+                receiver = entry.name || 'N/A'; // Subagent is receiver
+                sender = entry.adminname || 'N/A'; // Agent is sender
+                break;
+              case 'Agent duduct Chips':
+                receiver = entry.adminname || 'N/A'; // Subagent is receiver
+                sender = entry.name || 'N/A'; // Agent is sender
+                break;
+              case 'Add Chips to User':
+                receiver = entry.username || 'N/A'; // Agent is receiver
+                sender = entry.adminname || 'N/A'; // User is sender
+                break;
+              case 'User Deduct Chips Added':
+                receiver = entry.adminname || 'N/A'; // User is receiver
+                sender = entry.username || 'N/A'; // Agent is sender
+                break;
+              default:
+                receiver = 'N/A';
+                sender = 'N/A';
+            }
 
               return (
                 <tr key={entry._id}>

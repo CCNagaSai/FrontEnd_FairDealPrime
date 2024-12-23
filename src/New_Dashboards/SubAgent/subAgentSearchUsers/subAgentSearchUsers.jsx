@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
+import SubAgentBalanceAdjust from "../subAgentBalanceAdjustment/subAgentBalanceAdjust";
 
 const cookies = new Cookies();
 
-const SubAUsersList = () => {
+const SubAUsersList = ({onUserClick}) => {
   const navigate = useNavigate();
 
   // State
@@ -12,6 +13,8 @@ const SubAUsersList = () => {
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState("");
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -73,12 +76,18 @@ const SubAUsersList = () => {
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
-  const handleRedirect = () => {
-    navigate("/SearchUsers");
+  const handleTransferPointsClick = (type, user) => {
+    console.log("Transfer Points Clicked", { type, user });
+    setSelectedUser(user);
+    setIsModalOpen(true); // Open the modal
   };
 
-  const handleLockRedirect = (lockStatus) => {
-    navigate("/UserLockStatus", { state: { lockStatus } });
+  const handleModalClose = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
+  const handleUserClick = (user) => {
+    onUserClick(user);
   };
 
   const handleSort = (key) => {
@@ -113,6 +122,45 @@ const SubAUsersList = () => {
     return <div className="text-red-500">{error}</div>;
   }
 
+  const modalOverlayStyle = {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background: "rgba(0, 0, 0, 0.5)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000,
+    padding: "20px",
+  };
+
+  const modalContentStyle = {
+    background: "white",
+    padding: "20px",
+    borderRadius: "8px",
+    width: "90%",
+    height: "80%",
+    maxWidth: "500px",
+    position: "relative",
+    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+    overflowY: "auto",
+  };
+
+  const modalCloseStyle = {
+    position: "absolute",
+    top: "10px",
+    right: "10px",
+    cursor: "pointer",
+    backgroundColor: "blue",
+    border: "none",
+    fontSize: "30px",
+    color: "white",
+    fontWeight: "bold",
+    padding: "5px 10px 5px 10px", // Added padding to create space around the button
+  };
+
   return (
     <div className="user-list-container font-sans p-4 sm:p-6 bg-gray-100">
       <h1 className="view-users-heading text-xl sm:text-2xl text-blue-500 text-left border-b-4 border-blue-500 pb-2 mb-6">
@@ -123,7 +171,7 @@ const SubAUsersList = () => {
         <div className="user-summary text-sm sm:text-lg font-bold mb-4">
           <span>
             TOTAL USERS: ({data.length}) TOTAL POINTS: (
-            {data.reduce((sum, item) => sum + item.points, 0)})
+            {data.reduce((sum, item) => sum + item.chips, 0)})
           </span>
         </div>
 
@@ -150,12 +198,6 @@ const SubAUsersList = () => {
                   Last Login
                 </th>
                 <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
-                  Lock Status
-                </th>
-                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
-                  Locked By
-                </th>
-                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
                   Status
                 </th>
                 <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
@@ -167,7 +209,7 @@ const SubAUsersList = () => {
               {displayedData.map((row, index) => (
                 <tr key={index} className="hover:bg-gray-100">
                   <td
-                    onClick={handleRedirect}
+                    onClick={() => handleUserClick(row)}
                     className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline"
                   >
                     {row.name || "N/A"}
@@ -177,16 +219,16 @@ const SubAUsersList = () => {
                     {row.lastLoginDate || "N/A"}
                   </td>
                   <td
-                    onClick={() => handleLockRedirect(row.status)}
-                    className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline"
+                    className=" px-2 sm:px-4 py-2 "
                   >
                     {row.status ? "Active" : "Inactive"}
                   </td>
-                  <td className="px-2 sm:px-4 py-2">{row.name || "N/A"}</td>
-                  <td className="px-2 sm:px-4 py-2">
-                    {row.isVIP ? "VIP" : "Regular"}
-                  </td>
-                  <td className="px-2 sm:px-4 py-2">TRANSFER POINTS</td>
+                  <td className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline"
+                    onClick={() =>
+                      handleTransferPointsClick("User", row._id)
+                    }
+                    >
+                      TRANSFER POINTS</td>
                 </tr>
               ))}
             </tbody>
@@ -213,6 +255,21 @@ const SubAUsersList = () => {
           Next
         </button>
       </div>
+      {isModalOpen && (
+        <div style={modalOverlayStyle}>
+          <div style={modalContentStyle}>
+            <button
+              style={modalCloseStyle}
+              onClick={handleModalClose}
+            >
+              &times;
+            </button>
+            <SubAgentBalanceAdjust
+              prefilledUser={selectedUser}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

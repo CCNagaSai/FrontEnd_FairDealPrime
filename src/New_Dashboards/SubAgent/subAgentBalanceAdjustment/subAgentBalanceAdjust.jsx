@@ -4,9 +4,9 @@ import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 
-const SubAgentBalanceAdjust = () => {
+const SubAgentBalanceAdjust = ({ prefilledUser }) => {
+  const [selectedUser, setSelectedUser] = useState(prefilledUser || "");
   const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState("");
   const [adjustType, setAdjustType] = useState("add"); // Default to 'add'
   const [amount, setAmount] = useState("");
   const [transactionPassword, setTransactionPassword] = useState("");
@@ -14,20 +14,25 @@ const SubAgentBalanceAdjust = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Retrieve cookies once
+
   const id = cookies.get("LoginUserId");
-  const type = cookies.get("name");
   const token = cookies.get("token");
+  const logintype = cookies.get("logintype")
+  const email = cookies.get("email")
 
   useEffect(() => {
     const fetchUserData = async () => {
+
       try {
         setLoading(true);
         setError(null);
 
-        if (!id || !type) {
+
+        if (!id) {
           throw new Error("Missing id or type from cookies");
         }
+        
+        console.log("dataaa", id)
 
         // Fetch users on component mount
         const response = await fetch(
@@ -56,12 +61,12 @@ const SubAgentBalanceAdjust = () => {
     };
 
     fetchUserData();
-  }, [id, type, token]);
+  }, [id, token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedUser || !amount) {
-      setError("Please fill out all required fields.");
+    if (!selectedUser || !amount || parseFloat(amount) <= 0) {
+      setError("Type, Partner, and Amount fields are mandatory. Amount must be positive.");
       return;
     }
 
@@ -69,7 +74,7 @@ const SubAgentBalanceAdjust = () => {
       money: amount,
       type: adjustType === "add" ? "Deposit" : "Deduct",
       userId: selectedUser,
-      adminname: type,
+      adminname: email,
       adminid: id,
     };
 
@@ -78,32 +83,36 @@ const SubAgentBalanceAdjust = () => {
         ? "http://93.127.194.87:9999/admin/user/addMoney"
         : "http://93.127.194.87:9999/admin/user/deductMoney";
 
-    try {
-      const response = await fetch(apiUrl, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          token: token,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      alert("Transaction successful!");
-      // Clear the form
-      setSelectedUser("");
-      setAmount("");
-      setTransactionPassword("");
-      setComments("");
-      setError("");
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      setError("Transaction failed. Please try again.");
-    }
-  };
+        try {
+          const response = await fetch(apiUrl, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              token: token,
+            },
+            body: JSON.stringify(payload),
+          });
+    
+          const result = await response.json();
+    
+          // Check API response for success or failure
+          if (result.status === "ok") {
+            alert(result.msg || "Transaction successful!");
+            // Clear the form
+            setType("");
+            setSelectedUser("");
+            setAmount("");
+            setTransactionPassword("");
+            setComments("");
+            setError("");
+          } else {
+            alert(result.msg || "Transaction failed. Please check your balance.");
+          }
+        } catch (error) {
+          console.error("Error submitting form:", error);
+          setError("Transaction failed. Please try again.");
+        }
+      };
 
   return (
     <div className="partner-adjustment-container">
@@ -187,6 +196,7 @@ const SubAgentBalanceAdjust = () => {
             type="button"
             className="btn btn-clear"
             onClick={() => {
+              setType("");
               setSelectedUser("");
               setAmount("");
               setTransactionPassword("");

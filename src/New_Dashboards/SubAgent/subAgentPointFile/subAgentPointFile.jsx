@@ -259,44 +259,6 @@ const SubAReportpointfile = () => {
               />
             </div>
           )}
-
-          {/* Backend Data Table */}
-        {loading ? (
-        <p>Loading backend data...</p>
-        ) : backendData.length > 0 ? (
-        <div className="overflow-x-auto mt-6">
-            <table className="min-w-full bg-white border border-gray-300">
-            <thead>
-                <tr>
-                <th className="px-4 py-2 border-b border-gray-300 text-left">SubAgent Name</th>
-                <th className="px-4 py-2 border-b border-gray-300 text-left">Date and Time</th>
-                <th className="px-4 py-2 border-b border-gray-300 text-left">Amount</th>
-                <th className="px-4 py-2 border-b border-gray-300 text-left">Previous Chips</th>
-                <th className="px-4 py-2 border-b border-gray-300 text-left">Current Chips</th>
-                <th className="px-4 py-2 border-b border-gray-300 text-left">Txn Type</th>
-                <th className="px-4 py-2 border-b border-gray-300 text-left">Agent Name</th>
-                <th className="px-4 py-2 border-b border-gray-300 text-left">From | To Name</th>
-                </tr>
-            </thead>
-            <tbody>
-                {backendData.map((entry, index) => (
-                <tr key={index}>
-                    <td className="px-4 py-2 border-b border-gray-300">{entry.adminname || 'N/A'}</td>
-                    <td className="px-4 py-2 border-b border-gray-300">{entry.createdAt || 'N/A'}</td>
-                    <td className="px-4 py-2 border-b border-gray-300">₹{entry.trnxAmount || '0'}</td>
-                    <td className="px-4 py-2 border-b border-gray-300">₹{entry.oppChips || '0'}</td>
-                    <td className="px-4 py-2 border-b border-gray-300">₹{entry.chips || '0'}</td>
-                    <td className="px-4 py-2 border-b border-gray-300">{entry.trnxTypeTxt || 'N/A'}</td>
-                    <td className="px-4 py-2 border-b border-gray-300">{entry.adminname || 'N/A'}</td>
-                    <td className="px-4 py-2 border-b border-gray-300">{entry.username || 'N/A'}</td>
-                </tr>
-                ))}
-            </tbody>
-            </table>
-        </div>
-        ) : (
-        <p>No data found from the backend.</p>
-        )}
         {/* Backend Data Table */}
         {loading ? (
             <p>Loading backend data...</p>

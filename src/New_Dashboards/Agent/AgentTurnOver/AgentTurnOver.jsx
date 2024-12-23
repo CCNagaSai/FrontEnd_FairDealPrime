@@ -32,7 +32,7 @@ const ATurnover = () => {
 
   // Define columns for both tables
   const desktopColumnsTable1 = [
-    "Agent", "Play Points", "Win Points", "End Points", "Margin", "Net", "Bonus", "PL"
+    "Sub Agent", "Play Points", "Win Points", "End Points", "Margin", "Net", "Bonus", "PL"
   ];
 
   const desktopColumnsTable2 = [
@@ -40,7 +40,7 @@ const ATurnover = () => {
   ];
 
   const mobileColumnsTable1 = [
-    "Agent", "Play Points", "Win Points", "End Points", "Margin", "Net", "Bonus", "PL"
+    "Sub Agent", "Play Points", "Win Points", "End Points", "Margin", "Net", "Bonus", "PL"
   ];
 
   const mobileColumnsTable2 = [

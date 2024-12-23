@@ -4,34 +4,12 @@ import Cookies from "universal-cookie";
 import { useNavigate } from 'react-router-dom';
 
 const Topbar = () => {
-
+  const Navigate = useNavigate();
   const cookies = new Cookies();
-  const context = useContext(offerContext)
-  // const { LogoutClick } = context
-  const navigate = useNavigate();
+  const context = useContext(offerContext);
+  const { LogoutClick } = context;
 
-  const LogoutClick = async () => {
-    console.log("Logging out...");
-    cookies.remove('token');
-    cookies.remove('email');
-    cookies.remove('name');
-    cookies.remove('LoginUserId');
-    cookies.remove('logintype');
-    console.log("Cookies removed");
-
-    // If you have any additional checks for completion:
-    if (!cookies.get('token') && !cookies.get('email')) {
-        console.log('Logout successful, cookies removed');
-    }
-
-    return true; // Ensure this returns true after completing the logout
-}
-  const logout = async () => {
-    await LogoutClick();
-    navigate('/signin'); 
-
-  }
-
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false); // State to control the logout confirmation popup
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [balance, setBalance] = useState(0);
@@ -43,17 +21,42 @@ const Topbar = () => {
   const token = cookies.get("token"); 
 
   console.log("aaaa", agentId);
+  const logout = async () => {
+    try {
+      console.log("Clearing cookies...");
+      // Remove cookies with explicit paths
+      cookies.remove("logintype", { path: "/" });
+      cookies.remove("name", { path: "/" });
+      cookies.remove("email", { path: "/" });
+      cookies.remove("LoginUserId", { path: "/" });
+      cookies.remove("token", { path: "/" });
+  
+      // Log cookie values to verify they're cleared
+      console.log("After removal:");
+      console.log("logintype:", cookies.get("logintype"));
+      console.log("name:", cookies.get("name"));
+      console.log("email:", cookies.get("email"));
+      console.log("LoginUserId:", cookies.get("LoginUserId"));
+      console.log("token:", cookies.get("token"));
+  
+      // Logout click logic (if any)
+      await LogoutClick();
+  
+      // Navigate to the signin page
+      Navigate("/signin");
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+  
 
-  // Fetch the balance based on position
   useEffect(() => {
     const fetchBalance = async () => {
       let apiUrl = "";
 
       if (position === "Shop" && agentId) {
-        // Use the Shop API endpoint
         apiUrl = `http://93.127.194.87:9999/admin/shop/agentBalance?subAgentId=${agentId}`;
       } else if (position === "Agent" && agentId) {
-        // Use the Agent API endpoint
         apiUrl = `http://93.127.194.87:9999/admin/agent/agentBalance?agentId=${agentId}`;
       }
 
@@ -62,14 +65,14 @@ const Topbar = () => {
           const response = await fetch(apiUrl, {
             method: "GET",
             headers: {
-              token: token, // Add the token to the request headers
-              "Content-Type": "application/json", // Optional, if needed by the API
+              token: token,
+              "Content-Type": "application/json",
             },
           });
 
           if (response.ok) {
             const data = await response.json();
-            setBalance(data.agent.chips || 0); // Assuming the API returns balance
+            setBalance(data.agent.chips || 0);
           } else {
             console.error("Failed to fetch balance");
           }
@@ -80,7 +83,7 @@ const Topbar = () => {
     };
 
     fetchBalance();
-  }, [position, agentId, token]); // Added token as a dependency
+  }, [position, agentId, token]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -115,7 +118,6 @@ const Topbar = () => {
         className="w-6 h-6 mx-auto lg:ml-5 lg:mr-11 md:mx-4"
       />
 
-      {/* Desktop View (visible on screens >= 768px) */}
       <div className="hidden md:flex z-50 flex-row justify-center items-center ml-6 md:ml-4 lg:ml-9">
         <div className="text-sm flex flex-col md:flex-row justify-center gap-4 items-center lg:gap-6">
           <p className="font-bold">
@@ -127,12 +129,14 @@ const Topbar = () => {
           <p>
             Position: <span className="text-red-500 font-bold">{position}</span>
           </p>
-          <p className="text-xs text-gray-500">{currentTime}</p>
+          <p className="text-l text-gray-500 font-bold mr-5">{currentTime}</p>
         </div>
 
         <div className="flex flex-row items-center gap-2 lg:gap-4 mt-4">
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs"
-          onClick={logout}>
+          <button 
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs"
+            onClick={() => setShowLogoutPopup(true)}
+          >
             LOGOUT
           </button>
           <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
@@ -141,7 +145,28 @@ const Topbar = () => {
         </div>
       </div>
 
-      {/* Hamburger Menu (visible only on screens < 768px) */}
+      {showLogoutPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 shadow-lg">
+            <p className="mb-4 text-lg font-semibold">Are you sure you want to logout?</p>
+            <div className="flex justify-end gap-4">
+              <button 
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
+                onClick={logout}
+              >
+                Logout
+              </button>
+              <button 
+                className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+                onClick={() => setShowLogoutPopup(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <button
         ref={buttonRef}
         onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -164,7 +189,6 @@ const Topbar = () => {
         </svg>
       </button>
 
-      {/* Collapsible Menu (visible only on screens < 768px) */}
       <div
         ref={menuRef}
         className={`lg:hidden ${isMenuOpen ? "block" : "hidden"} w-full z-40 flex flex-col items-center space-y-4 absolute right-4 mt-10 bg-gray-50 border rounded-lg p-4`}
@@ -190,8 +214,10 @@ const Topbar = () => {
           </li>
           <li>
             <div className="flex gap-2 items-center">
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs"
-              onClick={logout}>
+              <button 
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs"
+                onClick={() => setShowLogoutPopup(true)}
+              >
                 LOGOUT
               </button>
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs">

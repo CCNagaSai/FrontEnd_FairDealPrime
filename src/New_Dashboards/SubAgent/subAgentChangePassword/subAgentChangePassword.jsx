@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import "./subAgentChangePassword.css";
 
-import Cookies from 'universal-cookie';
+import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
-const SubAChangePassword = () => {
+const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isValid, setIsValid] = useState(false);
   const [passwordMatchError, setPasswordMatchError] = useState(""); // Error state
   const [token, setToken] = useState("");
-  const [agentId, setAgentId] = useState("");
+  const [subAgentId, setAgentId] = useState("");
 
   // Function to validate the form
   const validateForm = () => {
@@ -33,25 +33,28 @@ const SubAChangePassword = () => {
     }
   };
   useEffect(() => {
-      // Get agentId and token from cookies
-      const storedAgentId = cookies.get('LoginUserId'); // Fetch loginUserID from cookies
-      const storedToken = cookies.get('token');        // Fetch token from cookies
-    
-      console.log("Retrieved loginUserID (Agent ID) from cookies:", storedAgentId);
-      console.log("Retrieved token from cookies:", storedToken);
-    
-      if (storedAgentId) {
-        setAgentId(storedAgentId); // Set the agentId in state
-      } else {
-        console.warn("No loginUserID found in cookies");
-      }
-    
-      if (storedToken) {
-        setToken(storedToken); // Set the token in state
-      } else {
-        console.warn("No token found in cookies");
-      }
-    }, []);
+    // Get agentId and token from cookies
+    const storedAgentId = cookies.get("LoginUserId"); // Fetch loginUserID from cookies
+    const storedToken = cookies.get("token"); // Fetch token from cookies
+
+    console.log(
+      "Retrieved loginUserID (Agent ID) from cookies:",
+      storedAgentId
+    );
+    console.log("Retrieved token from cookies:", storedToken);
+
+    if (storedAgentId) {
+      setAgentId(storedAgentId); // Set the agentId in state
+    } else {
+      console.warn("No loginUserID found in cookies");
+    }
+
+    if (storedToken) {
+      setToken(storedToken); // Set the token in state
+    } else {
+      console.warn("No token found in cookies");
+    }
+  }, []);
 
   useEffect(() => {
     validateForm();
@@ -81,19 +84,24 @@ const SubAChangePassword = () => {
     console.log("Confirm Password:", confirmPassword);
 
     try {
-      const response = await fetch("http://93.127.194.87:9999/admin/shop/subagentChangePassword", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          token: token,
-        },
-        body: JSON.stringify({ oldPassword, newPassword, agentId }),
-      });
+      const response = await fetch(
+        "http://93.127.194.87:9999/admin/shop/subagentChangePassword",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+          body: JSON.stringify({ oldPassword, newPassword, subAgentId }),
+        }
+      );
 
       const data = await response.json();
 
       if (data.isValid) {
-        console.log(`Password validation success! Proceeding with: ${actionType}`);
+        console.log(
+          `Password validation success! Proceeding with: ${actionType}`
+        );
         await updatePassword(actionType);
       } else {
         console.error("Old password is incorrect.");
@@ -210,11 +218,7 @@ const SubAChangePassword = () => {
           >
             Change Report
           </button>
-          <button
-            type="reset"
-            className="btn1 reset"
-            onClick={handleReset}
-          >
+          <button type="reset" className="btn1 reset" onClick={handleReset}>
             Reset
           </button>
         </div>
@@ -223,4 +227,4 @@ const SubAChangePassword = () => {
   );
 };
 
-export default SubAChangePassword;
+export default ChangePassword;

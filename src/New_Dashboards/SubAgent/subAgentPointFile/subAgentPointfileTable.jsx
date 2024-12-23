@@ -15,7 +15,7 @@ const SubAgentPointFileTable = ({ backendData }) => {
             <th className="px-4 py-2 border-b border-gray-300 text-left">Receiver</th>
             <th className="px-4 py-2 border-b border-gray-300 text-left">Old Points</th>
             <th className="px-4 py-2 border-b border-gray-300 text-left">In</th>
-
+            <th className="px-4 py-2 border-b border-gray-300 text-left">out</th>
             <th className="px-4 py-2 border-b border-gray-300 text-left">New Points</th>
             <th className="px-4 py-2 border-b border-gray-300 text-left">Sender</th>
             <th className="px-4 py-2 border-b border-gray-300 text-left">Transaction Type</th>
@@ -25,10 +25,33 @@ const SubAgentPointFileTable = ({ backendData }) => {
           {backendData.map((entry, index) => {
             const dateOnly = entry.createdAt.split('T')[0]; // Extract date
             const isPositive = entry.trnxAmount > 0;
-            const receiver = isPositive ? entry.adminname || 'N/A' : entry.username || 'N/A';
-            const sender = isPositive ? entry.username || 'N/A' : entry.adminname || 'N/A';
             const inAmount = isPositive ? `₹${entry.trnxAmount}` : ''; // Show in "In" if positive
             const outAmount = !isPositive ? `₹${Math.abs(entry.trnxAmount)}` : ''; // Show in "Out" if negative
+            // Determine sender and receiver based on trnxTypeTxt
+            let sender = '';
+            let receiver = '';
+
+            switch (entry.trnxTypeTxt) {
+              case 'Agent Addeed Chips':
+                receiver = entry.name || 'N/A'; // Subagent is receiver
+                sender = entry.adminname || 'N/A'; // Agent is sender
+                break;
+              case 'Agent duduct Chips':
+                receiver = entry.adminname || 'N/A'; // Subagent is receiver
+                sender = entry.name || 'N/A'; // Agent is sender
+                break;
+              case 'Add Chips to User':
+                receiver = entry.username || 'N/A'; // Agent is receiver
+                sender = entry.adminname || 'N/A'; // User is sender
+                break;
+              case 'User Deduct Chips Added':
+                receiver = entry.adminname || 'N/A'; // User is receiver
+                sender = entry.username || 'N/A'; // Agent is sender
+                break;
+              default:
+                receiver = 'N/A';
+                sender = 'N/A';
+            }
 
             return (
               <tr key={entry._id}>

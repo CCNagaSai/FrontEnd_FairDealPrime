@@ -26,9 +26,41 @@ const AgentOutPointTable = ({ backendData }) => {
             .map((entry, index) => {
               const dateOnly = entry.createdAt.split('T')[0];
               const isPositive = entry.trnxAmount > 0;
-              const receiver = isPositive ? entry.name || 'N/A' : entry.adminname || 'N/A';
-              const sender = isPositive ? entry.adminname || 'N/A' : entry.name || 'N/A';
               const outAmount = `₹${Math.abs(entry.trnxAmount)}`; // Show the absolute value in "Out"
+
+              // Determine sender and receiver based on trnxTypeTxt
+            let sender = '';
+            let receiver = '';
+
+            switch (entry.trnxTypeTxt) {
+              case 'Sub Agent Deduct Chips Added':
+                receiver = entry.name || 'N/A'; // Subagent is receiver
+                sender = entry.shopname || 'N/A'; // Agent is sender
+                break;
+              case 'Add Chips to Sub Agent':
+                receiver = entry.shopname || 'N/A'; // Subagent is receiver
+                sender = entry.name || 'N/A'; // Agent is sender
+                break;
+              case 'Deduct amount Addeed Chips to agent':
+                receiver = entry.name || 'N/A'; // Agent is receiver
+                sender = entry.shopid || 'N/A'; // User is sender
+                break;
+              case 'Add Chips to User':
+                receiver = entry.shopname || 'N/A'; // User is receiver
+                sender = entry.name || 'N/A'; // Agent is sender
+                break;
+              case 'Admin Addeed Chips':
+                receiver = entry.name || 'N/A'; // Admin is receiver
+                sender = entry.adminname || 'N/A'; // Super Admin is sender
+                break;
+              case 'Admin duduct Chips':
+                receiver = entry.adminname || 'N/A'; // Super Admin is receiver
+                sender = entry.name || 'N/A'; // Admin is sender
+                break;
+              default:
+                receiver = 'N/A';
+                sender = 'N/A';
+            }
 
               return (
                 <tr key={entry._id}>
