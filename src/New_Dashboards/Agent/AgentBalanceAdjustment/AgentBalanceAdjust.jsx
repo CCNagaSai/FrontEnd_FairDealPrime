@@ -19,8 +19,8 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
 
   const id = cookies.get("LoginUserId");
   const token = cookies.get("token");
-  const logintype = cookies.get("logintype")
-  const name = cookies.get("name")
+  const logintype = cookies.get("logintype");
+  const email = cookies.get("email");
 
   // Fetch users or subagents based on selected type
   useEffect(() => {
@@ -69,7 +69,9 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
 
     // Basic validation
     if (!type || !selectedUser || !amount || parseFloat(amount) <= 0) {
-      setError("Type, Partner, and Amount fields are mandatory. Amount must be positive.");
+      setError(
+        "Type, Partner, and Amount fields are mandatory. Amount must be positive."
+      );
       return;
     }
 
@@ -77,7 +79,7 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
       money: amount,
       type: adjustType === "add" ? "Deposit" : "Deduct",
       userId: selectedUser,
-      adminname: name,
+      adminname: email,
       adminid: id,
     };
 

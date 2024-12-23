@@ -11,7 +11,7 @@ const ChangePassword = () => {
   const [isValid, setIsValid] = useState(false);
   const [passwordMatchError, setPasswordMatchError] = useState(""); // Error state
   const [token, setToken] = useState("");
-  const [agentId, setAgentId] = useState("");
+  const [subAgentId, setAgentId] = useState("");
 
   // Function to validate the form
   const validateForm = () => {
@@ -85,14 +85,14 @@ const ChangePassword = () => {
 
     try {
       const response = await fetch(
-        "http://93.127.194.87:9999/admin/agent/agentChangePassword",
+        "http://93.127.194.87:9999/admin/shop/subagentChangePassword",
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
             token: token,
           },
-          body: JSON.stringify({ oldPassword, newPassword, agentId }),
+          body: JSON.stringify({ oldPassword, newPassword, subAgentId }),
         }
       );
 

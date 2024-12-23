@@ -45,7 +45,7 @@ const SubAgentPointFileTable = ({ backendData }) => {
               ? entry.adminname || "N/A"
               : entry.username || "N/A";
             const sender = isPositive
-              ? entry.username || entry.name || "N/A"
+              ? entry.shopid || entry.name || "N/A"
               : entry.adminname || "N/A";
             const inAmount = isPositive ? `₹${entry.trnxAmount}` : ""; // Show in "In" if positive
             const outAmount = !isPositive
