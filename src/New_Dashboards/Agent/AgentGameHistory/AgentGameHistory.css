@@ -1,0 +1,32 @@
+.infobar{
+    display: flex;
+    gap: 50px;
+
+}
+
+.radio-group {
+    display: flex; /* Use flex to arrange items inline */
+    gap: 8px; /* Adjust the spacing between items */
+    align-items: center; /* Vertically align items */
+  }
+  
+  .radio-group label {
+    display: flex; /* Flex container for label contents */
+    align-items: center; /* Align items vertically */
+    gap: 4px; /* Adjust spacing between the radio button and text */
+    font-size: 14px; /* Adjust text size */
+  }
+  
+  .radio-group input {
+    width: 16px; /* Size of the radio button */
+    height: 16px;
+    border-radius: 50%; /* Circular radio button */
+    cursor: pointer; /* Pointer cursor for better UX */
+  }
+  
+  .radio-group span {
+    overflow: hidden;
+    text-overflow: ellipsis; /* Truncate text if too long */
+    white-space: nowrap;
+  }
+  

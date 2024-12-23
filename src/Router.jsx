@@ -50,18 +50,21 @@ import Playeredit from './pages/PlayerUpdate'
 import CoinManagement from './pages/CoinManagement'
 
 // import AgentDashboard from "./pages/agentdashboard";
-// import Reportpointfile from "./agent_subagent_components/agentdashboard"
-// import { 
-//   Agentdashboard,
-//   AgentSearchUsers,
-//   AgentPartnerAdjustment,
-//   AgentKickoffUsers,
-//   AgentCreateUser,
-//   AgentChangePassword,
-//   AgentTurnover,
-//   AgentPointFile,
-//   AgentInpoint,
-//  } from "./Agent/AgentTabs";
+import {
+  Agentdash,
+  AgentSearchUsers,
+  AgentSearchSubAgents,
+  AgentBalanceAdjustment,
+  AgentKickoffUsers,
+  AgentCreateUser,
+  AgentCreateSubagent,
+  AgentChangePassword,
+  AgentPointFile,
+  AgentInPoint,
+  AgentOutPoint,
+  AgentGameHistory,
+  AgentTurnOver,
+} from "./New_Dashboards/Agent/AgentTabs";
 
  import {
   SubAgentdash,
@@ -75,7 +78,7 @@ import CoinManagement from './pages/CoinManagement'
   SubAgentOutPoint,
   SubAgentGameHistory,
   SubAgentTurnOver,
- } from "./New_Dashboards/SubAgent/SubAgentTabs"
+ } from "./New_Dashboards/SubAgent/SubAgentTabs";
 
 import ShopDashboard from "./pages/shopdashboard";
 
@@ -103,7 +106,126 @@ import AdminTranscation from './pages/AdminTranscation'
 
 import TableTranscation from './pages/tableManagment'
 
+import Cookies from "universal-cookie";
+import { useRef, useEffect, useState } from "react";
 
+function Router() {
+const cookies = new Cookies();
+const idRef = useRef(null);
+const tokenRef = useRef(null);
+
+const [logintype, setLogintype] = useState(null);
+
+useEffect(() => {
+  // Get id and type from cookies
+  idRef.current = cookies.get("logintype");
+  tokenRef.current = cookies.get("token");
+
+  // Set the login type to state
+  setLogintype(idRef.current);
+}, []);
+
+const agentRoutes = [
+  {
+    path: "/agentdashboard",
+    element: <Agentdash />,
+  },
+  {
+	path: "/agent/Turn-over",
+    element: <AgentTurnOver />,
+  },
+  {
+    path: "/agent/search-users",
+    element: <AgentSearchUsers />,
+  },
+  {
+	path: "/agent/search-sub-agents",
+	element: <AgentSearchSubAgents />,
+  },
+  {
+    path: "/agent/balance-adjustment",
+    element: <AgentBalanceAdjustment />,
+  },
+  {
+    path: "/agent/gamehistory",
+    element: <AgentGameHistory />,
+  },
+  {
+    path: "/agent/outpoint",
+    element: <AgentOutPoint />,
+  },
+  {
+    path: "/agent/inpoint",
+    element: <AgentInPoint />,
+  },
+  {
+    path: "/agent/pointfile",
+    element: <AgentPointFile />,
+  },
+  {
+    path: "/agent/change-password",
+    element: <AgentChangePassword />,
+  },
+  {
+    path: "/agent/create-user",
+    element: <AgentCreateUser />,
+  },
+  {
+    path: "/agent/create-sub-agent",
+    element: <AgentCreateSubagent />,
+  },
+  {
+    path: "/agent/kickoff-users",
+    element: <AgentKickoffUsers />,
+  },
+];
+
+const shopRoutes = [
+  {
+    path: "/shopdashboard",
+    element: <SubAgentdash />,
+  },
+  {
+    path: "/sub-agent/Turn-over",
+    element: <SubAgentTurnOver />,
+  },
+  {
+    path: "/sub-agent/search-users",
+    element: <SubAgentSearchUsers />,
+  },
+  {
+    path: "/sub-agent/balance-adjustment",
+    element: <SubAgentBalanceAdjustment />,
+  },
+  {
+    path: "/sub-agent/gamehistory",
+    element: <SubAgentGameHistory />,
+  },
+  {
+    path: "/sub-agent/outpoint",
+    element: <SubAgentOutPoint />,
+  },
+  {
+    path: "/sub-agent/inpoint",
+    element: <SubAgentInPoint />,
+  },
+  {
+    path: "/sub-agent/pointfile",
+    element: <SubAgentPointFile />,
+  },
+  {
+    path: "/sub-agent/change-password",
+    element: <SubAgentChangePassword />,
+  },
+  {
+    path: "/sub-agent/create-user",
+    element: <SubAgentCreateUser />,
+  },
+  {
+    path: "/sub-agent/kickoff-users",
+    element: <SubAgentKickoffUsers />,
+  },
+];
 
 const router = createBrowserRouter([
   {
@@ -307,99 +429,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     children: [
-    // {
-    //   path: "/agentdashboard",
-    //   element: <Agentdashboard />,
-    // },
-    {
-      path: "/shopdashboard",
-      element: <SubAgentdash />,
-    },
-    // {
-    //   path: "/agent/Turn-over",
-    //   element: <AgentTurnover />,
-    // },
-    
-    {
-      path: "/sub-agent/Turn-over",
-      element: <SubAgentTurnOver />,
-    },
-    // {
-    //   path: "/agent/search-users",
-    //   element: <AgentSearchUsers />,
-    // },
-    {
-      path: "/sub-agent/search-users",
-      element: <SubAgentSearchUsers />,
-    },
-    // {
-    //   path: "/agent/balance-adjustment",
-    //   element: <AgentPartnerAdjustment />,
-    // },
-    {
-      path: "/sub-agent/balance-adjustment",
-      element: <SubAgentBalanceAdjustment />,
-    },
-
-
-    // {
-    //   path: "/agent/gamehistory",
-    //   element: <AgentSearchUsers />,
-    // },
-    {
-      path: "/sub-agent/gamehistory",
-      element: <SubAgentGameHistory />,
-    },
-    // {
-    //   path: "/agent/outpoint",
-    //   element: <AgentSearchUsers />,
-    // },
-    {
-      path: "/sub-agent/outpoint",
-      element: <SubAgentOutPoint />,
-    },
-    // {
-    //   path: "/agent/inpoint",
-    //   element: <AgentInpoint />,
-    // },
-    {
-      path: "/sub-agent/inpoint",
-      element: <SubAgentInPoint />,
-    },
-    // {
-    //   path: "/agent/pointfile",
-    //   element: <AgentPointFile />,
-    // },
-    {
-      path: "/sub-agent/pointfile",
-      element: <SubAgentPointFile />,
-    },
-    // {
-    //   path: "/agent/change-password",
-    //   element: <AgentChangePassword />,
-    // },
-    
-    {
-      path: "/sub-agent/change-password",
-      element: <SubAgentChangePassword />,
-    },
-    // {
-    //   path: "/agent/create-user",
-    //   element: <AgentCreateUser />,
-    // },
-    {
-      path: "/sub-agent/create-user",
-      element: <SubAgentCreateUser />,
-    },
-    // {
-    //   path: "/agent/kickoff-users",
-    //   element: <AgentKickoffUsers />,
-    // },
-
-    {
-      path: "/sub-agent/kickoff-users",
-      element: <SubAgentKickoffUsers />,
-    },
+      ...(logintype === "Agent" ? agentRoutes : shopRoutes),
     ],
   },
 
@@ -429,7 +459,6 @@ const router = createBrowserRouter([
   },
 ]);
 
-function Router() {
   return <RouterProvider router={router} />;
 }
 
