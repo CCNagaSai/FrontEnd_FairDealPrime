@@ -62,14 +62,14 @@ const Topbar = () => {
           const response = await fetch(apiUrl, {
             method: "GET",
             headers: {
-              "Authorization": `Bearer ${token}`, // Add the token to the request headers
+              token: token, // Add the token to the request headers
               "Content-Type": "application/json", // Optional, if needed by the API
             },
           });
 
           if (response.ok) {
             const data = await response.json();
-            setBalance(data.balance || 0); // Assuming the API returns balance
+            setBalance(data.agent.chips || 0); // Assuming the API returns balance
           } else {
             console.error("Failed to fetch balance");
           }

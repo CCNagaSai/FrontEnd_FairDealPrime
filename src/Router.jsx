@@ -106,126 +106,7 @@ import AdminTranscation from './pages/AdminTranscation'
 
 import TableTranscation from './pages/tableManagment'
 
-import Cookies from "universal-cookie";
-import { useRef, useEffect, useState } from "react";
 
-function Router() {
-const cookies = new Cookies();
-const idRef = useRef(null);
-const tokenRef = useRef(null);
-
-const [logintype, setLogintype] = useState(null);
-
-useEffect(() => {
-  // Get id and type from cookies
-  idRef.current = cookies.get("logintype");
-  tokenRef.current = cookies.get("token");
-
-  // Set the login type to state
-  setLogintype(idRef.current);
-}, []);
-
-const agentRoutes = [
-  {
-    path: "/agentdashboard",
-    element: <Agentdash />,
-  },
-  {
-	path: "/agent/Turn-over",
-    element: <AgentTurnOver />,
-  },
-  {
-    path: "/agent/search-users",
-    element: <AgentSearchUsers />,
-  },
-  {
-	path: "/agent/search-sub-agents",
-	element: <AgentSearchSubAgents />,
-  },
-  {
-    path: "/agent/balance-adjustment",
-    element: <AgentBalanceAdjustment />,
-  },
-  {
-    path: "/agent/gamehistory",
-    element: <AgentGameHistory />,
-  },
-  {
-    path: "/agent/outpoint",
-    element: <AgentOutPoint />,
-  },
-  {
-    path: "/agent/inpoint",
-    element: <AgentInPoint />,
-  },
-  {
-    path: "/agent/pointfile",
-    element: <AgentPointFile />,
-  },
-  {
-    path: "/agent/change-password",
-    element: <AgentChangePassword />,
-  },
-  {
-    path: "/agent/create-user",
-    element: <AgentCreateUser />,
-  },
-  {
-    path: "/agent/create-sub-agent",
-    element: <AgentCreateSubagent />,
-  },
-  {
-    path: "/agent/kickoff-users",
-    element: <AgentKickoffUsers />,
-  },
-];
-
-const shopRoutes = [
-  {
-    path: "/shopdashboard",
-    element: <SubAgentdash />,
-  },
-  {
-    path: "/sub-agent/Turn-over",
-    element: <SubAgentTurnOver />,
-  },
-  {
-    path: "/sub-agent/search-users",
-    element: <SubAgentSearchUsers />,
-  },
-  {
-    path: "/sub-agent/balance-adjustment",
-    element: <SubAgentBalanceAdjustment />,
-  },
-  {
-    path: "/sub-agent/gamehistory",
-    element: <SubAgentGameHistory />,
-  },
-  {
-    path: "/sub-agent/outpoint",
-    element: <SubAgentOutPoint />,
-  },
-  {
-    path: "/sub-agent/inpoint",
-    element: <SubAgentInPoint />,
-  },
-  {
-    path: "/sub-agent/pointfile",
-    element: <SubAgentPointFile />,
-  },
-  {
-    path: "/sub-agent/change-password",
-    element: <SubAgentChangePassword />,
-  },
-  {
-    path: "/sub-agent/create-user",
-    element: <SubAgentCreateUser />,
-  },
-  {
-    path: "/sub-agent/kickoff-users",
-    element: <SubAgentKickoffUsers />,
-  },
-];
 
 const router = createBrowserRouter([
   {
@@ -429,7 +310,113 @@ const router = createBrowserRouter([
   {
     path: "/",
     children: [
-      ...(logintype === "Agent" ? agentRoutes : shopRoutes),
+
+      // Agents routes
+      {
+        path: "/agentdashboard",
+        element: <Agentdash />,
+      },
+      {
+        path: "/agent/Turn-over",
+        element: <AgentTurnOver />,
+      },
+      {
+        path: "/agent/search-users",
+        element: <AgentSearchUsers />,
+      },
+      {
+        path: "/agent/search-sub-agents",
+        element: <AgentSearchSubAgents />,
+      },
+      {
+        path: "/agent/balance-adjustment",
+        element: <AgentBalanceAdjustment />,
+      },
+      {
+        path: "/agent/gamehistory",
+        element: <AgentGameHistory />,
+      },
+      {
+        path: "/agent/outpoint",
+        element: <AgentOutPoint />,
+      },
+      {
+        path: "/agent/inpoint",
+        element: <AgentInPoint />,
+      },
+      
+      {
+        path: "/agent/pointfile",
+        element: <AgentPointFile />,
+      },
+      
+      {
+        path: "/agent/change-password",
+        element: <AgentChangePassword />,
+      }, 
+      {
+        path: "/agent/create-user",
+        element: <AgentCreateUser />,
+      },
+      {
+        path: "/agent/create-sub-agent",
+        element: <AgentCreateSubagent />,
+      },
+      {
+        path: "/agent/kickoff-users",
+        element: <AgentKickoffUsers />,
+      },
+
+      // SubAgents routes
+
+      {
+        path: "/shopdashboard",
+        element: <SubAgentdash />,
+      },
+    {
+        path: "/sub-agent/kickoff-users",
+        element: <SubAgentKickoffUsers />,
+      },
+    {
+        path: "/sub-agent/create-user",
+        element: <SubAgentCreateUser />,
+      },
+    {
+        path: "/sub-agent/change-password",
+        element: <SubAgentChangePassword />,
+      },
+    {
+        path: "/sub-agent/pointfile",
+        element: <SubAgentPointFile />,
+      },
+    {
+        path: "/sub-agent/inpoint",
+        element: <SubAgentInPoint />,
+      },
+    {
+        path: "/sub-agent/outpoint",
+        element: <SubAgentOutPoint />,
+      },
+    {
+        path: "/sub-agent/gamehistory",
+        element: <SubAgentGameHistory />,
+      },
+    {
+        path: "/sub-agent/balance-adjustment",
+        element: <SubAgentBalanceAdjustment />,
+      },
+    {
+        path: "/sub-agent/search-users",
+        element: <SubAgentSearchUsers />,
+      },
+    {
+        path: "/sub-agent/Turn-over",
+        element: <SubAgentTurnOver />,
+      },
+    {
+        path: "/shopdashboard",
+        element: <SubAgentdash />,
+      },
     ],
   },
 
@@ -459,6 +446,7 @@ const router = createBrowserRouter([
   },
 ]);
 
+function Router() {
   return <RouterProvider router={router} />;
 }
 
