@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import FormTable from '../../Common/Report/Table';
-import './subAgentPointfile.css';
+import './subAgentPointFile.css';
 import { data } from '../../Common/data/data';
 import SubAgentPointFileTable from './subAgentPointfileTable';
 import Cookies from 'universal-cookie';
