@@ -68,6 +68,7 @@ function PlayerTab({ gameName }) {
     return (
       (!from || registrationDate >= from) &&
       (!to || registrationDate <= to) &&
+      user.play > 0 &&
       (searchTerm === '' ||
         (user.userId.toLowerCase().includes(searchTerm.toLowerCase())) ||  
         (user.won != undefined && user.won.toString().includes(searchTerm.toLowerCase())) ||

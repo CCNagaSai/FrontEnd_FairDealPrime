@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { Link } from "react-router-dom";
 
 function Sidebar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -7,7 +8,7 @@ function Sidebar() {
   return (
     <div className="relative">
       {/* Sidebar for larger screens */}
-      <div className="hidden md:block md:w-52 bg-[#e6ebff] text-white h-[90vh] top-[10%] left-0 shadow-xl border-r-2 border-gray-200 rounded-lg font-sans">
+      <div className="hidden md:block md:w-52 bg-[#e6ebff] text-white top-[10%] left-0 shadow-xl border-r-2 border-gray-200 rounded-lg font-sans">
         <div className="text-lg font-bold uppercase text-white bg-blue-800 px-2 py-1 rounded-tr-lg">
           Main Menu
         </div>
@@ -18,7 +19,7 @@ function Sidebar() {
             </strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agentdashboard">Agent Dashboard</a>
+                <Link to="/agentdashboard">Agent Dashboard</Link>
               </li>
             </ul>
           </li>
@@ -26,16 +27,16 @@ function Sidebar() {
             <strong className="text-lg text-blue-800 ml-2 cursor-default">User Management</strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/search-users">Search Users</a>
+                <Link to="/agent/search-users">Search Users</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/search-sub-agents">Search Sub Agents</a>
+                <Link to="/agent/search-sub-agents">Search Sub Agents</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/balance-adjustment">Balance Adjustment</a>
+                <Link to="/agent/balance-adjustment">Balance Adjustment</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/kickoff-users">Kickoff Users</a>
+                <Link to="/agent/kickoff-users">Kickoff Users</Link>
               </li>
             </ul>
           </li>
@@ -43,13 +44,13 @@ function Sidebar() {
             <strong className="text-lg text-blue-800 ml-2 cursor-default">Agent Management</strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/create-user">Create User</a>
+                <Link to="/agent/create-user">Create User</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/create-sub-agent">Create Sub Agent</a>
+                <Link to="/agent/create-sub-agent">Create Sub Agent</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/change-password">Change Password</a>
+                <Link to="/agent/change-password">Change Password</Link>
               </li>
             </ul>
           </li>
@@ -57,19 +58,19 @@ function Sidebar() {
             <strong className="text-lg text-blue-800 ml-2 cursor-default">Reports</strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/pointfile">Point File</a>
+                <Link to="/agent/pointfile">Point File</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/inpoint">In Points</a>
+                <Link to="/agent/inpoint">In Points</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/outpoint">Out Points</a>
+                <Link to="/agent/outpoint">Out Points</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/gamehistory">Game History</a>
+                <Link to="/agent/gamehistory">Game History</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/Turn-over">Turn Over</a>
+                <Link to="/agent/Turn-over">Turn Over</Link>
               </li>
             </ul>
           </li>
@@ -119,7 +120,7 @@ function Sidebar() {
             </strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agentdashboard">Agent Dashboard</a>
+                <Link to="/agentdashboard">Agent Dashboard</Link>
               </li>
             </ul>
           </li>
@@ -127,16 +128,16 @@ function Sidebar() {
             <strong className="text-lg text-blue-800 ml-2 cursor-default">User Management</strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/search-users">Search Users</a>
+                <Link to="/agent/search-users">Search Users</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/search-sub-agents">Search Sub Agents</a>
+                <Link to="/agent/search-sub-agents">Search Sub Agents</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/balance-adjustment">Balance Adjustment</a>
+                <Link to="/agent/balance-adjustment">Balance Adjustment</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/kickoff-users">Kickoff Users</a>
+                <Link to="/agent/kickoff-users">Kickoff Users</Link>
               </li>
             </ul>
           </li>
@@ -144,13 +145,13 @@ function Sidebar() {
             <strong className="text-lg text-blue-800 ml-2 cursor-default">Agent Management</strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/create-user">Create User</a>
+                <Link to="/agent/create-user">Create User</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/create-sub-agent">Create Sub Agent</a>
+                <Link to="/agent/create-sub-agent">Create Sub Agent</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/change-password">Change Password</a>
+                <Link to="/agent/change-password">Change Password</Link>
               </li>
             </ul>
           </li>
@@ -158,19 +159,19 @@ function Sidebar() {
             <strong className="text-lg text-blue-800 ml-2 cursor-default">Reports</strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/pointfile">Point File</a>
+                <Link to="/agent/pointfile">Point File</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/inpoint">In Points</a>
+                <Link to="/agent/inpoint">In Points</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/outpoint">Out Points</a>
+                <Link to="/agent/outpoint">Out Points</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/gamehistory">Game History</a>
+                <Link to="/agent/gamehistory">Game History</Link>
               </li>
               <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <a href="/agent/Turn-over">Turn Over</a>
+                <Link to="/agent/Turn-over">Turn Over</Link>
               </li>
             </ul>
           </li>

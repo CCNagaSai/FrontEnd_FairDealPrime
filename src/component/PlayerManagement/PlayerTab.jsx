@@ -107,7 +107,6 @@ function PlayerTab({ }) {
         user.username != undefined && user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.name != undefined && user.name.includes(searchTerm) ||
         user._id != undefined && user._id.includes(searchTerm)
-
       )
     );
   });
@@ -143,6 +142,12 @@ function PlayerTab({ }) {
     setUserData(sorted);
     setSortDirection(direction);
   };
+
+  const formatNumber = (num) => {
+    if (num % 1 === 0) return num; // If it's an integer, return as is
+    return parseFloat(num?.toFixed(2) || 0); // Round to 2 decimal places for numbers with decimals
+  };
+  
 
   return (
     <>
@@ -322,12 +327,12 @@ function PlayerTab({ }) {
                     UserName={user.username}
                     name={user.name}
 
-                    totalPlayPoints={user.totalPlayPoints}
-                    totalWonPoints={user.totalWonPoints}
-                    endPoints={user.endPoints}
-                    margin={user.margin}
+                    totalPlayPoints={formatNumber(user.totalPlayPoints)}
+                    totalWonPoints={formatNumber(user.totalWonPoints)}
+                    endPoints={formatNumber(user.endPoints)}
+                    margin={formatNumber(user.margin)}
 
-                    MainWallet={user.chips}
+                    MainWallet={formatNumber(user.chips)}
                     RegistrationDate={user.createdAt}
                     LastLogin={user.lastLoginDate}
                     status={user.status ? 'Active' : 'Non-Active'}

@@ -1,61 +1,64 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
 
-import React, { useState, useContext, useEffect } from 'react';
-import offerContext from '../../context/offerContext';
-import "./styles.css";
-function betHistory(data) {
-  console.log("BET ::::::::::::::", data.data)
-
+function UserBetHistory({ data }) {
+    console.log("Bet history data", data);
   const [betinfo, setBetinfo] = useState({});
 
-
-  useEffect(() => {
-    const submitdata = async () => {
-      if (data != undefined && data.data != undefined && data.data.referid.length > 0) {
-        let datajson = {}
-        for (let i = 0; i <= data.data.referid.length - 1; i++) {
-          if (data.data.referid[i].type != undefined) {
-
-
-            datajson[data.data.referid[i].betIndex] = datajson[data.data.referid[i].betIndex] != undefined ? datajson[data.data.referid[i].betIndex] + data.data.referid[i].bet : data.data.referid[i].bet
-
-
+//   useEffect(() => {
+//     if (data && data.referid?.length > 0) {
+//       const datajson = {};
+//       data.referid.forEach((ref) => {
+//         if (ref.type) {
+//           datajson[ref.betIndex] =
+//             (datajson[ref.betIndex] || 0) + ref.bet;
+//         }
+//       });
+  
+//       for (let j = 0; j <= 155; j++) {
+//         datajson[j.toString()] = convertRupees(datajson[j.toString()]);
+//       }
+  
+//       setBetinfo(datajson);
+//     }
+//   }, [data]);
+  
+    useEffect(() => {
+      const submitdata = async () => {
+        if (data != undefined && data.betObjectData.length > 0) {
+          let datajson = {}
+          for (let i = 0; i <= data.betObjectData.length - 1; i++) {
+            if (data.betObjectData[i].type != undefined) {
+  
+  
+              datajson[data.betObjectData[i].betIndex] = datajson[data.betObjectData[i].betIndex] != undefined ? datajson[data.betObjectData[i].betIndex] + data.betObjectData[i].bet : data.betObjectData[i].bet
+  
+  
+            }
           }
+  
+          for (let j = 0; j <= 155; j++) {
+  
+            datajson[j.toString()] = convertRupees(datajson[j.toString()])
+  
+          }
+  
+  
+  
+          setBetinfo(datajson)
         }
-
-        for (let j = 0; j <= 155; j++) {
-
-          datajson[j.toString()] = convertRupees(datajson[j.toString()])
-
-        }
-
-
-
-        setBetinfo(datajson)
+  
+  
       }
-
-
-    }
-    submitdata()
-  }, []);
-
-  console.log("sssskdjskjj", setBetinfo)
-
-
+      submitdata()
+    }, []);
+  
 
   function convertRupees(number) {
-    if (number >= 10000000) {
-      return (number / 10000000).toFixed(1) + ' crore';
-    } else if (number >= 100000) {
-      return (number / 10 ** 5).toFixed(1) + ' lakh';
-    } else if (number >= 1000) {
-      return (number / 1000).toFixed(1) + 'K';
-    } else {
-      return number;
-    }
+    if (number >= 10000000) return (number / 10000000).toFixed(1) + " crore";
+    if (number >= 100000) return (number / 10 ** 5).toFixed(1) + " lakh";
+    if (number >= 1000) return (number / 1000).toFixed(1) + "K";
+    return number;
   }
-
-
 
   return (
     <div className="w-full rounded-lg bg-white px-[24px] py-[20px] dark:bg-darkblack-600">
@@ -113,27 +116,27 @@ function betHistory(data) {
 
                 <td className="w-[250px] px-6 py-5 xl:px-0">
                   <p className="text-base font-medium text-bgray-900 dark:text-white">
-                    {data.data.name}
+                    {data.username}
                   </p>
                 </td>
                 <td className="w-[165px] px-6 py-5 xl:px-0">
                   <p className="text-base font-medium text-bgray-900 dark:text-white">
-                    {data.data.datetime}
+                    {data.createdAt}
                   </p>
                 </td>
                 <td className="w-[185px] px-6 py-5 xl:px-0">
                   <p className="text-base font-medium text-bgray-900 dark:text-white">
-                    {data.data.play}
+                    {data.play}
                   </p>
                 </td>
                 <td className="w-[165px] px-6 py-5 xl:px-0">
                   <p className="text-base font-semibold text-bgray-900 dark:text-white">
-                    {data.data.won}
+                    {data.won}
                   </p>
                 </td>
                 <td className="w-[165px] px-6 py-5 xl:px-0">
                   <p className="text-base font-medium text-bgray-900 dark:text-white">
-                    {data.data.ballposition
+                    {data.ballposition
                     }
                   </p>
                 </td>
@@ -225,5 +228,4 @@ function betHistory(data) {
   );
 }
 
-
-export default betHistory;
+export default UserBetHistory;

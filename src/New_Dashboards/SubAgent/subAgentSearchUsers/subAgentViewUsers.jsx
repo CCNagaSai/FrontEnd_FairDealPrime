@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 
-const AViewUser = ({ user, onBack }) => {
+const SubAViewUser = ({ user, onBack }) => {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [isEditingLock, setIsEditingLock] = useState(false);
@@ -176,5 +176,5 @@ const AViewUser = ({ user, onBack }) => {
   );
 };
 
-export default AViewUser;
+export default SubAViewUser;
 

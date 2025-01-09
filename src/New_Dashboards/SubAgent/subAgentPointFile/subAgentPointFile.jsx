@@ -249,7 +249,7 @@ const SubAReportpointfile = () => {
             </form>
           </div>
 
-          {showTable && (
+          {/* {showTable && (
             <div className="overflow-x-auto mt-6">
               <FormTable
                 data={filteredData}
@@ -258,7 +258,7 @@ const SubAReportpointfile = () => {
                 showTotalInOut={true}
               />
             </div>
-          )}
+          )} */}
         {/* Backend Data Table */}
         {loading ? (
             <p>Loading backend data...</p>

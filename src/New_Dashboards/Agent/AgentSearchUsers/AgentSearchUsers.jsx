@@ -16,6 +16,8 @@ const AUsersList = ( {onUserClick} ) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedType, setSelectedType] = useState(""); 
   const [selectedUser, setSelectedUser] = useState("");
+  const [filters, setFilters] = useState({ username: "", status: "" });
+  const [originalData, setOriginalData] = useState([]);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -61,7 +63,8 @@ const AUsersList = ( {onUserClick} ) => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const result = await response.json(); // Parse the JSON
+        const result = await response.json();
+        setOriginalData(result.userList || []);
         setData(result.userList || []); // Set the data
       } catch (err) {
         console.error("Error fetching user data:", err.message);
@@ -73,6 +76,29 @@ const AUsersList = ( {onUserClick} ) => {
 
     fetchUserData();
   }, []);
+
+  const handleFilterChange = () => {
+    const filteredData = originalData.filter((user) => {
+      const matchesUsername =
+        !filters.username || user.name.toLowerCase().includes(filters.username.toLowerCase());
+      const matchesStatus =
+        !filters.status ||
+        (filters.status === "Active" && user.status) ||
+        (filters.status === "Inactive" && !user.status);
+  
+      return matchesUsername && matchesStatus;
+    });
+  
+    setCurrentPage(1);
+    setData(filteredData);
+  };
+  
+  const handleClear = () => {
+    setFilters({ username: "", status: "" });
+    setCurrentPage(1);
+    setData(originalData); // Reset to original data
+  };
+  
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
@@ -171,6 +197,53 @@ const AUsersList = ( {onUserClick} ) => {
       <h1 className="view-users-heading text-xl sm:text-2xl text-blue-500 text-left border-b-4 border-blue-500 pb-2 mb-6">
         View Users
       </h1>
+      {/* Filter Form */}
+      <div className="bg-[#e6ebff] p-5 rounded-lg shadow-lg m-1 sm:m-3">
+        <form className="flex flex-col items-center" onSubmit={(e) => e.preventDefault()}>
+          <div className="flex flex-col sm:flex-row justify-between sm:space-x-4 mb-0 sm:mb-5 w-full">
+            <div className="flex-1 mb-4 sm:mb-0">
+              <label className="block mb-2">Username:</label>
+              <input
+                type="text"
+                value={filters.username}
+                onChange={(e) => setFilters({ ...filters, username: e.target.value })}
+                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+                placeholder="Enter username"
+              />
+            </div>
+            <div className="flex-1 mb-4 sm:mb-0">
+              <label className="block mb-2">Status:</label>
+              <select
+                value={filters.status}
+                onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+              >
+                <option value="">All</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+          <div className="flex justify-center w-full">
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={handleFilterChange}
+                className="bg-blue-500 text-white p-2 sm:p-3 rounded-lg font-bold hover:bg-blue-600"
+              >
+                Apply Filters
+              </button>
+              <button
+                type="button"
+                onClick={handleClear}
+                className="bg-blue-500 text-white p-2 sm:p-3 rounded-lg font-bold hover:bg-blue-600"
+              >
+                Clear Filters
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
 
       <div className="user-details bg-white p-4 sm:p-6 rounded-md shadow-md">
         <div className="user-summary text-sm sm:text-lg font-bold mb-4">

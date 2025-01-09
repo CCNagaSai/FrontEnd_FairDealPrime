@@ -12,7 +12,7 @@ const SubAReportOutpoint = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [dateRange, setDateRange] = useState('Select');
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredData, setFilteredData] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [columns, setColumns] = useState([]);
   const [showTable, setShowTable] = useState(false);
@@ -121,7 +121,7 @@ const SubAReportOutpoint = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    let filtered = data;
+    let filtered = backendData;
 
     if (startDate && endDate) {
       filtered = filtered.filter((entry) => {
@@ -153,7 +153,7 @@ const SubAReportOutpoint = () => {
     setStartDate('');
     setEndDate('');
     setDateRange('Select');
-    setFilteredData(data);
+    setFilteredData(backendData);
     setShowTable(false);
   };
 
@@ -248,17 +248,6 @@ const SubAReportOutpoint = () => {
               </div>
             </form>
           </div>
-
-          {showTable && (
-            <div className="overflow-x-auto mt-6">
-              <FormTable
-                data={filteredData}
-                columns={columns}
-                showPagination={true}
-                showTotalInOut={true}
-              />
-            </div>
-          )}
         {/* Backend Data Table */}
         {loading ? (
             <p>Loading backend data...</p>

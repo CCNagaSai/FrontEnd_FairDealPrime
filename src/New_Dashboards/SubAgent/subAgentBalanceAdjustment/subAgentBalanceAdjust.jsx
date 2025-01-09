@@ -13,6 +13,8 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
   const [comments, setComments] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [transactionResult, setTransactionResult] = useState(null);
+
 
 
   const id = cookies.get("LoginUserId");
@@ -66,10 +68,13 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedUser || !amount || parseFloat(amount) <= 0) {
-      setError("Type, Partner, and Amount fields are mandatory. Amount must be positive.");
+      setError("Partner and Amount fields are mandatory. Amount must be positive.");
       return;
     }
-
+  
+    const selectedUserDetails = users.find((user) => user._id === selectedUser);
+    const previousPoints = selectedUserDetails?.chips || 0;
+  
     const payload = {
       money: amount,
       type: adjustType === "add" ? "Deposit" : "Deduct",
@@ -77,47 +82,109 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
       adminname: email,
       adminid: id,
     };
-
+  
     const apiUrl =
       adjustType === "add"
         ? "http://93.127.194.87:9999/admin/user/addMoney"
         : "http://93.127.194.87:9999/admin/user/deductMoney";
+  
+    try {
+      const response = await fetch(apiUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      const result = await response.json();
+      console.log("API Response:", result);
+  
+      if (result.status === "ok") {
+        // const newPoints = result.newPoints;
+        const newPoints = result.newPoints || (adjustType === "add"
+          ? previousPoints + parseFloat(amount)
+          : previousPoints - parseFloat(amount));
+  
+        setTransactionResult({
+          success: true,
+          message: `${adjustType === "add" ? "Added" : "Deducted"} ${amount} points to ${selectedUserDetails?.name}`,
+          previousPoints: previousPoints,
+          pointsChanged: amount,
+          newPoints: newPoints,
+        });
+      } else {
+        // If status is not "ok", set the error message from the API
+        setTransactionResult({
+          success: false,
+          message: result.msg || "Transaction failed. Please check your balance.",
+        });
+      }
 
-        try {
-          const response = await fetch(apiUrl, {
-            method: "PUT",
+        const updatedUserResponse = await fetch(
+          `http://93.127.194.87:9999/admin/user/UserList?Id=${id}&type=Shop`,
+          {
+            method: "GET",
             headers: {
               "Content-Type": "application/json",
               token: token,
             },
-            body: JSON.stringify(payload),
-          });
-    
-          const result = await response.json();
-    
-          // Check API response for success or failure
-          if (result.status === "ok") {
-            alert(result.msg || "Transaction successful!");
-            // Clear the form
-            setType("");
-            setSelectedUser("");
-            setAmount("");
-            setTransactionPassword("");
-            setComments("");
-            setError("");
-          } else {
-            alert(result.msg || "Transaction failed. Please check your balance.");
           }
-        } catch (error) {
-          console.error("Error submitting form:", error);
-          setError("Transaction failed. Please try again.");
+        );
+
+        if (!updatedUserResponse.ok) {
+          throw new Error(`Failed to fetch updated user data`);
         }
-      };
+
+        const updatedUserData = await updatedUserResponse.json();
+        setUsers(updatedUserData.userList || []);
+  
+        // Update user's points locally
+        // setUsers((prevUsers) =>
+        //   prevUsers.map((user) =>
+        //     user._id === selectedUser
+        //       ? { ...user, chips: newPoints }
+        //       : user
+        //   )
+        // );
+  
+        // Clear the form
+        setSelectedUser("");
+        setAmount("");
+        setTransactionPassword("");
+        setComments("");
+        setError("");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setError("Transaction failed. Please try again.");
+    }
+  };
+  
 
   return (
     <div className="partner-adjustment-container">
       <h1 className="partner-adjustment-heading">Partner Adjustment</h1>
       {error && <p className="error-message">{error}</p>}
+      {transactionResult && (
+        <div className="transaction-result-wrapper">
+          <div
+            className={`transaction-result-card ${transactionResult.success ? "success" : "failure"}`}
+          >
+            <h2>{transactionResult.success ? "Transaction Successful" : "Transaction Failed"}</h2>
+            <p>{transactionResult.message}</p>
+            {transactionResult.success ? (
+              <>
+                <p>Previous Points: {transactionResult.previousPoints}</p>
+                <p>Points {adjustType === "add" ? "Added" : "Deducted"}: {transactionResult.pointsChanged}</p>
+                <p>New Points: {transactionResult.newPoints}</p>
+              </>
+            ) : null}
+          </div>
+        </div>
+      )}
+
+
       <form
         className="partner-adjustment-form"
         style={{ maxWidth: "600px", margin: "0 auto" }}
@@ -136,7 +203,7 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
             </option>
             {users.map((user) => (
               <option key={user._id} value={user._id}>
-                {user.name || user.username}
+                {user.name || user.username} --{user.chips || 0}
               </option>
             ))}
           </select>
@@ -189,12 +256,11 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
         </div>
 
         <div className="button-group">
-          <button type="submit" className="btn btn-submit">
+          <button className="bg-blue-500 text-white px-4 py-2 mr-5 rounded hover:bg-blue-600">
             Submit
           </button>
           <button
-            type="button"
-            className="btn btn-clear"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
             onClick={() => {
               setType("");
               setSelectedUser("");

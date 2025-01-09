@@ -1,29 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const SubAgentInPointTable = ({ backendData }) => {
-  if (!backendData || backendData.length === 0) {
-    return <p>No data found from the backend.</p>;
-  }
+  const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+  
+    // Filter the data first
+    const filteredData = backendData?.filter(entry => entry.trnxAmount > 0) || [];
+  
+    if (filteredData.length === 0) {
+      return ;
+    }
+  
+    // Pagination calculations based on the filtered data
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const displayedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+  
+    const handlePrevious = () => {
+      if (currentPage > 1) setCurrentPage(prev => prev - 1);
+    };
+  
+    const handleNext = () => {
+      if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
+    };
 
   return (
     <div className="overflow-x-auto mt-6">
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
-          <tr>
-            <th className="px-4 py-2 border-b border-gray-300 text-left">S.No</th>
-            <th className="px-4 py-2 border-b border-gray-300 text-left">Date</th>
-            <th className="px-4 py-2 border-b border-gray-300 text-left">Receiver</th>
-            <th className="px-4 py-2 border-b border-gray-300 text-left">Old Points</th>
-            <th className="px-4 py-2 border-b border-gray-300 text-left">In</th>
-            <th className="px-4 py-2 border-b border-gray-300 text-left">New Points</th>
-            <th className="px-4 py-2 border-b border-gray-300 text-left">Sender</th>
-            <th className="px-4 py-2 border-b border-gray-300 text-left">Transaction Type</th>
+          <tr className="bg-blue-200">
+            <th className="border border-gray-300 px-4 py-2">S.No</th>
+            <th className="border border-gray-300 px-4 py-2">Date</th>
+            <th className="border border-gray-300 px-4 py-2">Receiver</th>
+            <th className="border border-gray-300 px-4 py-2">Old Points</th>
+            <th className="border border-gray-300 px-4 py-2">In</th>
+            <th className="border border-gray-300 px-4 py-2">New Points</th>
+            <th className="border border-gray-300 px-4 py-2">Sender</th>
+            <th className="border border-gray-300 px-4 py-2">Transaction Type</th>
           </tr>
         </thead>
         <tbody>
-          {backendData
+        {displayedData.map((entry, index) => {
+          {/* {backendData
             .filter(entry => entry.trnxAmount > 0) // Only include rows where "In" has a value
-            .map((entry, index) => {
+            .map((entry, index) => { */}
               const dateOnly = entry.createdAt.split('T')[0]; // Extract date
               const isPositive = entry.trnxAmount > 0;
               const inAmount = isPositive ? `₹${entry.trnxAmount}` : ''; // Show in "In" if positive
@@ -56,19 +76,39 @@ const SubAgentInPointTable = ({ backendData }) => {
 
               return (
                 <tr key={entry._id}>
-                  <td className="px-4 py-2 border-b border-gray-300">{index + 1}</td>
-                  <td className="px-4 py-2 border-b border-gray-300">{dateOnly}</td>
-                  <td className="px-4 py-2 border-b border-gray-300">{receiver}</td>
-                  <td className="px-4 py-2 border-b border-gray-300">₹{entry.oppChips || '0'}</td>
-                  <td className="px-4 py-2 border-b border-gray-300">{inAmount}</td>
-                  <td className="px-4 py-2 border-b border-gray-300">₹{entry.chips || '0'}</td>
-                  <td className="px-4 py-2 border-b border-gray-300">{sender}</td>
-                  <td className="px-4 py-2 border-b border-gray-300">{entry.trnxTypeTxt || 'N/A'}</td>
+                  <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
+                  <td className="border border-gray-300 px-4 py-2">{dateOnly}</td>
+                  <td className="border border-gray-300 px-4 py-2">{receiver}</td>
+                  <td className="border border-gray-300 px-4 py-2">₹{entry.oppChips || '0'}</td>
+                  <td className="border border-gray-300 px-4 py-2">{inAmount}</td>
+                  <td className="border border-gray-300 px-4 py-2">₹{entry.chips || '0'}</td>
+                  <td className="border border-gray-300 px-4 py-2">{sender}</td>
+                  <td className="border border-gray-300 px-4 py-2">{entry.trnxTypeTxt || 'N/A'}</td>
                 </tr>
               );
             })}
         </tbody>
       </table>
+      {/* Pagination Controls */}
+      <div className="pagination mt-4 flex justify-center items-center gap-4">
+        <button
+          onClick={handlePrevious}
+          disabled={currentPage === 1}
+          className={`px-4 py-2 rounded-lg ${currentPage === 1 ? 'bg-gray-300' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={handleNext}
+          disabled={currentPage === totalPages}
+          className={`px-4 py-2 rounded-lg ${currentPage === totalPages ? 'bg-gray-300' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

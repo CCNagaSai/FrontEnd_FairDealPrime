@@ -80,4 +80,53 @@
     padding-bottom: 5px;
     margin-bottom: 20px;
   }
+
+  /* CSS for Transaction Result */
+.transaction-result-card {
+  background-color: white; /* White background */
+  border-radius: 5px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  margin: 0 auto; /* Center the card */
+  max-width: 500px; /* Restrict the card width */
+  border: 1px solid #ddd; /* Light gray border for better visibility */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  text-align: left;
+}
+
+/* Success Text (Green for Add) */
+.transaction-result-card.success {
+  color: #155724; /* Green text */
+  border-left: 4px solid #28a745; /* Green left border */
+}
+
+/* Failure Text (Red for Subtract) */
+.transaction-result-card.failure {
+  color: #721c24; /* Red text */
+  border-left: 4px solid #dc3545; /* Red left border */
+}
+
+/* Headings within the card */
+.transaction-result-card h2 {
+  margin: 0 0 10px 0; /* Spacing below the heading */
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Paragraphs within the card */
+.transaction-result-card p {
+  margin: 5px 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Center the entire card container */
+.transaction-result-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
   

@@ -1,7 +1,7 @@
 import React from 'react';
 import '../SubAgentdash.css';
 import ReactDOM from 'react-dom/client';
-import Sidebar from '../subAgentSidebar'; // Adjust path to Sidebar component
+import SubAgentSidebar from '../subAgentSidebar'; // Adjust path to Sidebar component
 import SubAgentBalanceAdjust from './subAgentBalanceAdjust';
 import Topbar from "../../Common/Topbar";
 
@@ -13,7 +13,7 @@ const SubAgentBalanceAdjustment = () => {
       </div>
       <div className="content">
         <div className="Left">
-          <Sidebar />
+          <SubAgentSidebar />
         </div>
         <div className="Right">
           <SubAgentBalanceAdjust />

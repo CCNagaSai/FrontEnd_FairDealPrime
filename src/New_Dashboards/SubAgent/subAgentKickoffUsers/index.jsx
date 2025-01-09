@@ -1,11 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../SubAgentdash.css';
 import ReactDOM from 'react-dom/client';
-import Sidebar from '../subAgentSidebar'; // Adjust path to Sidebar component
+import Sidebar from '../subAgentSidebar';
 import SubAKickoffUsers from './subAgentKickoffUsers';
 import Topbar from "../../Common/Topbar";
+import SubAViewUser from '../subAgentSearchUsers/subAgentViewUsers';
 
 const SubAgentKickoffUsers = () => {
+  const [selectedUser, setSelectedUser] = useState(null);
+  
+    const handleUserClick = (user) => {
+      setSelectedUser(user);
+    };
+  
+    const handleBackToList = () => {
+      setSelectedUser(null);
+    };
+
   return (
     <div className="app">
       <div className="Header">
@@ -16,7 +27,11 @@ const SubAgentKickoffUsers = () => {
           <Sidebar />
         </div>
         <div className="Right">
-          <SubAKickoffUsers />
+          {selectedUser ? (
+            <SubAViewUser user={selectedUser} onBack={handleBackToList} />
+          ) : (
+            <SubAKickoffUsers onUserClick={handleUserClick} />
+          )}
         </div>
       </div>
     </div>

@@ -16,6 +16,7 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
   const [comments, setComments] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [transactionResult, setTransactionResult] = useState(null);
 
   const id = cookies.get("LoginUserId");
   const token = cookies.get("token");
@@ -73,6 +74,9 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
       return;
     }
 
+    const selectedUserDetails = users.find((user) => user._id === selectedUser);
+    const previousPoints = selectedUserDetails?.chips || 0;
+
     const payload = {
       money: amount,
       type: adjustType === "add" ? "Deposit" : "Deduct",
@@ -104,7 +108,52 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
 
       // Check API response for success or failure
       if (result.status === "ok") {
-        alert(result.msg || "Transaction successful!");
+        const newPoints = result.newPoints || (adjustType === "add"
+          ? previousPoints + parseFloat(amount)
+          : previousPoints - parseFloat(amount));
+  
+        setTransactionResult({
+          success: true,
+          message: `${adjustType === "add" ? "Added" : "Deducted"} ${amount} points to ${selectedUserDetails?.name}`,
+          previousPoints: previousPoints,
+          pointsChanged: amount,
+          newPoints: newPoints,
+        });
+      } else {
+        // If status is not "ok", set the error message from the API
+        setTransactionResult({
+          success: false,
+          message: result.msg || "Transaction failed. Please check your balance.",
+        });
+      }
+
+        const updatedUserResponse = await fetch(
+          `http://93.127.194.87:9999/admin/user/UserList?Id=${id}&type=Shop`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              token: token,
+            },
+          }
+        );
+
+        if (!updatedUserResponse.ok) {
+          throw new Error(`Failed to fetch updated user data`);
+        }
+
+        const updatedUserData = await updatedUserResponse.json();
+        setUsers(updatedUserData.userList || []);
+  
+        // Update user's points locally
+        // setUsers((prevUsers) =>
+        //   prevUsers.map((user) =>
+        //     user._id === selectedUser
+        //       ? { ...user, chips: newPoints }
+        //       : user
+        //   )
+        // );
+  
         // Clear the form
         setType("");
         setSelectedUser("");
@@ -112,9 +161,6 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
         setTransactionPassword("");
         setComments("");
         setError("");
-      } else {
-        alert(result.msg || "Transaction failed. Please check your balance.");
-      }
     } catch (error) {
       console.error("Error submitting form:", error);
       setError("Transaction failed. Please try again.");
@@ -125,6 +171,24 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
     <div className="partner-adjustment-container">
       <h1 className="partner-adjustment-heading">Partner Adjustment</h1>
       {error && <p className="error-message">{error}</p>}
+      {transactionResult && (
+        <div className="transaction-result-wrapper">
+          <div
+            className={`transaction-result-card ${transactionResult.success ? "success" : "failure"}`}
+          >
+            <h2>{transactionResult.success ? "Transaction Successful" : "Transaction Failed"}</h2>
+            <p>{transactionResult.message}</p>
+            {transactionResult.success ? (
+              <>
+                <p>Previous Points: {transactionResult.previousPoints}</p>
+                <p>Points {adjustType === "add" ? "Added" : "Deducted"}: {transactionResult.pointsChanged}</p>
+                <p>New Points: {transactionResult.newPoints}</p>
+              </>
+            ) : null}
+          </div>
+        </div>
+      )}
+
       <form
         className="partner-adjustment-form"
         style={{ maxWidth: "600px", margin: "0 auto" }}
@@ -159,7 +223,7 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
             </option>
             {users.map((user) => (
               <option key={user._id} value={user._id}>
-                {user.name || user.username}
+                {user.name || user.username} --{user.chips || 0}
               </option>
             ))}
           </select>
@@ -190,7 +254,7 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
           />
         </div>
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label htmlFor="transaction-password">Transaction Password:</label>
           <input
             type="password"
@@ -199,9 +263,9 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
             value={transactionPassword}
             onChange={(e) => setTransactionPassword(e.target.value)}
           />
-        </div>
+        </div> */}
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label htmlFor="comments">Comments:</label>
           <textarea
             id="comments"
@@ -209,15 +273,14 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
             value={comments}
             onChange={(e) => setComments(e.target.value)}
           ></textarea>
-        </div>
+        </div> */}
 
-        <div className="button-group">
-          <button type="submit" className="btn btn-submit">
+        <div>
+          <button className="bg-blue-500 text-white px-4 py-2 mr-5 rounded hover:bg-blue-600">
             Submit
           </button>
           <button
-            type="button"
-            className="btn btn-clear"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
             onClick={() => {
               setType("");
               setSelectedUser("");

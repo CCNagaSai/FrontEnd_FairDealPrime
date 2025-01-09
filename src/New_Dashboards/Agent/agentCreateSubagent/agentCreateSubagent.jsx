@@ -8,7 +8,9 @@ const ACreateSubagent = () => {
   const [selectedGames, setSelectedGames] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [agentId, setAgentId] = useState("");
-  const [token, setToken] = useState(""); 
+  const [token, setToken] = useState("");
+  const [usernameStatus, setUsernameStatus] = useState(null);
+  const [debounceTimeout, setDebounceTimeout] = useState(null); 
 
   const [formData, setFormData] = useState({
     username: "",
@@ -16,6 +18,8 @@ const ACreateSubagent = () => {
     mobileNumber: "",
     transactionPassword: "",
   });
+
+  const [submissionMessage, setSubmissionMessage] = useState(null);
 
   const gamesList = [
     "SPIN NORMAL",
@@ -70,13 +74,82 @@ const ACreateSubagent = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+    if (name === "username") {
+      debounceCheckUsername(value);
+    }
+  };
+
+  const debounceCheckUsername = (username) => {
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout);
+    }
+
+    const timeout = setTimeout(() => {
+      checkUsernameAvailability(username);
+    }, 300);
+
+    setDebounceTimeout(timeout);
+  };
+
+  const checkUsernameAvailability = async (username) => {
+    if (!username) {
+      setUsernameStatus(null);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "http://93.127.194.87:9999/admin/shop/check-username",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+          body: JSON.stringify({ name: username }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setUsernameStatus({
+          available: !result.exists,
+          message: result.exists
+            ? "Sub Agent name already exists."
+            : "Sub Agent name is available.",
+        });
+      } else {
+        setUsernameStatus({
+          available: false,
+          message: "Error checking name availability.",
+        });
+      }
+    } catch (error) {
+      setUsernameStatus({
+        available: false,
+        message: "Failed to connect to the server.",
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!formData.username || !formData.password) {
-      alert("Username and Password are mandatory!");
+      setSubmissionMessage({
+        type: "error",
+        text: "name and Password are mandatory!",
+      });
+      return;
+    }
+
+    if (!usernameStatus?.available) {
+      setSubmissionMessage({
+        type: "error",
+        text: "Please use a valid and available name.",
+      });
       return;
     }
 
@@ -110,21 +183,56 @@ const ACreateSubagent = () => {
 
       const result = await response.json();
 
-      if (response.ok) {
-        alert("User created successfully!");
-        console.log("API Response:", result);
+      if (response.ok && result.status) {
+        setSubmissionMessage({
+          type: "success",
+          text: "Sub Agent created successfully!",
+        });
+        setFormData({
+          username: "",
+          password: "",
+          mobileNumber: "",
+          transactionPassword: "",
+        });
+        setUsernameStatus(null);
       } else {
-        alert("Error creating user: " + result.message);
+        setSubmissionMessage({
+          type: "error",
+          text: result.message || "Failed to create Sub Agent.",
+        });
       }
     } catch (error) {
-      console.error("API Error:", error);
-      alert("Failed to connect to the server.");
+      setSubmissionMessage({
+        type: "error",
+        text: "Failed to connect to the server.",
+      });
     }
+  };
+
+  const handleReset = () => {
+    setFormData({
+      username: "",
+      password: "",
+      mobileNumber: "",
+      transactionPassword: "",
+    });
+    setUsernameStatus(null);
+    setSubmissionMessage(null);
   };
 
   return (
     <div className="create-user-container">
       <h1 className="user-general-information">Sub Agent - General Information</h1>
+      {submissionMessage && (
+        <p
+          style={{
+            color: submissionMessage.type === "success" ? "green" : "red",
+            marginTop: "10px",
+          }}
+        >
+          <strong>{submissionMessage.text}</strong>
+        </p>
+      )}
       <form className="form" onSubmit={handleSubmit}>
         <div className="form-group">
           <label>
@@ -139,6 +247,16 @@ const ACreateSubagent = () => {
             onChange={handleChange}
             required
           />
+          {usernameStatus && (
+            <p
+              style={{
+                color: usernameStatus.available ? "green" : "red",
+                marginTop: "5px",
+              }}
+            >
+              {usernameStatus.message}
+            </p>
+          )}
         </div>
         <div className="form-group">
           <label>
@@ -202,10 +320,22 @@ const ACreateSubagent = () => {
           </div>
         </div>
         <div className="form-actions">
-          <button type="submit" className="btn create">
+          <button
+            type="submit"
+            className="btn create"
+            style={{
+              backgroundColor: usernameStatus?.available ? "blue" : "grey",
+              cursor: usernameStatus?.available ? "pointer" : "not-allowed",
+            }}
+            disabled={!usernameStatus?.available}
+          >
             Create
           </button>
-          <button type="reset" className="btn reset">
+          <button
+            type="reset"
+            className="btn reset"
+            onClick={handleReset}
+          >
             Reset
           </button>
         </div>

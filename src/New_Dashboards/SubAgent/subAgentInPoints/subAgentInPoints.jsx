@@ -249,16 +249,6 @@ const SubAReportInpoint = () => {
             </form>
           </div>
 
-          {showTable && (
-            <div className="overflow-x-auto mt-6">
-              <FormTable
-                data={filteredData}
-                columns={columns}
-                showPagination={true}
-                showTotalInOut={true}
-              />
-            </div>
-          )}
         {/* Backend Data Table */}
         {loading ? (
             <p>Loading backend data...</p>
