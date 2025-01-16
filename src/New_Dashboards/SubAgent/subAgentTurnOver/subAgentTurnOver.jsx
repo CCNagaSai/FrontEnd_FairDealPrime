@@ -82,7 +82,7 @@ const SubATurnover = () => {
 
     switch (range) {
       case 'Today':
-        startDate.setHours(0, 0, 0, 0);
+        startDate.setDate(today.getDate());
         endDate.setHours(23, 59, 59, 999);
         break;
       case 'Yesterday':
@@ -124,35 +124,48 @@ const SubATurnover = () => {
 
   const handleFilterChange = () => {
     let filtered = backendData;
-
-    // Filter by username
-    if (filters.userId) {
-      filtered = filtered.filter((entry) =>
-        entry.username.toLowerCase().includes(filters.userId.toLowerCase())
-      );
-    }
-
+  
     // Filter by date range
     if (filters.startDate && filters.endDate) {
       const startDate = new Date(filters.startDate);
       startDate.setHours(0, 0, 0, 0); // Start of the day
       const endDate = new Date(filters.endDate);
       endDate.setHours(23, 59, 59, 999); // End of the day
-
+  
       filtered = filtered.filter((entry) => {
         const entryDate = new Date(entry.createdAt);
         return entryDate >= startDate && entryDate <= endDate;
       });
     }
-
-    filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-    setCurrentPage(1);
-    setFilteredData(filtered);
-    setShowTable(filtered.length > 0);
-    setNoResults(filtered.length === 0); // Check if no results are found
+  
+    // Aggregate data by username
+    const aggregatedData = filtered.reduce((acc, entry) => {
+      const existingUser = acc.find((user) => user.username === entry.username);
+  
+      if (existingUser) {
+        existingUser.play += entry.play;
+        existingUser.won += entry.won;
+        existingUser.endPoints = existingUser.play - existingUser.won; // Update End Points
+        existingUser.createdAt = new Date(existingUser.createdAt) > new Date(entry.createdAt)
+          ? existingUser.createdAt
+          : entry.createdAt; // Keep the most recent date
+      } else {
+        acc.push({
+          ...entry,
+          endPoints: entry.play - entry.won, // Calculate End Points
+        });
+      }
+  
+      return acc;
+    }, []);
+  
+    // Sort aggregated data by most recent `createdAt` date
+    aggregatedData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  
+    setFilteredData(aggregatedData);
+    setShowTable(aggregatedData.length > 0);
+    setNoResults(aggregatedData.length === 0); // Show message if no results
     setIsSubmitted(true); // Indicate filters have been applied
-
   };
   
   
@@ -245,6 +258,13 @@ const SubATurnover = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const displayedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
   console.log(filteredData, "cccccccc");
+
+  useEffect(() => {
+    if (isSubmitted) {
+      handleFilterChange();
+    }
+  }, [backendData, filters, isSubmitted]);
+  
 
   return (
     <div>
@@ -339,6 +359,11 @@ const SubATurnover = () => {
             <div className="bg-[#e6ebff] p-4 flex flex-col sm:flex-row gap-2 sm:gap-6 mt-4 rounded-md m-2 text-sm sm:text-base">
               <span className="block">Start Date: {filters.startDate || 'Not Selected'}</span>
               <span className="block">End Date: {filters.endDate || 'Not Selected'}</span>
+              <span className="block">Total Play Points: {filteredData.reduce((sum, item) => sum + item.play, 0).toFixed(2)}</span>
+              <span className="block">Total Won Points: {filteredData.reduce((sum, item) => sum + item.won, 0).toFixed(2)}</span>
+              <span className="block">Total End Points: {filteredData.reduce((sum, item) => sum + (item.play - item.won), 0).toFixed(2)}</span>
+              <span className="block">Total Margin: {filteredData.reduce((sum, item) => sum + (2.5 / 100) * item.play, 0).toFixed(2)}</span>
+              <span className="block">Total Net: {filteredData.reduce((sum, item) => sum + ((item.play - item.won) - (2.5 / 100) * item.play), 0).toFixed(2)}</span>
             </div>
           )}
 
@@ -393,10 +418,6 @@ const SubATurnover = () => {
                             day: "2-digit",
                             month: "2-digit",
                             year: "numeric",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
-                            hour12: true,
                           })}
                         </td>
                       </tr>
@@ -404,6 +425,29 @@ const SubATurnover = () => {
                   );
                 })}
               </tbody>
+              <tfoot>
+                <tr className="bg-blue-100 font-bold">
+                  <td className="border border-gray-300 px-4 py-2">Total</td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {filteredData.reduce((sum, item) => sum + item.play, 0).toFixed(2)}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {filteredData.reduce((sum, item) => sum + item.won, 0).toFixed(2)}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {filteredData.reduce((sum, item) => sum + (item.play - item.won), 0).toFixed(2)}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {filteredData.reduce((sum, item) => sum + (2.5 / 100) * item.play, 0).toFixed(2)}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {filteredData
+                      .reduce((sum, item) => sum + ((item.play - item.won) - (2.5 / 100) * item.play), 0)
+                      .toFixed(2)}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">-</td>
+                </tr>
+              </tfoot>
             </table>
           </div>
             {/* Pagination controls */}

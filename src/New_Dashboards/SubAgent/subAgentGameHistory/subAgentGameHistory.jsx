@@ -83,7 +83,7 @@ const SubAGameHistory = () => {
 
     switch (range) {
       case 'Today':
-        startDate.setHours(0, 0, 0, 0);
+        startDate.setDate(today.getDate());
         endDate.setHours(23, 59, 59, 999);
         break;
       case 'Yesterday':
