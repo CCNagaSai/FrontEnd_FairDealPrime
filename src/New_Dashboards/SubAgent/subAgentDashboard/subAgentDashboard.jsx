@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Cookies from "universal-cookie";
 import "./subAgentDashboard.css";
 
-const SubADashboard = ({onUserClick}) => {
+const SubADashboard = ({ onUserClick }) => {
   const [dashboardData, setDashboardData] = useState({
     activeUsers: 0,
     inactiveUsers: 0,
@@ -62,35 +62,50 @@ const SubADashboard = ({onUserClick}) => {
         console.log("Backend Response:", result); // Debug the backend response
 
         // Check if result.data exists and log it
-          const data = result || {};
-          console.log("Processed Data:", data); // Debug processed data
+        const data = result || {};
+        console.log("Processed Data:", data); // Debug processed data
 
-          const normalizePlayers = (players, key) =>
-            players.map((player) => ({
-              ...player,
-              chips: player[key] || 0, // Use `chips` or fallback to `coins` value
-            }));
+        const normalizePlayers = (players, key) =>
+          players.map((player) => ({
+            ...player,
+            chips: player[key] || 0, // Use `chips` or fallback to `coins` value
+          }));
 
-          const activePlayers = normalizePlayers(data.activeUsers?.activePlayersDetails || [], "coins");
-          const inactivePlayers = normalizePlayers(data.inactiveUsers?.inActivePlayersDetails || [], "chips");
-          const suspendedPlayers = normalizePlayers(data.suspendedUsers?.suspendedPlayerDetails || [], "chips");
+        const activePlayers = normalizePlayers(
+          data.activeUsers?.activePlayersDetails || [],
+          "coins"
+        );
+        const inactivePlayers = normalizePlayers(
+          data.inactiveUsers?.inActivePlayersDetails || [],
+          "chips"
+        );
+        const suspendedPlayers = normalizePlayers(
+          data.suspendedUsers?.suspendedPlayerDetails || [],
+          "chips"
+        );
 
-          const filteredInactivePlayers = inactivePlayers.filter(
-            (player) => !activePlayers.some((activePlayer) => activePlayer.playerId === player._id)
-          );
-    
-          const filteredSuspendedPlayers = suspendedPlayers.filter(
-            (player) => !activePlayers.some((activePlayer) => activePlayer.playerId === player._id)
-          );
+        const filteredInactivePlayers = inactivePlayers.filter(
+          (player) =>
+            !activePlayers.some(
+              (activePlayer) => activePlayer.playerId === player._id
+            )
+        );
 
-          setDashboardData({
-            activeUsers: data.activeUsers?.totalActiveCount || 0,
-            inactiveUsers: data.inactiveUsers?.totalInactiveCount || 0,
-            suspendedUsers: data.suspendedUsers?.suspendedUsersCount || 0,
-            activePlayersDetails: activePlayers,
-            inactivePlayersDetails: filteredInactivePlayers,
-            suspendedPlayersDetails: filteredSuspendedPlayers,
-          });
+        const filteredSuspendedPlayers = suspendedPlayers.filter(
+          (player) =>
+            !activePlayers.some(
+              (activePlayer) => activePlayer.playerId === player._id
+            )
+        );
+
+        setDashboardData({
+          activeUsers: data.activeUsers?.totalActiveCount || 0,
+          inactiveUsers: data.inactiveUsers?.totalInactiveCount || 0,
+          suspendedUsers: data.suspendedUsers?.suspendedUsersCount || 0,
+          activePlayersDetails: activePlayers,
+          inactivePlayersDetails: filteredInactivePlayers,
+          suspendedPlayersDetails: filteredSuspendedPlayers,
+        });
       } catch (err) {
         console.error("Error fetching dashboard data:", err.message);
       } finally {
@@ -125,8 +140,12 @@ const SubADashboard = ({onUserClick}) => {
           ) : (
             playersDetails.map((player) => (
               <tr key={player._id}>
-                <td className="border border-gray-300 px-4 py-2">{player.name}</td>
-                <td className="border border-gray-300 px-4 py-2">{player.chips}</td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {player.name}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {player.chips}
+                </td>
                 {/* <td className="border border-gray-300 px-4 py-2">
                   <button onClick={() => handleViewButtonClick(player)}>
                     View
@@ -152,15 +171,12 @@ const SubADashboard = ({onUserClick}) => {
     <div className="dashboard-container">
       <h1 className="dashboard-title">Dashboard</h1>
       <div className="card-container">
-        <div
-          className="card blue"
-          onClick={() => handleCardClick("active")}
-        >
-          <div className="card-icon">
-            <i className="fas fa-user"></i>
-          </div>
+        <div className="card blue" onClick={() => handleCardClick("active")}>
           <div className="card-content">
-            <h2>{dashboardData.activeUsers}</h2>
+            <div className="icon-number-row">
+              <i className="fas fa-user"></i>
+              <h2>{dashboardData.activeUsers}</h2>
+            </div>
             <p>Active Players</p>
           </div>
         </div>
@@ -169,31 +185,27 @@ const SubADashboard = ({onUserClick}) => {
           className="card orange"
           onClick={() => handleCardClick("inactive")}
         >
-          <div className="card-icon">
-            <i className="fas fa-user-times"></i>
-          </div>
           <div className="card-content">
-            <h2>{dashboardData.inactiveUsers}</h2>
+            <div className="icon-number-row">
+              <i className="fas fa-user-times"></i>
+              <h2>{dashboardData.inactiveUsers}</h2>
+            </div>
             <p>Inactive Players</p>
           </div>
         </div>
 
-        <div
-          className="card red"
-          onClick={() => handleCardClick("suspended")}
-        >
-          <div className="card-icon">
-            <i className="fas fa-user-times"></i>
-          </div>
+        <div className="card red" onClick={() => handleCardClick("suspended")}>
           <div className="card-content">
-            <h2>{dashboardData.suspendedUsers}</h2>
+            <div className="icon-number-row">
+              <i className="fas fa-user-times"></i>
+              <h2>{dashboardData.suspendedUsers}</h2>
+            </div>
             <p>Suspended Players</p>
           </div>
         </div>
       </div>
 
-      <div className="online-users-section">
-      </div>
+      <div className="online-users-section"></div>
 
       {selectedCard === "active" && (
         <div className="details-table">
