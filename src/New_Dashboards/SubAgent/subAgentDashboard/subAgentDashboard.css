@@ -19,7 +19,7 @@
 
 .card-container {
   display: flex;
-  flex-direction: column; /* Stacks cards vertically (mobile view default) */
+  flex-direction: row; /* Stacks cards vertically (mobile view default) */
   gap: 20px;
   width: 100%; /* Ensure the container doesn't exceed the parent width */
   box-sizing: border-box; /* Include padding and border in width calculations */
@@ -33,7 +33,7 @@
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
-  width: 100%; /* Ensure the card fits inside the container */
+  width: 25%; /* Ensure the card fits inside the container */
 }
 
 .card.blue {
