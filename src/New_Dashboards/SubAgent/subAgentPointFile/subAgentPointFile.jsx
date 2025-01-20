@@ -7,11 +7,14 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 const SubAReportpointfile = () => {
-  const [receiveBy, setReceiveBy] = useState("");
-  const [sentBy, setSentBy] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [dateRange, setDateRange] = useState("Select");
+  const [filters, setFilters] = useState({
+    receiveBy: "",
+    sentBy: "",
+    startDate: "",
+    endDate: "",
+    dateRange: "Select",
+  });
+
   const [filteredData, setFilteredData] = useState(data);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [columns, setColumns] = useState([]);
@@ -116,79 +119,92 @@ const SubAReportpointfile = () => {
     }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  // Handle filter change and date range calculations
+  const handleDateRangeChange = (range) => {
+    const today = new Date();
+    let startDate = new Date();
+    let endDate = new Date();
 
-    let filtered = backendData; // Start with all backend data
+    switch (range) {
+      case "Today":
+        startDate = new Date(today.setHours(0, 0, 0, 0));
+        endDate = new Date(today.setHours(23, 59, 59, 999));
+        break;
+      case "Yesterday":
+        startDate = new Date(today.setDate(today.getDate() - 1));
+        endDate = new Date(today.setDate(today.getDate()));
+        break;
+      case "Last 7 Days":
+        startDate = new Date(today.setDate(today.getDate() - 7));
+        break;
+      case "Last 30 Days":
+        startDate = new Date(today.setDate(today.getDate() - 30));
+        break;
+      default:
+        startDate = "";
+        endDate = "";
+        break;
+    }
 
-    // Filter by "Receive By"
+    setFilters((prev) => ({
+      ...prev,
+      startDate: startDate ? startDate.toISOString().split("T")[0] : "",
+      endDate: endDate ? endDate.toISOString().split("T")[0] : "",
+      dateRange: range,
+    }));
+  };
+
+  const handleManualDateChange = (e, field) => {
+    setFilters((prev) => ({
+      ...prev,
+      [field]: e.target.value,
+      dateRange: "Select", // Reset range if manual dates are entered
+    }));
+  };
+
+  const handleSubmit = () => {
+    const { receiveBy, sentBy, startDate, endDate } = filters;
+
+    let filtered = backendData;
+
+    // Filter by Receive By
     if (receiveBy) {
       filtered = filtered.filter((entry) =>
         entry.receiver.toLowerCase().includes(receiveBy.toLowerCase())
       );
     }
 
-    // Filter by "Sent By"
+    // Filter by Sent By
     if (sentBy) {
       filtered = filtered.filter((entry) =>
         entry.sender.toLowerCase().includes(sentBy.toLowerCase())
       );
     }
 
-    // Filter by "Start Date" and "End Date"
+    // Filter by Date Range
     if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
       filtered = filtered.filter((entry) => {
-        const entryDate = new Date(entry.date); // Convert entry date to Date object
-        return (
-          entryDate >= new Date(startDate) && entryDate <= new Date(endDate)
-        );
+        const entryDate = new Date(entry.createdAt);
+        return entryDate >= start && entryDate <= end;
       });
     }
 
-    // Filter by "Date Range"
-    const today = new Date();
-    if (dateRange !== "Select") {
-      filtered = filtered.filter((entry) => {
-        const entryDate = new Date(entry.date);
-
-        if (dateRange === "Today") {
-          return entryDate.toDateString() === today.toDateString(); // Same day
-        }
-
-        if (dateRange === "Yesterday") {
-          const yesterday = new Date(today);
-          yesterday.setDate(today.getDate() - 1);
-          return entryDate.toDateString() === yesterday.toDateString(); // Same day as yesterday
-        }
-
-        if (dateRange === "Last 7 Days") {
-          const last7Days = new Date(today);
-          last7Days.setDate(today.getDate() - 7);
-          return entryDate >= last7Days && entryDate <= today;
-        }
-
-        if (dateRange === "Last 30 Days") {
-          const last30Days = new Date(today);
-          last30Days.setDate(today.getDate() - 30);
-          return entryDate >= last30Days && entryDate <= today;
-        }
-
-        return true; // Default
-      });
-    }
-
-    // Update filtered data state
     setFilteredData(filtered);
-    setShowTable(true); // Show the table
+    setShowTable(filtered.length > 0);
   };
 
   const handleClear = () => {
-    setReceiveBy("");
-    setSentBy("");
-    setStartDate("");
-    setEndDate("");
-    setDateRange("Select");
-    setFilteredData(backendData); // Reset to all backend data
+    setFilters({
+      receiveBy: "",
+      sentBy: "",
+      startDate: "",
+      endDate: "",
+      dateRange: "Select",
+    });
+    setFilteredData(backendData); // Reset to all data
     setShowTable(false);
   };
 
@@ -213,8 +229,10 @@ const SubAReportpointfile = () => {
                   <label className="block mb-2">Receive By:</label>
                   <input
                     type="text"
-                    value={receiveBy}
-                    onChange={(e) => setReceiveBy(e.target.value)}
+                    value={filters.receiveBy}
+                    onChange={(e) =>
+                      setFilters({ ...filters, receiveBy: e.target.value })
+                    }
                     className="w-full p-3 border border-gray-300 rounded-lg"
                   />
                 </div>
@@ -223,8 +241,10 @@ const SubAReportpointfile = () => {
                   <label className="block mb-2">Sent By:</label>
                   <input
                     type="text"
-                    value={sentBy}
-                    onChange={(e) => setSentBy(e.target.value)}
+                    value={filters.sentBy}
+                    onChange={(e) =>
+                      setFilters({ ...filters, sentBy: e.target.value })
+                    }
                     className="w-full p-3 border border-gray-300 rounded-lg"
                   />
                 </div>
@@ -236,8 +256,8 @@ const SubAReportpointfile = () => {
                   <label className="block mb-2">Start Date:</label>
                   <input
                     type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
+                    value={filters.startDate}
+                    onChange={(e) => handleManualDateChange(e, "startDate")}
                     className="w-full p-3 border border-gray-300 rounded-lg"
                   />
                 </div>
@@ -246,8 +266,8 @@ const SubAReportpointfile = () => {
                   <label className="block mb-2">End Date:</label>
                   <input
                     type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
+                    value={filters.endDate}
+                    onChange={(e) => handleManualDateChange(e, "endDate")}
                     className="w-full p-3 border border-gray-300 rounded-lg"
                   />
                 </div>
@@ -255,8 +275,8 @@ const SubAReportpointfile = () => {
                 <div className="flex-1">
                   <label className="block mb-2">Date Range:</label>
                   <select
-                    value={dateRange}
-                    onChange={(e) => setDateRange(e.target.value)}
+                    value={filters.dateRange}
+                    onChange={(e) => handleDateRangeChange(e.target.value)}
                     className="w-full p-3 border border-gray-300 rounded-lg"
                   >
                     <option value="Select">Select</option>
@@ -274,15 +294,17 @@ const SubAReportpointfile = () => {
                 <div className="flex gap-4">
                   <button
                     type="submit"
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-600"
+                    className="bg-blue-500 text-white p-2 md:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-20 md:w-auto"
                     onClick={handleSubmit}
+                    style={{ width: "150px" }}
                   >
                     Submit
                   </button>
                   <button
                     type="button"
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-600"
+                    className="bg-blue-500 text-white p-2 md:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-20 md:w-auto"
                     onClick={handleClear}
+                    style={{ width: "150px" }}
                   >
                     Clear
                   </button>
@@ -291,7 +313,7 @@ const SubAReportpointfile = () => {
             </form>
           </div>
 
-          {/* {showTable && (
+          {showTable && (
             <div className="overflow-x-auto mt-6">
               <FormTable
                 data={filteredData}
@@ -300,7 +322,7 @@ const SubAReportpointfile = () => {
                 showTotalInOut={true}
               />
             </div>
-          )} */}
+          )}
           {/* Backend Data Table */}
           {loading ? (
             <p>Loading backend data...</p>
