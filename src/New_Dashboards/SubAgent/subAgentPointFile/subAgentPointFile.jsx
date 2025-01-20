@@ -127,22 +127,24 @@ const SubAReportpointfile = () => {
 
     switch (range) {
       case "Today":
-        startDate = new Date(today.setHours(0, 0, 0, 0));
-        endDate = new Date(today.setHours(23, 59, 59, 999));
+        startDate.setDate(today.getDate());
+        endDate.setHours(23, 59, 59, 999);
         break;
       case "Yesterday":
-        startDate = new Date(today.setDate(today.getDate() - 1));
-        endDate = new Date(today.setDate(today.getDate()));
+        startDate.setDate(today.getDate() - 1);
+        endDate.setDate(today.getDate() - 1);
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(23, 59, 59, 999);
         break;
       case "Last 7 Days":
-        startDate = new Date(today.setDate(today.getDate() - 7));
+        startDate.setDate(today.getDate() - 7);
+        startDate.setHours(0, 0, 0, 0);
         break;
       case "Last 30 Days":
-        startDate = new Date(today.setDate(today.getDate() - 30));
+        startDate.setDate(today.getDate() - 30);
+        startDate.setHours(0, 0, 0, 0);
         break;
       default:
-        startDate = "";
-        endDate = "";
         break;
     }
 
