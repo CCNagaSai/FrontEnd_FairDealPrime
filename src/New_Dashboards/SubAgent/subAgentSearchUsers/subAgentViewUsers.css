@@ -58,3 +58,68 @@
     margin-top: 10px;
   }
   
+/* Base Table Styles */
+.user-table th,
+.user-table td {
+  text-align: center;
+  padding: 0.5rem;
+  word-wrap: break-word;
+  font-size: 0.9rem;
+}
+
+.user-table th {
+  background-color: #3b82f6; /* Blue color for header */
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.user-table tr:hover {
+  background-color: #f9fafb; /* Light gray background on hover */
+}
+
+/* Optional custom scrollbar styling */
+.table-container::-webkit-scrollbar {
+  height: 8px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #3490dc; /* Blue thumb */
+  border-radius: 4px;
+}
+.table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #2779bd; /* Darker blue on hover */
+}
+
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .user-table th,
+  .user-table td {
+    padding: 0.4rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .user-table th,
+  .user-table td {
+    padding: 0.3rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .user-table th,
+  .user-table td {
+    padding: 0.2rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 376px) {
+  .user-table th,
+  .user-table td {
+    padding: 0.1rem;
+    font-size: 0.25rem;
+  }
+}

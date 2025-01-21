@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import SubAgentBalanceAdjust from "../subAgentBalanceAdjustment/subAgentBalanceAdjust";
-
+import "./subAgentViewUsers.css";
 const cookies = new Cookies();
+import "./subAgentViewUsers.css";
 
 const SubAUsersList = ({ onUserClick }) => {
   const navigate = useNavigate();
@@ -198,7 +199,7 @@ const SubAUsersList = ({ onUserClick }) => {
           className="flex flex-col items-center"
           onSubmit={(e) => e.preventDefault()}
         >
-          <div className="flex flex-row justify-between space-x-4 mb-5 w-full">
+          <div className="flex flex-row justify-between space-x-4 mb-1 w-full">
             {/* Username Filter */}
             <div className="flex-1 mb-4">
               <label className="block mb-2">Username:</label>
@@ -215,7 +216,7 @@ const SubAUsersList = ({ onUserClick }) => {
             </div>
 
             {/* Status Filter */}
-            <div className="flex-1 mb-4">
+            <div className="flex-1 mb-1">
               <label className="block mb-2">Status:</label>
               <select
                 value={filters.status}
@@ -261,33 +262,33 @@ const SubAUsersList = ({ onUserClick }) => {
             {data.reduce((sum, item) => sum + item.chips, 0)})
           </span>
         </div>
-
-        <div className="overflow-x-auto">
-          <table className="user-table w-full border-collapse text-sm sm:text-base">
+        {/* Add scrolling behavior below 375px */}
+        <div className="table-container overflow-x-auto sm:overflow-visible">
+          <table className="user-table w-full border-collapse text-xs sm:text-sm lg:text-base">
             <thead>
               <tr>
                 <th
                   onClick={() => handleSort("name")}
-                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-700"
+                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-700 text-center"
                 >
                   Player
                 </th>
                 <th
                   onClick={() => handleSort("chips")}
-                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-700"
+                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-700 text-center"
                 >
                   Points
                 </th>
                 <th
                   onClick={() => handleSort("lastLoginDate")}
-                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-700"
+                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-700 text-center"
                 >
                   Last Login
                 </th>
-                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
+                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white text-center">
                   Status
                 </th>
-                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
+                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white text-center">
                   Action
                 </th>
               </tr>
@@ -297,19 +298,21 @@ const SubAUsersList = ({ onUserClick }) => {
                 <tr key={index} className="hover:bg-gray-100">
                   <td
                     onClick={() => handleUserClick(row)}
-                    className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline"
+                    className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline text-center"
                   >
                     {row.name || "N/A"}
                   </td>
-                  <td className="px-2 sm:px-4 py-2">{row.chips || 0}</td>
-                  <td className="px-2 sm:px-4 py-2">
+                  <td className="px-2 sm:px-4 py-2 text-center">
+                    {row.chips || 0}
+                  </td>
+                  <td className="px-2 sm:px-4 py-2 text-center">
                     {row.lastLoginDate || "N/A"}
                   </td>
-                  <td className=" px-2 sm:px-4 py-2 ">
+                  <td className="px-2 sm:px-4 py-2 text-center">
                     {row.status ? "Active" : "Inactive"}
                   </td>
                   <td
-                    className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline"
+                    className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline text-center"
                     onClick={() => handleTransferPointsClick("User", row._id)}
                   >
                     TRANSFER POINTS
@@ -340,6 +343,7 @@ const SubAUsersList = ({ onUserClick }) => {
           Next
         </button>
       </div>
+
       {isModalOpen && (
         <div style={modalOverlayStyle}>
           <div style={modalContentStyle}>

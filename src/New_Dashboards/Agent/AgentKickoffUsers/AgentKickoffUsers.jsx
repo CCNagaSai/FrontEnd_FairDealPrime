@@ -13,7 +13,7 @@ const AKickoffUsers = ({ onUserClick }) => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [originalData, setOriginalData] = useState([]);
-  const [filters, setFilters] = useState({ username: ""});
+  const [filters, setFilters] = useState({ username: "" });
 
   const idRef = useRef(null);
   const typeRef = useRef(null);
@@ -111,8 +111,6 @@ const AKickoffUsers = ({ onUserClick }) => {
     setData(filteredData);
   };
 
-
-
   // Pagination
   const itemsPerPage = 5;
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -127,7 +125,7 @@ const AKickoffUsers = ({ onUserClick }) => {
     currentPage < totalPages && setCurrentPage((p) => p + 1);
 
   const handleClear = () => {
-    setFilters({ username: ""});
+    setFilters({ username: "" });
     setCurrentPage(1);
     setData(originalData);
   };
@@ -146,9 +144,9 @@ const AKickoffUsers = ({ onUserClick }) => {
           className="flex flex-col items-center"
           onSubmit={(e) => e.preventDefault()}
         >
-          <div className="flex flex-row justify-between space-x-4 mb-5 w-full">
+          <div className="flex flex-row justify-between space-x-4 mb-4 w-full">
             {/* Username Filter */}
-            <div className="flex-1 mb-4">
+            <div className="flex-1">
               <label className="block mb-2">Username:</label>
               <input
                 type="text"

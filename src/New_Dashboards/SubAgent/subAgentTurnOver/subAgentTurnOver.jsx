@@ -287,14 +287,14 @@ const SubATurnover = () => {
           </h2>
 
           {/* Filter Form */}
-          <div className="bg-[#e6ebff] p-5 rounded-lg shadow-lg m-1 sm:m-3">
+          <div className="bg-[#e6ebff] p-4 rounded-lg shadow-lg m-1 sm:m-3">
             <form
               className="flex flex-col items-center"
               onSubmit={(e) => e.preventDefault()}
             >
               {/* Row 1: Username (Desktop: Full row, Mobile: Shared with Start Date) */}
               <div className="w-full flex flex-wrap gap-4 mb-5">
-                <div className="flex-1 min-w-[140px] sm:w-full">
+                <div className="flex-1 min-w-[50px] sm:w-full">
                   <label className="block mb-2">Username:</label>
                   <input
                     type="text"
@@ -307,7 +307,7 @@ const SubATurnover = () => {
                   />
                 </div>
 
-                <div className="flex-1 min-w-[140px] sm:w-full sm:hidden">
+                <div className="flex-1 min-w-[50px] sm:w-full sm:hidden">
                   <label className="block mb-2">Start Date:</label>
                   <input
                     type="date"
@@ -321,7 +321,7 @@ const SubATurnover = () => {
               {/* Row 2: Start Date, End Date, and Date Range */}
               <div className="w-full flex flex-wrap gap-4 mb-5">
                 {/* Start Date: Shown here for Desktop */}
-                <div className="flex-1 min-w-[140px] hidden sm:block">
+                <div className="flex-1 min-w-[50px] hidden sm:block">
                   <label className="block mb-2">Start Date:</label>
                   <input
                     type="date"
@@ -332,7 +332,7 @@ const SubATurnover = () => {
                 </div>
 
                 {/* End Date */}
-                <div className="flex-1 min-w-[140px]">
+                <div className="flex-1 min-w-[50px]">
                   <label className="block mb-2">End Date:</label>
                   <input
                     type="date"
@@ -343,7 +343,7 @@ const SubATurnover = () => {
                 </div>
 
                 {/* Date Range */}
-                <div className="flex-1 min-w-[140px]">
+                <div className="flex-1 min-w-[50px]">
                   <label className="block mb-2">Date Range:</label>
                   <select
                     value={dateRange}
@@ -360,22 +360,20 @@ const SubATurnover = () => {
                 </div>
               </div>
 
-              {/* Submit and Clear Buttons */}
+              {/* Submit and Clear buttons */}
               <div className="flex justify-center w-full">
                 <div className="flex gap-4">
                   <button
                     type="button"
                     onClick={handleFilterChange}
-                    className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
-                    style={{ width: "150px" }}
+                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-auto"
                   >
                     Apply Filters
                   </button>
                   <button
                     type="button"
                     onClick={handleClear}
-                    className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
-                    style={{ width: "150px" }}
+                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-auto"
                   >
                     Clear Filters
                   </button>
@@ -383,48 +381,52 @@ const SubATurnover = () => {
               </div>
             </form>
           </div>
-
           {/* Show selected filters after submit */}
           {isSubmitted && (
-          <div className="bg-[#e6ebff] p-2 flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 mt-2 rounded-md m-2 text-sm sm:text-base">
-            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
-              <strong>Start Date:</strong> {filters.startDate || "Not Selected"}
-            </span>
-            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
-            <strong>End Date:</strong> {filters.endDate || "Not Selected"}
-            </span>
-            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
-            <strong>Total Play Points:</strong>{" "}
-              {filteredData.reduce((sum, item) => sum + item.play, 0).toFixed(2)}
-            </span>
-            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
-            <strong>Total Won Points:</strong>{" "}
-              {filteredData.reduce((sum, item) => sum + item.won, 0).toFixed(2)}
-            </span>
-            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
-            <strong>Total End Points:</strong>{" "}
-              {filteredData
-                .reduce((sum, item) => sum + (item.play - item.won), 0)
-                .toFixed(2)}
-            </span>
-            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
-            <strong>Total Margin:</strong>{" "}
-              {filteredData
-                .reduce((sum, item) => sum + (2.5 / 100) * item.play, 0)
-                .toFixed(2)}
-            </span>
-            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
-              <strong>Total Net:</strong>{" "}
-              {filteredData
-                .reduce(
-                  (sum, item) =>
-                    sum + (item.play - item.won - (2.5 / 100) * item.play),
-                  0
-                )
-                .toFixed(2)}
-            </span>
-          </div>
-        )}
+            <div className="bg-[#e6ebff] p-2 flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 mt-2 rounded-md m-2 text-sm sm:text-base">
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Start Date:</strong>{" "}
+                {filters.startDate || "Not Selected"}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>End Date:</strong> {filters.endDate || "Not Selected"}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Total Play Points:</strong>{" "}
+                {filteredData
+                  .reduce((sum, item) => sum + item.play, 0)
+                  .toFixed(2)}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Total Won Points:</strong>{" "}
+                {filteredData
+                  .reduce((sum, item) => sum + item.won, 0)
+                  .toFixed(2)}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Total End Points:</strong>{" "}
+                {filteredData
+                  .reduce((sum, item) => sum + (item.play - item.won), 0)
+                  .toFixed(2)}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Total Margin:</strong>{" "}
+                {filteredData
+                  .reduce((sum, item) => sum + (2.5 / 100) * item.play, 0)
+                  .toFixed(2)}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Total Net:</strong>{" "}
+                {filteredData
+                  .reduce(
+                    (sum, item) =>
+                      sum + (item.play - item.won - (2.5 / 100) * item.play),
+                    0
+                  )
+                  .toFixed(2)}
+              </span>
+            </div>
+          )}
 
           {/* Display Message if No Results */}
           {noResults && <p>No records found based on the selected filters.</p>}

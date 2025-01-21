@@ -13,7 +13,7 @@ const SubAKickoffUsers = ({ onUserClick }) => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [originalData, setOriginalData] = useState([]);
-  const [filters, setFilters] = useState({ username: ""});
+  const [filters, setFilters] = useState({ username: "" });
 
   const idRef = useRef(null);
   const typeRef = useRef(null);
@@ -112,7 +112,7 @@ const SubAKickoffUsers = ({ onUserClick }) => {
   };
 
   const handleClear = () => {
-    setFilters({ username: ""});
+    setFilters({ username: "" });
     setCurrentPage(1);
     setData(originalData);
   };
@@ -144,7 +144,7 @@ const SubAKickoffUsers = ({ onUserClick }) => {
           className="flex flex-col items-center"
           onSubmit={(e) => e.preventDefault()}
         >
-          <div className="flex flex-row justify-center text-center space-x-4 mb-5 w-full">
+          <div className="flex flex-row justify-center text-center space-x-4 mb-1 w-full">
             {/* Username Filter */}
             <div className="flex-1 mb-4 text-center">
               <label className="block mb-2">Username:</label>
@@ -152,8 +152,8 @@ const SubAKickoffUsers = ({ onUserClick }) => {
                 type="text"
                 value={filters.username}
                 onChange={(e) => {
-                setFilters({ ...filters, username: e.target.value });
-                handleFilterChange(); // Trigger filter on change
+                  setFilters({ ...filters, username: e.target.value });
+                  handleFilterChange(); // Trigger filter on change
                 }}
                 className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg text-center"
                 placeholder="Enter username"

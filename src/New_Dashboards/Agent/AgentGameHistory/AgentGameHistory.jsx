@@ -193,7 +193,9 @@ const AGameHistory = () => {
                 (entry) => entry.history || []
               );
 
-              flattenedHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+              flattenedHistory.sort(
+                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+              );
 
               console.log("history", flattenedHistory);
               setBackendData(flattenedHistory);
@@ -249,7 +251,7 @@ const AGameHistory = () => {
               {/* First Row (Tablet/Mobile: Username + Start Date, Desktop: Only Username) */}
               <div className="w-full flex flex-wrap gap-4 mb-5">
                 {/* Username */}
-                <div className="flex-1 min-w-[140px]">
+                <div className="flex-1 min-w-[50px]">
                   <label className="block mb-2">Username:</label>
                   <input
                     type="text"
@@ -263,7 +265,7 @@ const AGameHistory = () => {
                 </div>
 
                 {/* Start Date (Visible in Tablet/Mobile) */}
-                <div className="flex-1 min-w-[140px] md:hidden">
+                <div className="flex-1 min-w-[50px] md:hidden">
                   <label className="block mb-2">Start Date:</label>
                   <input
                     type="date"
@@ -277,7 +279,7 @@ const AGameHistory = () => {
               {/* Second Row (Tablet/Mobile: End Date + Date Range, Desktop: Start Date, End Date, Date Range) */}
               <div className="w-full flex flex-wrap gap-4 mb-5">
                 {/* Start Date (Visible only in Desktop) */}
-                <div className="flex-1 min-w-[140px] hidden md:block">
+                <div className="flex-1 min-w-[50px] hidden md:block">
                   <label className="block mb-2">Start Date:</label>
                   <input
                     type="date"
@@ -288,7 +290,7 @@ const AGameHistory = () => {
                 </div>
 
                 {/* End Date */}
-                <div className="flex-1 min-w-[140px]">
+                <div className="flex-1 min-w-[50px]">
                   <label className="block mb-2">End Date:</label>
                   <input
                     type="date"
@@ -299,7 +301,7 @@ const AGameHistory = () => {
                 </div>
 
                 {/* Date Range */}
-                <div className="flex-1 min-w-[140px]">
+                <div className="flex-1 min-w-[50px]">
                   <label className="block mb-2">Date Range:</label>
                   <select
                     value={dateRange}
@@ -315,23 +317,20 @@ const AGameHistory = () => {
                   </select>
                 </div>
               </div>
-
               {/* Submit and Clear buttons */}
               <div className="flex justify-center w-full">
                 <div className="flex gap-4">
                   <button
                     type="button"
                     onClick={handleFilterChange}
-                    className="bg-blue-500 text-white p-2 md:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-20 md:w-auto"
-                    style={{ width: "150px" }}
+                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-auto"
                   >
                     Apply Filters
                   </button>
                   <button
                     type="button"
                     onClick={handleClear}
-                    className="bg-blue-500 text-white p-2 md:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-20 md:w-auto"
-                    style={{ width: "150px" }}
+                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-auto"
                   >
                     Clear Filters
                   </button>
