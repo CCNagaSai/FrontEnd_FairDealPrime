@@ -299,7 +299,7 @@ const SubAReportpointfile = () => {
                     type="submit"
                     className="bg-blue-500 text-white p-2 md:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-20 md:w-auto"
                     onClick={handleSubmit}
-                    style={{ width: "150px" }}
+                    style={{ width: "110px" }}
                   >
                     Submit
                   </button>
@@ -307,7 +307,7 @@ const SubAReportpointfile = () => {
                     type="button"
                     className="bg-blue-500 text-white p-2 md:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-20 md:w-auto"
                     onClick={handleClear}
-                    style={{ width: "150px" }}
+                    style={{ width: "110px" }}
                   >
                     Clear
                   </button>

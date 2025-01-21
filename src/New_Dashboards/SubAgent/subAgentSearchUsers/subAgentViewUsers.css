@@ -57,4 +57,29 @@
     cursor: pointer;
     margin-top: 10px;
   }
-  
+  /* @media (max-width: 450px) {
+    .user-table th,
+    .user-table td {
+      font-size: 7px;
+    }
+  } */
+  @media (max-width: 320px) {
+    .user-table th, .user-table td {
+        font-size: 6px;
+    }
+}
+@media screen and (min-width: 321px) and (max-width: 376px){
+  .user-table th, .user-table td {
+      font-size: 8px;
+  }
+}
+@media screen and (min-width: 376px) and (max-width: 450px){
+  .user-table th, .user-table td {
+      font-size: 9px;
+  }
+}
+@media screen and (min-width: 450px) and (max-width: 768px){
+  .user-table th, .user-table td {
+      font-size: 10px;
+  }
+}

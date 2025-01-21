@@ -93,9 +93,14 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    width: 150px;
   }
   
-  
+  @media (max-width: 420px){
+    button{width: 110px;
+
+    }
+  }
   
   /* Mobile (Responsive) styles */
   @media (max-width: 768px) {

@@ -238,14 +238,14 @@ const SubAUsersList = ({ onUserClick }) => {
               <button
                 type="button"
                 onClick={handleFilterChange}
-                className="bg-blue-500 text-white p-2 sm:p-3 rounded-lg font-bold hover:bg-blue-600"
+                className="bg-blue-500 text-sm text-white p-2 sm:p-3 rounded-lg font-bold hover:bg-blue-600"
               >
                 Apply Filters
               </button>
               <button
                 type="button"
                 onClick={handleClear}
-                className="bg-blue-500 text-white p-2 sm:p-3 rounded-lg font-bold hover:bg-blue-600"
+                className="bg-blue-500 text-sm text-white p-2 sm:p-3 rounded-lg font-bold hover:bg-blue-600"
               >
                 Clear Filters
               </button>
