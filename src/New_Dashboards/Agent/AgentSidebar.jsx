@@ -18,59 +18,130 @@ function Sidebar() {
               Home
             </strong>
             <ul className="list-none p-0 m-0 mt-1">
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agentdashboard">Agent Dashboard</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agentdashboard"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Agent Dashboard
+                </Link>
               </li>
             </ul>
           </li>
           <li className="mb-1">
-            <strong className="text-lg text-blue-800 ml-2 cursor-default">User Management</strong>
+            <strong className="text-lg text-blue-800 ml-2 cursor-default">
+              User Management
+            </strong>
             <ul className="list-none p-0 m-0 mt-1">
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/search-users">Search Users</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/search-users"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Search Users
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/search-sub-agents">Search Sub Agents</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/search-sub-agents"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Search Sub Agents
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/balance-adjustment">Balance Adjustment</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/balance-adjustment"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Balance Adjustment
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/kickoff-users">Kickoff Users</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/kickoff-users"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Kickoff Users
+                </Link>
               </li>
             </ul>
           </li>
           <li className="mb-1">
-            <strong className="text-lg text-blue-800 ml-2 cursor-default">Agent Management</strong>
+            <strong className="text-lg text-blue-800 ml-2 cursor-default">
+              Agent Management
+            </strong>
             <ul className="list-none p-0 m-0 mt-1">
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/create-user">Create User</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/create-user"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Create User
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/create-sub-agent">Create Sub Agent</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/create-sub-agent"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Create Sub Agent
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/change-password">Change Password</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/change-password"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Change Password
+                </Link>
               </li>
             </ul>
           </li>
           <li className="mb-1">
-            <strong className="text-lg text-blue-800 ml-2 cursor-default">Reports</strong>
+            <strong className="text-lg text-blue-800 ml-2 cursor-default">
+              Reports
+            </strong>
             <ul className="list-none p-0 m-0 mt-1">
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/pointfile">Point File</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/pointfile"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Point File
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/inpoint">In Points</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/inpoint"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  In Points
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/outpoint">Out Points</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/outpoint"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Out Points
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/gamehistory">Game History</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/gamehistory"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Game History
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/Turn-over">Turn Over</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/Turn-over"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Turn Over
+                </Link>
               </li>
             </ul>
           </li>
@@ -119,59 +190,130 @@ function Sidebar() {
               Home
             </strong>
             <ul className="list-none p-0 m-0 mt-1">
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agentdashboard">Agent Dashboard</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agentdashboard"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Agent Dashboard
+                </Link>
               </li>
             </ul>
           </li>
           <li className="mb-1">
-            <strong className="text-lg text-blue-800 ml-2 cursor-default">User Management</strong>
+            <strong className="text-lg text-blue-800 ml-2 cursor-default">
+              User Management
+            </strong>
             <ul className="list-none p-0 m-0 mt-1">
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/search-users">Search Users</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/search-users"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Search Users
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/search-sub-agents">Search Sub Agents</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/search-sub-agents"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Search Sub Agents
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/balance-adjustment">Balance Adjustment</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/balance-adjustment"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Balance Adjustment
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/kickoff-users">Kickoff Users</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/kickoff-users"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Kickoff Users
+                </Link>
               </li>
             </ul>
           </li>
           <li className="mb-1">
-            <strong className="text-lg text-blue-800 ml-2 cursor-default">Agent Management</strong>
+            <strong className="text-lg text-blue-800 ml-2 cursor-default">
+              Agent Management
+            </strong>
             <ul className="list-none p-0 m-0 mt-1">
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/create-user">Create User</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/create-user"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Create User
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/create-sub-agent">Create Sub Agent</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/create-sub-agent"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Create Sub Agent
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/change-password">Change Password</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/change-password"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Change Password
+                </Link>
               </li>
             </ul>
           </li>
           <li className="mb-1">
-            <strong className="text-lg text-blue-800 ml-2 cursor-default">Reports</strong>
+            <strong className="text-lg text-blue-800 ml-2 cursor-default">
+              Reports
+            </strong>
             <ul className="list-none p-0 m-0 mt-1">
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/pointfile">Point File</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/pointfile"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Point File
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/inpoint">In Points</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/inpoint"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  In Points
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/outpoint">Out Points</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/outpoint"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Out Points
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/gamehistory">Game History</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/gamehistory"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Game History
+                </Link>
               </li>
-              <li className="mb-1 cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500">
-                <Link to="/agent/Turn-over">Turn Over</Link>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/Turn-over"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Turn Over
+                </Link>
               </li>
             </ul>
           </li>

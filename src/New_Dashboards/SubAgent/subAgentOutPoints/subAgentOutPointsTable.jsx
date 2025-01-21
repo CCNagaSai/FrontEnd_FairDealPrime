@@ -26,6 +26,7 @@ const SubAgentOutPointTable = ({ backendData }) => {
   
 
   return (
+    <div>
     <div className="overflow-x-auto mt-6">
       <table className="table-auto border-collapse border border-gray-300 w-full text-sm sm:text-base">
         <thead>
@@ -89,26 +90,27 @@ const SubAgentOutPointTable = ({ backendData }) => {
             })}
         </tbody>
       </table>
-      {/* Pagination Controls */}
-      <div className="pagination mt-4 flex justify-center items-center gap-4">
-        <button
-          onClick={handlePrevious}
-          disabled={currentPage === 1}
-          className={`px-4 py-2 rounded-lg ${currentPage === 1 ? 'bg-gray-300' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
-        >
-          Previous
-        </button>
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          onClick={handleNext}
-          disabled={currentPage === totalPages}
-          className={`px-4 py-2 rounded-lg ${currentPage === totalPages ? 'bg-gray-300' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
-        >
-          Next
-        </button>
-      </div>
+    </div>
+    {/* Pagination Controls */}
+    <div className="pagination mt-4 flex justify-center items-center gap-4">
+    <button
+      onClick={handlePrevious}
+      disabled={currentPage === 1}
+      className={`px-4 py-2 rounded-lg ${currentPage === 1 ? 'bg-gray-300' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+    >
+      Previous
+    </button>
+    <span>
+      Page {currentPage} of {totalPages}
+    </span>
+    <button
+      onClick={handleNext}
+      disabled={currentPage === totalPages}
+      className={`px-4 py-2 rounded-lg ${currentPage === totalPages ? 'bg-gray-300' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+    >
+      Next
+    </button>
+  </div>
     </div>
   );
 };

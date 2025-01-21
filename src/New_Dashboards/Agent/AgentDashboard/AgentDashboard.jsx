@@ -160,7 +160,10 @@ const ADashboard = ({onUserClick}) => {
             <i className="fas fa-user"></i>
           </div>
           <div className="card-content">
-            <h2>{dashboardData.activeUsers}</h2>
+            <div className="icon-number-row">
+              <i className="fas fa-user"></i>
+              <h2>{dashboardData.activeUsers}</h2>
+            </div>
             <p>Active Players</p>
           </div>
         </div>
@@ -173,7 +176,10 @@ const ADashboard = ({onUserClick}) => {
             <i className="fas fa-user-times"></i>
           </div>
           <div className="card-content">
-            <h2>{dashboardData.inactiveUsers}</h2>
+            <div className="icon-number-row">
+              <i className="fas fa-user-times"></i>
+              <h2>{dashboardData.inactiveUsers}</h2>
+            </div>
             <p>Inactive Players</p>
           </div>
         </div>
@@ -186,7 +192,10 @@ const ADashboard = ({onUserClick}) => {
             <i className="fas fa-user-times"></i>
           </div>
           <div className="card-content">
-            <h2>{dashboardData.suspendedUsers}</h2>
+            <div className="icon-number-row">
+              <i className="fas fa-user-times"></i>
+              <h2>{dashboardData.suspendedUsers}</h2>
+            </div>
             <p>Suspended Players</p>
           </div>
         </div>

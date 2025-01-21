@@ -6,6 +6,8 @@ import offerContext from '../../context/offerContext';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
 
 function PlayerTab({ gameName }) {
 
@@ -21,18 +23,65 @@ function PlayerTab({ gameName }) {
     setPageSize(item)
     setActive(!active)
   }
+  const [totalDocuments, setTotalDocuments] = useState(0);
+  const [token, setToken] = useState(cookies.get('token'));
   //------------------------------------------------------------------------------------------------------------
 
 
-  let [gameHistoryData, setGameHistoryData] = useState([]);
+  const [gameHistoryData, setGameHistoryData] = useState([]);
 
   const context = useContext(offerContext)
-  const { SoratGameHistory, SpinGameHistory, AndarBaharGameHistory, WheelofFortuneGameHistory, BaraKaDumGameHistory, RouletteGameHistory } = context
+  // const { SoratGameHistory, SpinGameHistory, AndarBaharGameHistory, WheelofFortuneGameHistory, BaraKaDumGameHistory, RouletteGameHistory } = context
+  const { SoratGameHistory, SpinGameHistory, AndarBaharGameHistory, WheelofFortuneGameHistory, BaraKaDumGameHistory } = context
 
+  const RouletteGameHistory = async (page) => {
+    console.log(`Fetching page ${page} with pageSize ${pageSize}`);
+    try {
+        const token = cookies.get('token');
+        if (!token) {
+            console.error("Token is missing.");
+            return [];
+        }
+
+        const response = await fetch(`http://93.127.194.87:9999/admin/userhistory/RouletteGameHistory/?page=${page}&limit=${pageSize}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'token': token,
+            },
+        });
+
+        if (!response.ok) {
+            console.error(`API Error: ${response.status} ${response.statusText}`);
+            return [];
+        }
+
+        const json = await response.json();
+        console.log("json",json)
+
+        if (json.message && (json.message === "jwt expired" || json.message === "Unauthorized access")) {
+            console.warn("Session expired. Logging out.");
+            LogoutClick();
+            return [];
+        }
+
+        return json || [];
+    } catch (error) {
+        console.error("RouletteGameHistory API call failed:", error);
+        return [];
+    }
+};
+
+const [result, setResult] = useState({ totalPages: 1, gameHistoryData: [] });
+const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const submitdata = async () => {
+      setLoading(true);
       setGameHistoryData([])
+
+      let fetchedResult=[];
 
       if (gameName == "Sorat") {
         console.log("Sorat ")
@@ -51,15 +100,21 @@ function PlayerTab({ gameName }) {
         setGameHistoryData(await BaraKaDumGameHistory())
       } else if (gameName == "Roulette") {
         console.log("Roulette ")
-        setGameHistoryData(await RouletteGameHistory())
+        fetchedResult = await RouletteGameHistory(currentPage);
+        setResult(fetchedResult)
+        setGameHistoryData(fetchedResult?.gameHistoryData || [])
       }
+      setLoading(false);
     }
     submitdata()
-  }, [gameName]);
+  }, [gameName, currentPage, pageSize]);
+  console.log("gameHistoryData", gameHistoryData)
+
+  
 
   //--------------------------- Paggeation and No Of Pages ------------------------------------
   // Filter the user data based on date range and search term
-  const filteredUsers = gameHistoryData.filter((user) => {
+  const filteredUsers = gameHistoryData?.filter((user) => {
 
     const registrationDate = new Date(user.createdAt);
     const from = fromDate ? new Date(fromDate) : null;
@@ -68,7 +123,6 @@ function PlayerTab({ gameName }) {
     return (
       (!from || registrationDate >= from) &&
       (!to || registrationDate <= to) &&
-      user.play > 0 &&
       (searchTerm === '' ||
         (user.userId.toLowerCase().includes(searchTerm.toLowerCase())) ||  
         (user.won != undefined && user.won.toString().includes(searchTerm.toLowerCase())) ||
@@ -82,9 +136,12 @@ function PlayerTab({ gameName }) {
   const endIndex = startIndex + pageSize;
 
   // Filter the user data for the current page
-  const usersOnCurrentPage = filteredUsers.slice(startIndex, endIndex);
+  // const usersOnCurrentPage = filteredUsers?.slice(startIndex, endIndex);
+  const usersOnCurrentPage = filteredUsers;
 
-  const totalPages = Math.ceil(filteredUsers.length / pageSize);
+
+  const totalPages = result?.totalPages;
+  console.log("totalPages", totalPages)
 
   const goToPage = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -125,6 +182,7 @@ function PlayerTab({ gameName }) {
 
 
   };
+  console.log("filteredUsers", filteredUsers)
 
   //-----------------------------------------------------------------------------------------------
 
@@ -222,6 +280,9 @@ function PlayerTab({ gameName }) {
       </div>
 
       <div className="table-content w-full overflow-x-auto">
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
         <table style={{ "backgroundColor": backgroundColor }} id="tableId" className="w-full">
           <tbody>
             <tr className="border-b border-bgray-300 dark:border-darkblack-400">
@@ -357,6 +418,7 @@ function PlayerTab({ gameName }) {
             )}
           </tbody>
         </table>
+        )}
       </div>
       <div className="pagination-content w-full">
         <div className="flex w-full items-center justify-center lg:justify-between">
@@ -436,6 +498,10 @@ function PlayerTab({ gameName }) {
                 </svg>
               </span>
             </button>
+            {/* Display current page and total pages */}
+            <span className="text-sm font-semibold text-bgray-600 dark:text-bgray-50">
+              Page {currentPage} of {totalPages}
+            </span>
 
             <button aria-label="none" type="button" onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage === totalPages}

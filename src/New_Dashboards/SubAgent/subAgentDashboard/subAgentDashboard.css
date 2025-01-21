@@ -2,38 +2,42 @@
   border: 2px solid blue;
   padding: 20px;
   font-family: Arial, sans-serif;
-  max-width: 1200px; /* Add a max-width to limit the container size */
-  margin: 0 auto; /* Center the container */
-  box-sizing: border-box; /* Ensure padding is included in width calculations */
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .dashboard-title {
   font-size: 24px;
   font-weight: bold;
   color: blue;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   text-align: left;
-  border-bottom: 2px solid blue; /* Full-width underline */
-  padding-bottom: 5px;
+  border-bottom: 2px solid blue;
+  padding-bottom: 2px;
 }
 
 .card-container {
   display: flex;
-  flex-direction: column; /* Stacks cards vertically (mobile view default) */
-  gap: 20px;
-  width: 100%; /* Ensure the container doesn't exceed the parent width */
-  box-sizing: border-box; /* Include padding and border in width calculations */
+  flex-direction: row; /* Keep cards in one row */
+  justify-content: space-between; /* Evenly distribute space between cards */
+  gap: 20px; /* Add spacing between cards */
+ 
+  box-sizing: border-box;
+  width: 100%; /* Make sure the container fits its parent */
 }
 
 .card {
-  flex: 1;
+  flex: 0 0 calc(33.333% - 20px); /* Ensure each card takes one-third of the row */
+  max-width: calc(33.333% - 20px);
   border: 1px solid #ddd;
   border-radius: 8px;
   text-align: center;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
-  width: 100%; /* Ensure the card fits inside the container */
+  background-color: #fff;
+  transition: all 0.3s ease-in-out;
 }
 
 .card.blue {
@@ -51,20 +55,74 @@
   color: white;
 }
 
-.card-icon {
-  font-size: 48px;
-  margin-bottom: 10px;
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.card-content h2 {
+.icon-number-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Space between number and icon */
+}
+
+.icon-number-row h2 {
   font-size: 32px;
   margin: 0;
 }
 
+.icon-number-row i {
+  font-size: 32px;
+}
+
 .card-content p {
   font-size: 18px;
-  margin: 5px 0 0;
+  margin: 10px 0 0;
 }
+
+/* For small screens */
+@media screen and (max-width: 768px) {
+  .card {
+    flex: 0 0 calc(33.333% - 10px); /* Shrink card width for smaller screens */
+    max-width: calc(33.333% - 10px);
+  }
+
+  .icon-number-row h2 {
+    font-size: 24px; /* Adjust number size */
+  }
+
+  .icon-number-row i {
+    font-size: 24px; /* Adjust icon size */
+  }
+
+  .card-content p {
+    font-size: 16px; /* Adjust text size */
+  }
+}
+
+/* For extra small screens */
+@media screen and (max-width: 480px) {
+  .card {
+    flex: 0 0 calc(30% - 5px); /* Adjust card width further */
+    max-width: calc(30% - 5px);
+  }
+
+  .icon-number-row h2 {
+    font-size: 15px; /* Further adjust number size */
+  }
+
+  .icon-number-row i {
+    font-size: 15px; /* Further adjust icon size */
+  }
+
+  .card-content p {
+    font-size: 10px; /* Further adjust text size */
+  }
+}
+
 
 .online-users-section {
   border-top: 1px solid #ddd;
@@ -83,16 +141,4 @@
   font-size: 16px;
   font-weight: bold;
   color: gray;
-}
-
-/* Desktop-specific adjustments */
-@media screen and (min-width: 768px) {
-  .card-container {
-    flex-direction: row; /* Cards side by side for desktop */
-    gap: 20px; /* Add gap between cards */
-  }
-
-  .card {
-    width: calc(33.333% - 20px); /* Three cards side by side, with a gap */
-  }
 }

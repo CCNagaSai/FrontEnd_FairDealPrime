@@ -25,6 +25,7 @@ const AgentOutPointTable = ({ backendData }) => {
   };
 
   return (
+    <div>
     <div className="overflow-x-auto mt-6">
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
@@ -94,8 +95,9 @@ const AgentOutPointTable = ({ backendData }) => {
             })}
         </tbody>
       </table>
-      {/* Pagination Controls */}
-      <div className="pagination mt-4 flex justify-center items-center gap-4">
+    </div>
+    {/* Pagination Controls */}
+    <div className="pagination mt-4 flex justify-center items-center gap-4">
         <button
           onClick={handlePrevious}
           disabled={currentPage === 1}
@@ -114,7 +116,7 @@ const AgentOutPointTable = ({ backendData }) => {
           Next
         </button>
       </div>
-    </div>
+      </div>
   );
 };
 

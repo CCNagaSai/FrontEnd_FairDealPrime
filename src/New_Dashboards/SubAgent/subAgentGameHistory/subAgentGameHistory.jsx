@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './subAgentGameHistory.css'; 
+import React, { useState, useEffect, useRef } from "react";
+import "./subAgentGameHistory.css";
 import Cookies from "universal-cookie";
-import UserBetHistory from '../../Common/BoardHistory';
+import UserBetHistory from "../../Common/BoardHistory";
 
 const cookies = new Cookies();
-  
+
 const SubAGameHistory = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [backendData, setBackendData] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
   const [filters, setFilters] = useState({
-    gameName: '',
-    userId: '',
-    handId: '',
-    startDate: '',
-    endDate: '',
+    gameName: "",
+    userId: "",
+    handId: "",
+    startDate: "",
+    endDate: "",
   });
-  const [dateRange, setDateRange] = useState('Select');
+  const [dateRange, setDateRange] = useState("Select");
   const [columns, setColumns] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [showTable, setShowTable] = useState(false);
@@ -48,7 +48,7 @@ const SubAGameHistory = () => {
     "Sub Distributor",
     "Play Points",
     "Win Points",
-    "End Points"
+    "End Points",
   ];
 
   const mobileColumns = [
@@ -58,8 +58,7 @@ const SubAGameHistory = () => {
     "Sub Distributor",
     "Play Points",
     "Win Points",
-    "End Points"
-
+    "End Points",
   ];
 
   // Dynamically adjust columns based on screen size
@@ -67,8 +66,8 @@ const SubAGameHistory = () => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -82,21 +81,21 @@ const SubAGameHistory = () => {
     let endDate = new Date();
 
     switch (range) {
-      case 'Today':
+      case "Today":
         startDate.setDate(today.getDate());
         endDate.setHours(23, 59, 59, 999);
         break;
-      case 'Yesterday':
+      case "Yesterday":
         startDate.setDate(today.getDate() - 1);
         endDate.setDate(today.getDate() - 1);
         startDate.setHours(0, 0, 0, 0);
         endDate.setHours(23, 59, 59, 999);
         break;
-      case 'Last 7 Days':
+      case "Last 7 Days":
         startDate.setDate(today.getDate() - 7);
         startDate.setHours(0, 0, 0, 0);
         break;
-      case 'Last 30 Days':
+      case "Last 30 Days":
         startDate.setDate(today.getDate() - 30);
         startDate.setHours(0, 0, 0, 0);
         break;
@@ -107,8 +106,8 @@ const SubAGameHistory = () => {
     // Set start and end date in filters and update the state
     setFilters((prevFilters) => ({
       ...prevFilters,
-      startDate: startDate.toISOString().split('T')[0],
-      endDate: endDate.toISOString().split('T')[0],
+      startDate: startDate.toISOString().split("T")[0],
+      endDate: endDate.toISOString().split("T")[0],
     }));
     setDateRange(range); // Update selected date range
   };
@@ -117,7 +116,7 @@ const SubAGameHistory = () => {
     setFilters((prevFilters) => {
       const newFilters = { ...prevFilters, [field]: e.target.value };
       if (newFilters.startDate && newFilters.endDate) {
-        setDateRange('Select'); // Reset Date Range to Select if custom dates are entered
+        setDateRange("Select"); // Reset Date Range to Select if custom dates are entered
       }
       return newFilters;
     });
@@ -154,18 +153,17 @@ const SubAGameHistory = () => {
     setNoResults(filtered.length === 0); // Check if no results are found
     setIsSubmitted(true); // Indicate filters have been applied
   };
-  
-  
+
   const handleClear = () => {
     setFilters({
-      gameName: '',
-      userId: '',
-      handId: '',
-      startDate: '',
-      endDate: '',
+      gameName: "",
+      userId: "",
+      handId: "",
+      startDate: "",
+      endDate: "",
     });
     setCurrentPage(1);
-    setDateRange('Select');
+    setDateRange("Select");
     setFilteredData(backendData); // Reset filters
     setShowTable(false); // Hide the table when cleared
     setIsSubmitted(false); // Reset the "submitted" state
@@ -174,13 +172,22 @@ const SubAGameHistory = () => {
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const totalPlayPoints = Array.isArray(filteredData)
-    ? filteredData.reduce((acc, entry) => acc + parseFloat(entry.playPoints || 0), 0)
+    ? filteredData.reduce(
+        (acc, entry) => acc + parseFloat(entry.playPoints || 0),
+        0
+      )
     : 0;
   const totalWinPoints = Array.isArray(filteredData)
-    ? filteredData.reduce((acc, entry) => acc + parseFloat(entry.winpoints || 0), 0)
+    ? filteredData.reduce(
+        (acc, entry) => acc + parseFloat(entry.winpoints || 0),
+        0
+      )
     : 0;
   const totalEndPoints = Array.isArray(filteredData)
-    ? filteredData.reduce((acc, entry) => acc + parseFloat(entry.endPoints || 0), 0)
+    ? filteredData.reduce(
+        (acc, entry) => acc + parseFloat(entry.endPoints || 0),
+        0
+      )
     : 0;
 
   useEffect(() => {
@@ -197,7 +204,7 @@ const SubAGameHistory = () => {
               },
             }
           );
-  
+
           if (response.ok) {
             const data = await response.json();
             if (data && Array.isArray(data.gameHistoryData)) {
@@ -205,9 +212,11 @@ const SubAGameHistory = () => {
                 (entry) => entry.history || []
               );
 
-              flattenedHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-              
-              console.log("history", flattenedHistory)
+              flattenedHistory.sort(
+                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+              );
+
+              console.log("history", flattenedHistory);
               setBackendData(flattenedHistory);
               setFilteredData(flattenedHistory);
             } else {
@@ -220,13 +229,13 @@ const SubAGameHistory = () => {
           console.error("Error:", error);
         }
       };
-  
+
       fetchBackendData();
     }
   }, [token, id]);
-  console.log("backendsdata", backendData)
+  console.log("backendsdata", backendData);
 
-  console.log('Expanded Row:', expandedRow);
+  console.log("Expanded Row:", expandedRow);
 
   const handlePrevious = () => {
     if (currentPage > 1) setCurrentPage((prevPage) => prevPage - 1);
@@ -235,70 +244,91 @@ const SubAGameHistory = () => {
   const handleNext = () => {
     if (currentPage < totalPages) setCurrentPage((prevPage) => prevPage + 1);
   };
-  
-
 
   const toggleRow = (rowId) => {
     setExpandedRow(expandedRow === rowId ? null : rowId);
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const displayedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+  const displayedData = filteredData.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
   console.log(filteredData, "cccccccc");
 
   return (
     <div>
-
       <div className="flex flex-col md:flex-row">
-
         <div className="flex-1 ml-[4px] mr-[4px] md:max-w-[1100px] mx-auto border border-blue-500 p-[5px]">
-        <h2 className="text-blue-600 text-[18px] ml-1 md:text-xl font-bold mb-6 border-b border-blue-500 pb-3 ">
-            Game History</h2>
+          <h2 className="text-blue-600 text-[18px] ml-1 md:text-xl font-bold  border-b border-blue-500 pb-1 ">
+            Game History
+          </h2>
 
           {/* Filter Form */}
-          <div className="bg-[#e6ebff] p-5 rounded-lg shadow-lg m-1 sm:m-3">
-            <form className="flex flex-col items-center" onSubmit={(e) => e.preventDefault()}>
-              <div className="flex flex-col sm:flex-row justify-between sm:space-x-4 mb-0 sm:mb-5 w-full">
-              <div className="flex-1 mb-4 sm:mb-0">
-                <label className="block mb-2">Username:</label>
-                <input
-                  type="text"
-                  value={filters.userId}
-                  onChange={(e) => setFilters({ ...filters, userId: e.target.value })}
-                  className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
-                  placeholder="Enter username"
-                />
-              </div>
-              </div>
+          <div className="bg-[#e6ebff] p-5 rounded-lg shadow-lg m-1 md:m-3">
+            <form
+              className="flex flex-col items-center"
+              onSubmit={(e) => e.preventDefault()}
+            >
+              {/* First Row (Tablet/Mobile: Username + Start Date, Desktop: Only Username) */}
+              <div className="w-full flex flex-wrap gap-4 mb-5">
+                {/* Username */}
+                <div className="flex-1 min-w-[140px]">
+                  <label className="block mb-2">Username:</label>
+                  <input
+                    type="text"
+                    value={filters.userId}
+                    onChange={(e) =>
+                      setFilters({ ...filters, userId: e.target.value })
+                    }
+                    className="w-full p-2 md:p-3 border border-gray-300 rounded-lg"
+                    placeholder="Enter username"
+                  />
+                </div>
 
-              {/* Date filters */}
-              <div className="flex flex-col sm:flex-row justify-between sm:space-x-4 mb-5 w-full">
-                <div className="flex-1 mb-4 ">
+                {/* Start Date (Visible in Tablet/Mobile) */}
+                <div className="flex-1 min-w-[140px] md:hidden">
                   <label className="block mb-2">Start Date:</label>
                   <input
                     type="date"
                     value={filters.startDate}
-                    onChange={(e) => handleManualDateChange(e, 'startDate')}
-                    className="w-full p-2 sm:p-3  border  border-gray-300 rounded-lg"
+                    onChange={(e) => handleManualDateChange(e, "startDate")}
+                    className="w-full p-2 md:p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
+              </div>
+
+              {/* Second Row (Tablet/Mobile: End Date + Date Range, Desktop: Start Date, End Date, Date Range) */}
+              <div className="w-full flex flex-wrap gap-4 mb-5">
+                {/* Start Date (Visible only in Desktop) */}
+                <div className="flex-1 min-w-[140px] hidden md:block">
+                  <label className="block mb-2">Start Date:</label>
+                  <input
+                    type="date"
+                    value={filters.startDate}
+                    onChange={(e) => handleManualDateChange(e, "startDate")}
+                    className="w-full p-2 md:p-3 border border-gray-300 rounded-lg"
                   />
                 </div>
 
-                <div className="flex-1 mb-4 sm:mb-0">
+                {/* End Date */}
+                <div className="flex-1 min-w-[140px]">
                   <label className="block mb-2">End Date:</label>
                   <input
                     type="date"
                     value={filters.endDate}
-                    onChange={(e) => handleManualDateChange(e, 'endDate')}
-                    className="w-full p-2 sm:p-3  border  border-gray-300 rounded-lg"
+                    onChange={(e) => handleManualDateChange(e, "endDate")}
+                    className="w-full p-2 md:p-3 border border-gray-300 rounded-lg"
                   />
                 </div>
 
-                <div className="flex-1 mb-4 sm:mb-0">
+                {/* Date Range */}
+                <div className="flex-1 min-w-[140px]">
                   <label className="block mb-2">Date Range:</label>
                   <select
                     value={dateRange}
                     onChange={(e) => handleDateRangeChange(e.target.value)}
-                    className="w-full p-2 sm:p-3  border  border-gray-300 rounded-lg"
+                    className="w-full p-2 md:p-3 border border-gray-300 rounded-lg"
                   >
                     <option value="Select">Select</option>
                     <option value="Today">Today</option>
@@ -316,16 +346,16 @@ const SubAGameHistory = () => {
                   <button
                     type="button"
                     onClick={handleFilterChange}
-                    className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
-                    style={{ width: '150px' }}
+                    className="bg-blue-500 text-white p-2 md:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-20 md:w-auto"
+                    style={{ width: "150px" }}
                   >
                     Apply Filters
                   </button>
                   <button
                     type="button"
                     onClick={handleClear}
-                    className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
-                    style={{ width: '150px' }}
+                    className="bg-blue-500 text-white p-2 md:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-20 md:w-auto"
+                    style={{ width: "150px" }}
                   >
                     Clear Filters
                   </button>
@@ -337,8 +367,12 @@ const SubAGameHistory = () => {
           {/* Show selected filters after submit */}
           {isSubmitted && (
             <div className="bg-[#e6ebff] p-4 flex flex-col sm:flex-row gap-2 sm:gap-6 mt-4 rounded-md m-2 text-sm sm:text-base">
-              <span className="block">Start Date: {filters.startDate || 'Not Selected'}</span>
-              <span className="block">End Date: {filters.endDate || 'Not Selected'}</span>
+              <span className="block">
+                Start Date: {filters.startDate || "Not Selected"}
+              </span>
+              <span className="block">
+                End Date: {filters.endDate || "Not Selected"}
+              </span>
             </div>
           )}
 
@@ -348,91 +382,124 @@ const SubAGameHistory = () => {
           {/* Conditionally render the table */}
           {showTable && (
             <div>
-            <div className="overflow-x-auto mt-8">
-            <table className="table-auto border-collapse border border-gray-300 w-full text-sm sm:text-base">
-              <thead>
-                <tr className="bg-blue-200">
-                  {/* <th className="border border-gray-300 px-4 py-2">User ID</th> */}
-                  <th className="border border-gray-300 px-4 py-2">Username</th>
-                  <th className="border border-gray-300 px-4 py-2">Before Play Points</th>
-                  <th className="border border-gray-300 px-4 py-2">Ball Position</th>
-                  <th className="border border-gray-300 px-4 py-2">Play</th>
-                  <th className="border border-gray-300 px-4 py-2">Won</th>
-                  <th className="border border-gray-300 px-4 py-2">After Play Points</th>
-                  <th className="border border-gray-300 px-4 py-2">Created At</th>
-                  <th className="border border-gray-300 px-4 py-2">View board</th>
-                </tr>
-              </thead>
-              <tbody>
-                {/* {filteredData.map((item, index) => ( */}
-                {filteredData
-                .filter((item) => item.play !== 0)
-                .slice(startIndex, startIndex + itemsPerPage)
-                .map((item, index) => (
-                  <React.Fragment key={item.uuid}>
-                  <tr key={index} className="odd:bg-white even:bg-gray-100">
-                    {/* <td className="border border-gray-300 px-4 py-2">{item.userId}</td> */}
-                    <td className="border border-gray-300 px-4 py-2">{item.username}</td>
-                    <td className="border border-gray-300 px-4 py-2">{item.beforeplaypoint}</td>
-                    <td className="border border-gray-300 px-4 py-2">{item.ballposition}</td>
-                    <td className="border border-gray-300 px-4 py-2">{item.play}</td>
-                    <td className="border border-gray-300 px-4 py-2">{item.won}</td>
-                    <td className="border border-gray-300 px-4 py-2">{item.afterplaypoint}</td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {new Date(item.createdAt).toLocaleString("en-GB", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        second: "2-digit",
-                        hour12: true,
-                      })}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      <button
-                        onClick={() => toggleRow(item.uuid)}
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                      >
-                        {expandedRow === item.uuid ? 'Close' : 'Show'}
-                      </button>
-                      </td>
-                  </tr>
-                  {expandedRow === item.uuid && (
-                    <tr className="bg-gray-100">
-                      <td colSpan="10" className="border border-gray-300 px-4 py-2">
-                        <div className="relative">
-                          <UserBetHistory data={item} />
-                        </div>
-                      </td>
+              <div className="overflow-x-auto mt-8">
+                <table className="table-auto border-collapse border border-gray-300 w-full text-sm sm:text-base">
+                  <thead>
+                    <tr className="bg-blue-200">
+                      {/* <th className="border border-gray-300 px-4 py-2">User ID</th> */}
+                      <th className="border border-gray-300 px-4 py-2">
+                        Username
+                      </th>
+                      <th className="border border-gray-300 px-4 py-2">
+                        Before Play Points
+                      </th>
+                      <th className="border border-gray-300 px-4 py-2">
+                        Ball Position
+                      </th>
+                      <th className="border border-gray-300 px-4 py-2">Play</th>
+                      <th className="border border-gray-300 px-4 py-2">Won</th>
+                      <th className="border border-gray-300 px-4 py-2">
+                        After Play Points
+                      </th>
+                      <th className="border border-gray-300 px-4 py-2">
+                        Created At
+                      </th>
+                      <th className="border border-gray-300 px-4 py-2">
+                        View board
+                      </th>
                     </tr>
-                  )}
-                  </React.Fragment>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {/* Pagination controls */}
-          <div className="pagination flex justify-between items-center mt-6">
-            <button
-              className="prev px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-              disabled={currentPage === 1}
-              onClick={handlePrevious}
-            >
-              Previous
-            </button>
-            <span className="page-info text-blue-700 font-semibold">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              className="next px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-              disabled={currentPage === totalPages}
-              onClick={handleNext}
-            >
-              Next
-            </button>
-          </div>
-          </div>
+                  </thead>
+                  <tbody>
+                    {/* {filteredData.map((item, index) => ( */}
+                    {filteredData
+                      .filter((item) => item.play !== 0)
+                      .slice(startIndex, startIndex + itemsPerPage)
+                      .map((item, index) => (
+                        <React.Fragment key={item.uuid}>
+                          <tr
+                            key={index}
+                            className="odd:bg-white even:bg-gray-100"
+                          >
+                            {/* <td className="border border-gray-300 px-4 py-2">{item.userId}</td> */}
+                            <td className="border border-gray-300 px-4 py-2">
+                              {item.username}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {item.beforeplaypoint}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {item.ballposition}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {item.play}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {item.won}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {item.afterplaypoint}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              {new Date(item.createdAt).toLocaleString(
+                                "en-GB",
+                                {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  second: "2-digit",
+                                  hour12: true,
+                                }
+                              )}
+                            </td>
+                            <td className="border border-gray-300 px-4 py-2">
+                              <button
+                                onClick={() => toggleRow(item.uuid)}
+                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                              >
+                                {expandedRow === item.uuid ? "Close" : "Show"}
+                              </button>
+                            </td>
+                          </tr>
+                          {expandedRow === item.uuid && (
+                            <tr className="bg-gray-100">
+                              <td
+                                colSpan="10"
+                                className="border border-gray-300 px-4 py-2"
+                              >
+                                <div className="relative">
+                                  <UserBetHistory data={item} />
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+              {/* Pagination controls */}
+              <div className="pagination flex justify-between items-center mt-6">
+                <button
+                  className="prev px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  disabled={currentPage === 1}
+                  onClick={handlePrevious}
+                >
+                  Previous
+                </button>
+                <span className="page-info text-blue-700 font-semibold">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  className="next px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  disabled={currentPage === totalPages}
+                  onClick={handleNext}
+                >
+                  Next
+                </button>
+              </div>
+            </div>
           )}
         </div>
       </div>

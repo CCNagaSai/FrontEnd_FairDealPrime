@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './subAgentTurnOver.css'; 
+import React, { useState, useEffect, useRef } from "react";
+import "./subAgentTurnOver.css";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
-  
+
 const SubATurnover = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [backendData, setBackendData] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
   const [filters, setFilters] = useState({
-    gameName: '',
-    userId: '',
-    handId: '',
-    startDate: '',
-    endDate: '',
+    gameName: "",
+    userId: "",
+    handId: "",
+    startDate: "",
+    endDate: "",
   });
-  const [dateRange, setDateRange] = useState('Select');
+  const [dateRange, setDateRange] = useState("Select");
   const [columns, setColumns] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [showTable, setShowTable] = useState(false);
@@ -47,7 +47,7 @@ const SubATurnover = () => {
     "Sub Distributor",
     "Play Points",
     "Win Points",
-    "End Points"
+    "End Points",
   ];
 
   const mobileColumns = [
@@ -57,8 +57,7 @@ const SubATurnover = () => {
     "Sub Distributor",
     "Play Points",
     "Win Points",
-    "End Points"
-
+    "End Points",
   ];
 
   // Dynamically adjust columns based on screen size
@@ -66,8 +65,8 @@ const SubATurnover = () => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -81,21 +80,21 @@ const SubATurnover = () => {
     let endDate = new Date();
 
     switch (range) {
-      case 'Today':
+      case "Today":
         startDate.setDate(today.getDate());
         endDate.setHours(23, 59, 59, 999);
         break;
-      case 'Yesterday':
+      case "Yesterday":
         startDate.setDate(today.getDate() - 1);
         endDate.setDate(today.getDate() - 1);
         startDate.setHours(0, 0, 0, 0);
         endDate.setHours(23, 59, 59, 999);
         break;
-      case 'Last 7 Days':
+      case "Last 7 Days":
         startDate.setDate(today.getDate() - 7);
         startDate.setHours(0, 0, 0, 0);
         break;
-      case 'Last 30 Days':
+      case "Last 30 Days":
         startDate.setDate(today.getDate() - 30);
         startDate.setHours(0, 0, 0, 0);
         break;
@@ -106,8 +105,8 @@ const SubATurnover = () => {
     // Set start and end date in filters and update the state
     setFilters((prevFilters) => ({
       ...prevFilters,
-      startDate: startDate.toISOString().split('T')[0],
-      endDate: endDate.toISOString().split('T')[0],
+      startDate: startDate.toISOString().split("T")[0],
+      endDate: endDate.toISOString().split("T")[0],
     }));
     setDateRange(range); // Update selected date range
   };
@@ -116,7 +115,7 @@ const SubATurnover = () => {
     setFilters((prevFilters) => {
       const newFilters = { ...prevFilters, [field]: e.target.value };
       if (newFilters.startDate && newFilters.endDate) {
-        setDateRange('Select'); // Reset Date Range to Select if custom dates are entered
+        setDateRange("Select"); // Reset Date Range to Select if custom dates are entered
       }
       return newFilters;
     });
@@ -124,61 +123,63 @@ const SubATurnover = () => {
 
   const handleFilterChange = () => {
     let filtered = backendData;
-  
+
     // Filter by date range
     if (filters.startDate && filters.endDate) {
       const startDate = new Date(filters.startDate);
       startDate.setHours(0, 0, 0, 0); // Start of the day
       const endDate = new Date(filters.endDate);
       endDate.setHours(23, 59, 59, 999); // End of the day
-  
+
       filtered = filtered.filter((entry) => {
         const entryDate = new Date(entry.createdAt);
         return entryDate >= startDate && entryDate <= endDate;
       });
     }
-  
+
     // Aggregate data by username
     const aggregatedData = filtered.reduce((acc, entry) => {
       const existingUser = acc.find((user) => user.username === entry.username);
-  
+
       if (existingUser) {
         existingUser.play += entry.play;
         existingUser.won += entry.won;
         existingUser.endPoints = existingUser.play - existingUser.won; // Update End Points
-        existingUser.createdAt = new Date(existingUser.createdAt) > new Date(entry.createdAt)
-          ? existingUser.createdAt
-          : entry.createdAt; // Keep the most recent date
+        existingUser.createdAt =
+          new Date(existingUser.createdAt) > new Date(entry.createdAt)
+            ? existingUser.createdAt
+            : entry.createdAt; // Keep the most recent date
       } else {
         acc.push({
           ...entry,
           endPoints: entry.play - entry.won, // Calculate End Points
         });
       }
-  
+
       return acc;
     }, []);
-  
+
     // Sort aggregated data by most recent `createdAt` date
-    aggregatedData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  
+    aggregatedData.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+
     setFilteredData(aggregatedData);
     setShowTable(aggregatedData.length > 0);
     setNoResults(aggregatedData.length === 0); // Show message if no results
     setIsSubmitted(true); // Indicate filters have been applied
   };
-  
-  
+
   const handleClear = () => {
     setFilters({
-      gameName: '',
-      userId: '',
-      handId: '',
-      startDate: '',
-      endDate: '',
+      gameName: "",
+      userId: "",
+      handId: "",
+      startDate: "",
+      endDate: "",
     });
     setCurrentPage(1);
-    setDateRange('Select');
+    setDateRange("Select");
     setFilteredData(backendData); // Reset filters
     setShowTable(false); // Hide the table when cleared
     setIsSubmitted(false); // Reset the "submitted" state
@@ -187,13 +188,22 @@ const SubATurnover = () => {
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const totalPlayPoints = Array.isArray(filteredData)
-    ? filteredData.reduce((acc, entry) => acc + parseFloat(entry.playPoints || 0), 0)
+    ? filteredData.reduce(
+        (acc, entry) => acc + parseFloat(entry.playPoints || 0),
+        0
+      )
     : 0;
   const totalWinPoints = Array.isArray(filteredData)
-    ? filteredData.reduce((acc, entry) => acc + parseFloat(entry.winpoints || 0), 0)
+    ? filteredData.reduce(
+        (acc, entry) => acc + parseFloat(entry.winpoints || 0),
+        0
+      )
     : 0;
   const totalEndPoints = Array.isArray(filteredData)
-    ? filteredData.reduce((acc, entry) => acc + parseFloat(entry.endPoints || 0), 0)
+    ? filteredData.reduce(
+        (acc, entry) => acc + parseFloat(entry.endPoints || 0),
+        0
+      )
     : 0;
 
   useEffect(() => {
@@ -210,7 +220,7 @@ const SubATurnover = () => {
               },
             }
           );
-  
+
           if (response.ok) {
             const data = await response.json();
             if (data && Array.isArray(data.gameHistoryData)) {
@@ -218,9 +228,11 @@ const SubATurnover = () => {
                 (entry) => entry.history || []
               );
 
-              flattenedHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-              
-              console.log("history", flattenedHistory)
+              flattenedHistory.sort(
+                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+              );
+
+              console.log("history", flattenedHistory);
               setBackendData(flattenedHistory);
               setFilteredData(flattenedHistory);
             } else {
@@ -233,13 +245,13 @@ const SubATurnover = () => {
           console.error("Error:", error);
         }
       };
-  
+
       fetchBackendData();
     }
   }, [token, id]);
-  console.log("backendsdata", backendData)
+  console.log("backendsdata", backendData);
 
-  console.log('Expanded Row:', expandedRow);
+  console.log("Expanded Row:", expandedRow);
 
   const handlePrevious = () => {
     if (currentPage > 1) setCurrentPage((prevPage) => prevPage - 1);
@@ -248,15 +260,16 @@ const SubATurnover = () => {
   const handleNext = () => {
     if (currentPage < totalPages) setCurrentPage((prevPage) => prevPage + 1);
   };
-  
-
 
   const toggleRow = (rowId) => {
     setExpandedRow(expandedRow === rowId ? null : rowId);
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const displayedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+  const displayedData = filteredData.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
   console.log(filteredData, "cccccccc");
 
   useEffect(() => {
@@ -264,61 +277,78 @@ const SubATurnover = () => {
       handleFilterChange();
     }
   }, [backendData, filters, isSubmitted]);
-  
 
   return (
     <div>
-
       <div className="flex flex-col md:flex-row">
-
         <div className="flex-1 ml-[4px] mr-[4px] md:max-w-[1100px] mx-auto border border-blue-500 p-[5px]">
-        <h2 className="text-blue-600 text-[18px] ml-1 md:text-xl font-bold mb-6 border-b border-blue-500 pb-3 ">
-            Turn Over Report </h2>
+          <h2 className="text-blue-600 text-[18px] ml-1 md:text-xl font-bold  border-b border-blue-500 pb-1 ">
+            Turn Over Report{" "}
+          </h2>
 
           {/* Filter Form */}
           <div className="bg-[#e6ebff] p-5 rounded-lg shadow-lg m-1 sm:m-3">
-            <form className="flex flex-col items-center" onSubmit={(e) => e.preventDefault()}>
-              <div className="flex flex-col sm:flex-row justify-between sm:space-x-4 mb-0 sm:mb-5 w-full">
-              <div className="flex-1 mb-4 sm:mb-0">
-                <label className="block mb-2">Username:</label>
-                <input
-                  type="text"
-                  value={filters.userId}
-                  onChange={(e) => setFilters({ ...filters, userId: e.target.value })}
-                  className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
-                  placeholder="Enter username"
-                />
-              </div>
-              </div>
+            <form
+              className="flex flex-col items-center"
+              onSubmit={(e) => e.preventDefault()}
+            >
+              {/* Row 1: Username (Desktop: Full row, Mobile: Shared with Start Date) */}
+              <div className="w-full flex flex-wrap gap-4 mb-5">
+                <div className="flex-1 min-w-[140px] sm:w-full">
+                  <label className="block mb-2">Username:</label>
+                  <input
+                    type="text"
+                    value={filters.userId}
+                    onChange={(e) =>
+                      setFilters({ ...filters, userId: e.target.value })
+                    }
+                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+                    placeholder="Enter username"
+                  />
+                </div>
 
-              {/* Date filters */}
-              <div className="flex flex-col sm:flex-row justify-between sm:space-x-4 mb-5 w-full">
-                <div className="flex-1 mb-4 ">
+                <div className="flex-1 min-w-[140px] sm:w-full sm:hidden">
                   <label className="block mb-2">Start Date:</label>
                   <input
                     type="date"
                     value={filters.startDate}
-                    onChange={(e) => handleManualDateChange(e, 'startDate')}
-                    className="w-full p-2 sm:p-3  border  border-gray-300 rounded-lg"
+                    onChange={(e) => handleManualDateChange(e, "startDate")}
+                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
+              </div>
+
+              {/* Row 2: Start Date, End Date, and Date Range */}
+              <div className="w-full flex flex-wrap gap-4 mb-5">
+                {/* Start Date: Shown here for Desktop */}
+                <div className="flex-1 min-w-[140px] hidden sm:block">
+                  <label className="block mb-2">Start Date:</label>
+                  <input
+                    type="date"
+                    value={filters.startDate}
+                    onChange={(e) => handleManualDateChange(e, "startDate")}
+                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
                   />
                 </div>
 
-                <div className="flex-1 mb-4 sm:mb-0">
+                {/* End Date */}
+                <div className="flex-1 min-w-[140px]">
                   <label className="block mb-2">End Date:</label>
                   <input
                     type="date"
                     value={filters.endDate}
-                    onChange={(e) => handleManualDateChange(e, 'endDate')}
-                    className="w-full p-2 sm:p-3  border  border-gray-300 rounded-lg"
+                    onChange={(e) => handleManualDateChange(e, "endDate")}
+                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
                   />
                 </div>
 
-                <div className="flex-1 mb-4 sm:mb-0">
+                {/* Date Range */}
+                <div className="flex-1 min-w-[140px]">
                   <label className="block mb-2">Date Range:</label>
                   <select
                     value={dateRange}
                     onChange={(e) => handleDateRangeChange(e.target.value)}
-                    className="w-full p-2 sm:p-3  border  border-gray-300 rounded-lg"
+                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
                   >
                     <option value="Select">Select</option>
                     <option value="Today">Today</option>
@@ -330,14 +360,14 @@ const SubATurnover = () => {
                 </div>
               </div>
 
-              {/* Submit and Clear buttons */}
+              {/* Submit and Clear Buttons */}
               <div className="flex justify-center w-full">
                 <div className="flex gap-4">
                   <button
                     type="button"
                     onClick={handleFilterChange}
                     className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
-                    style={{ width: '150px' }}
+                    style={{ width: "150px" }}
                   >
                     Apply Filters
                   </button>
@@ -345,7 +375,7 @@ const SubATurnover = () => {
                     type="button"
                     onClick={handleClear}
                     className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
-                    style={{ width: '150px' }}
+                    style={{ width: "150px" }}
                   >
                     Clear Filters
                   </button>
@@ -356,16 +386,45 @@ const SubATurnover = () => {
 
           {/* Show selected filters after submit */}
           {isSubmitted && (
-            <div className="bg-[#e6ebff] p-4 flex flex-col sm:flex-row gap-2 sm:gap-6 mt-4 rounded-md m-2 text-sm sm:text-base">
-              <span className="block">Start Date: {filters.startDate || 'Not Selected'}</span>
-              <span className="block">End Date: {filters.endDate || 'Not Selected'}</span>
-              <span className="block">Total Play Points: {filteredData.reduce((sum, item) => sum + item.play, 0).toFixed(2)}</span>
-              <span className="block">Total Won Points: {filteredData.reduce((sum, item) => sum + item.won, 0).toFixed(2)}</span>
-              <span className="block">Total End Points: {filteredData.reduce((sum, item) => sum + (item.play - item.won), 0).toFixed(2)}</span>
-              <span className="block">Total Margin: {filteredData.reduce((sum, item) => sum + (2.5 / 100) * item.play, 0).toFixed(2)}</span>
-              <span className="block">Total Net: {filteredData.reduce((sum, item) => sum + ((item.play - item.won) - (2.5 / 100) * item.play), 0).toFixed(2)}</span>
-            </div>
-          )}
+          <div className="bg-[#e6ebff] p-2 flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 mt-2 rounded-md m-2 text-sm sm:text-base">
+            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+              <strong>Start Date:</strong> {filters.startDate || "Not Selected"}
+            </span>
+            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+            <strong>End Date:</strong> {filters.endDate || "Not Selected"}
+            </span>
+            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+            <strong>Total Play Points:</strong>{" "}
+              {filteredData.reduce((sum, item) => sum + item.play, 0).toFixed(2)}
+            </span>
+            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+            <strong>Total Won Points:</strong>{" "}
+              {filteredData.reduce((sum, item) => sum + item.won, 0).toFixed(2)}
+            </span>
+            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+            <strong>Total End Points:</strong>{" "}
+              {filteredData
+                .reduce((sum, item) => sum + (item.play - item.won), 0)
+                .toFixed(2)}
+            </span>
+            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+            <strong>Total Margin:</strong>{" "}
+              {filteredData
+                .reduce((sum, item) => sum + (2.5 / 100) * item.play, 0)
+                .toFixed(2)}
+            </span>
+            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+              <strong>Total Net:</strong>{" "}
+              {filteredData
+                .reduce(
+                  (sum, item) =>
+                    sum + (item.play - item.won - (2.5 / 100) * item.play),
+                  0
+                )
+                .toFixed(2)}
+            </span>
+          </div>
+        )}
 
           {/* Display Message if No Results */}
           {noResults && <p>No records found based on the selected filters.</p>}
@@ -373,104 +432,156 @@ const SubATurnover = () => {
           {/* Conditionally render the table */}
           {showTable && (
             <div>
-            <div className="overflow-x-auto mt-8">
-            <table className="table-auto border-collapse border border-gray-300 w-full text-sm sm:text-base">
-              <thead>
-                <tr className="bg-blue-200">
-                  {/* <th className="border border-gray-300 px-4 py-2">User ID</th> */}
-                  <th className="border border-gray-300 px-4 py-2">Username</th>
-                  <th className="border border-gray-300 px-4 py-2">Play Points</th>
-                  <th className="border border-gray-300 px-4 py-2">Won Points</th>
-                  <th className="border border-gray-300 px-4 py-2">End Points</th>
-                  <th className="border border-gray-300 px-4 py-2">Margin</th>
-                  <th className="border border-gray-300 px-4 py-2">Net</th>
-                  <th className="border border-gray-300 px-4 py-2">Created At</th>
-                </tr>
-              </thead>
-              <tbody>
-                {/* {filteredData.map((item, index) => ( */}
-                {filteredData
-                  .filter((item) => item.play !== 0)
-                  .slice(startIndex, startIndex + itemsPerPage)
-                .map((item, index) => {
-                  // Calculate derived values
-                  const playPoints = item.play;
-                  const wonPoints = item.won;
-                  const endPoints = playPoints - wonPoints;
-                  const margin = (2.5 / 100) * playPoints;
-                  const net = endPoints - margin;
-
-                  // Helper function to format numbers
-                  const formatValue = (value) => (value % 1 === 0 ? value : value.toFixed(2));
-
-                  return (
-                    <React.Fragment key={item.uuid}>
-                      <tr key={index} className="odd:bg-white even:bg-gray-100">
-                        {/* <td className="border border-gray-300 px-4 py-2">{item.userId}</td> */}
-                        <td className="border border-gray-300 px-4 py-2">{item.username}</td>
-                        <td className="border border-gray-300 px-4 py-2">{formatValue(playPoints)}</td>
-                        <td className="border border-gray-300 px-4 py-2">{formatValue(wonPoints)}</td>
-                        <td className="border border-gray-300 px-4 py-2">{formatValue(endPoints)}</td>
-                        <td className="border border-gray-300 px-4 py-2">{formatValue(margin)}</td>
-                        <td className="border border-gray-300 px-4 py-2">{formatValue(net)}</td>
-                        <td className="border border-gray-300 px-4 py-2">
-                          {new Date(item.createdAt).toLocaleString("en-GB", {
-                            day: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                          })}
-                        </td>
-                      </tr>
-                  </React.Fragment>
-                  );
-                })}
-              </tbody>
-              <tfoot>
-                <tr className="bg-blue-100 font-bold">
-                  <td className="border border-gray-300 px-4 py-2">Total</td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {filteredData.reduce((sum, item) => sum + item.play, 0).toFixed(2)}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {filteredData.reduce((sum, item) => sum + item.won, 0).toFixed(2)}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {filteredData.reduce((sum, item) => sum + (item.play - item.won), 0).toFixed(2)}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {filteredData.reduce((sum, item) => sum + (2.5 / 100) * item.play, 0).toFixed(2)}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
+              <div className="overflow-x-auto mt-8">
+                <table className="table-auto border-collapse border border-gray-300 w-full text-sm sm:text-base">
+                  <thead>
+                    <tr className="bg-blue-200">
+                      {/* <th className="border border-gray-300 px-4 py-2">User ID</th> */}
+                      <th className="border border-gray-300 px-4 py-2">
+                        Username
+                      </th>
+                      <th className="border border-gray-300 px-4 py-2">
+                        Play Points
+                      </th>
+                      <th className="border border-gray-300 px-4 py-2">
+                        Won Points
+                      </th>
+                      <th className="border border-gray-300 px-4 py-2">
+                        End Points
+                      </th>
+                      <th className="border border-gray-300 px-4 py-2">
+                        Margin
+                      </th>
+                      <th className="border border-gray-300 px-4 py-2">Net</th>
+                      <th className="border border-gray-300 px-4 py-2">
+                        Created At
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* {filteredData.map((item, index) => ( */}
                     {filteredData
-                      .reduce((sum, item) => sum + ((item.play - item.won) - (2.5 / 100) * item.play), 0)
-                      .toFixed(2)}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">-</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-            {/* Pagination controls */}
-            <div className="pagination flex justify-between items-center mt-6">
-              <button
-                className="prev px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                disabled={currentPage === 1}
-                onClick={handlePrevious}
-              >
-                Previous
-              </button>
-              <span className="page-info text-blue-700 font-semibold">
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                className="next px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                disabled={currentPage === totalPages}
-                onClick={handleNext}
-              >
-                Next
-              </button>
+                      .filter((item) => item.play !== 0)
+                      .slice(startIndex, startIndex + itemsPerPage)
+                      .map((item, index) => {
+                        // Calculate derived values
+                        const playPoints = item.play;
+                        const wonPoints = item.won;
+                        const endPoints = playPoints - wonPoints;
+                        const margin = (2.5 / 100) * playPoints;
+                        const net = endPoints - margin;
+
+                        // Helper function to format numbers
+                        const formatValue = (value) =>
+                          value % 1 === 0 ? value : value.toFixed(2);
+
+                        return (
+                          <React.Fragment key={item.uuid}>
+                            <tr
+                              key={index}
+                              className="odd:bg-white even:bg-gray-100"
+                            >
+                              {/* <td className="border border-gray-300 px-4 py-2">{item.userId}</td> */}
+                              <td className="border border-gray-300 px-4 py-2">
+                                {item.username}
+                              </td>
+                              <td className="border border-gray-300 px-4 py-2">
+                                {formatValue(playPoints)}
+                              </td>
+                              <td className="border border-gray-300 px-4 py-2">
+                                {formatValue(wonPoints)}
+                              </td>
+                              <td className="border border-gray-300 px-4 py-2">
+                                {formatValue(endPoints)}
+                              </td>
+                              <td className="border border-gray-300 px-4 py-2">
+                                {formatValue(margin)}
+                              </td>
+                              <td className="border border-gray-300 px-4 py-2">
+                                {formatValue(net)}
+                              </td>
+                              <td className="border border-gray-300 px-4 py-2">
+                                {new Date(item.createdAt).toLocaleString(
+                                  "en-GB",
+                                  {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                  }
+                                )}
+                              </td>
+                            </tr>
+                          </React.Fragment>
+                        );
+                      })}
+                  </tbody>
+                  <tfoot>
+                    <tr className="bg-blue-100 font-bold">
+                      <td className="border border-gray-300 px-4 py-2">
+                        Total
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {filteredData
+                          .reduce((sum, item) => sum + item.play, 0)
+                          .toFixed(2)}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {filteredData
+                          .reduce((sum, item) => sum + item.won, 0)
+                          .toFixed(2)}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {filteredData
+                          .reduce(
+                            (sum, item) => sum + (item.play - item.won),
+                            0
+                          )
+                          .toFixed(2)}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {filteredData
+                          .reduce(
+                            (sum, item) => sum + (2.5 / 100) * item.play,
+                            0
+                          )
+                          .toFixed(2)}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        {filteredData
+                          .reduce(
+                            (sum, item) =>
+                              sum +
+                              (item.play - item.won - (2.5 / 100) * item.play),
+                            0
+                          )
+                          .toFixed(2)}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2">-</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+              {/* Pagination controls */}
+              <div className="pagination flex justify-between items-center mt-6">
+                <button
+                  className="prev px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  disabled={currentPage === 1}
+                  onClick={handlePrevious}
+                >
+                  Previous
+                </button>
+                <span className="page-info text-blue-700 font-semibold">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  className="next px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  disabled={currentPage === totalPages}
+                  onClick={handleNext}
+                >
+                  Next
+                </button>
+              </div>
             </div>
-          </div>
           )}
         </div>
       </div>

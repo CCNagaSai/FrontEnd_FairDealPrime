@@ -29,4 +29,38 @@
     text-overflow: ellipsis; /* Truncate text if too long */
     white-space: nowrap;
   }
+
+  .responsive-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Adjust as needed */
+  }
+
+  .responsive-container span {
+    flex: 1 1 calc(50% - 10px); /* Each item takes 50% of the width minus the gap */
+    box-sizing: border-box;
+  }
+
+  @media (min-width: 400px) and (max-width: 600px) {
+    .responsive-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px; /* Adjust gap as needed */
+    }
+    .responsive-row > span {
+      flex: 1 1 45%; /* Two items per row */
+    }
+  }
+  
+  @media (min-width: 601px) {
+    .responsive-row {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 16px; /* Adjust gap as needed */
+    }
+    .responsive-row > span {
+      flex: 1 1 auto; /* All items in one row */
+    }
+  }
+  
   

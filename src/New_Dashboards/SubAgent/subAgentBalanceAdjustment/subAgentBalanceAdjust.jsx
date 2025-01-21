@@ -201,7 +201,10 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
             <option value="" disabled>
               Select
             </option>
-            {users.map((user) => (
+            {users
+            ?.slice()
+            ?.sort((a, b) => (a.name || a.username || "").localeCompare(b.name || b.username || ""))
+            ?.map((user) => (
               <option key={user._id} value={user._id}>
                 {user.name || user.username} --{user.chips || 0}
               </option>

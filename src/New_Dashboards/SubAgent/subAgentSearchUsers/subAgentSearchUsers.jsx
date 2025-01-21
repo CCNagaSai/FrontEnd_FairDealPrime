@@ -5,7 +5,7 @@ import SubAgentBalanceAdjust from "../subAgentBalanceAdjustment/subAgentBalanceA
 
 const cookies = new Cookies();
 
-const SubAUsersList = ({onUserClick}) => {
+const SubAUsersList = ({ onUserClick }) => {
   const navigate = useNavigate();
 
   // State
@@ -15,8 +15,8 @@ const SubAUsersList = ({onUserClick}) => {
   const [filters, setFilters] = useState({ username: "", status: "" });
   const [originalData, setOriginalData] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState("");
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -80,25 +80,25 @@ const SubAUsersList = ({onUserClick}) => {
   const handleFilterChange = () => {
     const filteredData = originalData.filter((user) => {
       const matchesUsername =
-        !filters.username || user.name.toLowerCase().includes(filters.username.toLowerCase());
+        !filters.username ||
+        user.name.toLowerCase().includes(filters.username.toLowerCase());
       const matchesStatus =
         !filters.status ||
         (filters.status === "Active" && user.status) ||
         (filters.status === "Inactive" && !user.status);
-  
+
       return matchesUsername && matchesStatus;
     });
-  
+
     setCurrentPage(1);
     setData(filteredData);
   };
-  
+
   const handleClear = () => {
     setFilters({ username: "", status: "" });
     setCurrentPage(1);
     setData(originalData); // Reset to original data
   };
-  
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
@@ -189,28 +189,40 @@ const SubAUsersList = ({onUserClick}) => {
 
   return (
     <div className="user-list-container font-sans p-4 sm:p-6 bg-gray-100">
-      <h1 className="view-users-heading text-xl sm:text-2xl text-blue-500 text-left border-b-4 border-blue-500 pb-2 mb-6">
+      <h1 className="view-users-heading text-xl sm:text-2xl text-blue-500 text-left border-b-4 border-blue-500 pb-1">
         View Users
       </h1>
       {/* Filter Form */}
       <div className="bg-[#e6ebff] p-5 rounded-lg shadow-lg m-1 sm:m-3">
-        <form className="flex flex-col items-center" onSubmit={(e) => e.preventDefault()}>
-          <div className="flex flex-col sm:flex-row justify-between sm:space-x-4 mb-0 sm:mb-5 w-full">
-            <div className="flex-1 mb-4 sm:mb-0">
+        <form
+          className="flex flex-col items-center"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          <div className="flex flex-row justify-between space-x-4 mb-5 w-full">
+            {/* Username Filter */}
+            <div className="flex-1 mb-4">
               <label className="block mb-2">Username:</label>
               <input
                 type="text"
                 value={filters.username}
-                onChange={(e) => setFilters({ ...filters, username: e.target.value })}
+                onChange={(e) => {
+                  setFilters({ ...filters, username: e.target.value });
+                  handleFilterChange(); // Trigger filter on change
+                }}
                 className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
                 placeholder="Enter username"
               />
             </div>
-            <div className="flex-1 mb-4 sm:mb-0">
+
+            {/* Status Filter */}
+            <div className="flex-1 mb-4">
               <label className="block mb-2">Status:</label>
               <select
                 value={filters.status}
-                onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+                onChange={(e) => {
+                  setFilters({ ...filters, status: e.target.value });
+                  handleFilterChange(); // Trigger filter on change
+                }}
                 className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
               >
                 <option value="">All</option>
@@ -219,6 +231,8 @@ const SubAUsersList = ({onUserClick}) => {
               </select>
             </div>
           </div>
+
+          {/* Filter Buttons */}
           <div className="flex justify-center w-full">
             <div className="flex gap-4">
               <button
@@ -291,17 +305,15 @@ const SubAUsersList = ({onUserClick}) => {
                   <td className="px-2 sm:px-4 py-2">
                     {row.lastLoginDate || "N/A"}
                   </td>
-                  <td
-                    className=" px-2 sm:px-4 py-2 "
-                  >
+                  <td className=" px-2 sm:px-4 py-2 ">
                     {row.status ? "Active" : "Inactive"}
                   </td>
-                  <td className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline"
-                    onClick={() =>
-                      handleTransferPointsClick("User", row._id)
-                    }
-                    >
-                      TRANSFER POINTS</td>
+                  <td
+                    className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline"
+                    onClick={() => handleTransferPointsClick("User", row._id)}
+                  >
+                    TRANSFER POINTS
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -331,15 +343,10 @@ const SubAUsersList = ({onUserClick}) => {
       {isModalOpen && (
         <div style={modalOverlayStyle}>
           <div style={modalContentStyle}>
-            <button
-              style={modalCloseStyle}
-              onClick={handleModalClose}
-            >
+            <button style={modalCloseStyle} onClick={handleModalClose}>
               &times;
             </button>
-            <SubAgentBalanceAdjust
-              prefilledUser={selectedUser}
-            />
+            <SubAgentBalanceAdjust prefilledUser={selectedUser} />
           </div>
         </div>
       )}
