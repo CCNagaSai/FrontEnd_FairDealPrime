@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import "./AgentPointFile.css";
 
 const AgentPointFileTable = ({ backendData }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,15 +25,15 @@ const AgentPointFileTable = ({ backendData }) => {
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
           <tr className="bg-blue-200">
-            <th className="border border-gray-300 px-4 py-2">S.No</th>
-            <th className="border border-gray-300 px-4 py-2">Date</th>
-            <th className="border border-gray-300 px-4 py-2">Receiver</th>
-            <th className="border border-gray-300 px-4 py-2">Old Points</th>
-            <th className="border border-gray-300 px-4 py-2">In</th>
-            <th className="border border-gray-300 px-4 py-2">Out</th>
-            <th className="border border-gray-300 px-4 py-2">New Points</th>
-            <th className="border border-gray-300 px-4 py-2">Sender</th>
-            <th className="border border-gray-300 px-4 py-2">Transaction Type</th>
+            <th className="border border-gray-300 px-2 py-1">S.No</th>
+            <th className="border border-gray-300 px-2 py-1">Date</th>
+            <th className="border border-gray-300 px-2 py-1">Receiver</th>
+            <th className="border border-gray-300 px-2 py-1">Old Points</th>
+            <th className="border border-gray-300 px-2 py-1">In</th>
+            <th className="border border-gray-300 px-2 py-1">Out</th>
+            <th className="border border-gray-300 px-2 py-1">New Poi2ts</th>
+            <th className="border border-gray-300 px-2 py-1">Sender</th>
+            <th className="border border-gray-300 px-2 py-1">Transaction Type</th>
           </tr>
         </thead>
         <tbody>
@@ -77,15 +78,15 @@ const AgentPointFileTable = ({ backendData }) => {
 
             return (
               <tr key={entry._id}>
-                <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
-                <td className="border border-gray-300 px-4 py-2">{dateOnly}</td>
-                <td className="border border-gray-300 px-4 py-2">{receiver}</td>
-                <td className="border border-gray-300 px-4 py-2">₹{entry.oppChips || '0'}</td>
-                <td className="border border-gray-300 px-4 py-2">{inAmount || 0}</td>
-                <td className="border border-gray-300 px-4 py-2">{outAmount || 0}</td>
-                <td className="border border-gray-300 px-4 py-2">₹{entry.chips || '0'}</td>
-                <td className="border border-gray-300 px-4 py-2">{sender}</td>
-                <td className="border border-gray-300 px-4 py-2">{entry.trnxTypeTxt || 'N/A'}</td>
+                <td className="border border-gray-300 px-2 py-1">{index + 1}</td>
+                <td className="border border-gray-300 px-2 py-1">{dateOnly}</td>
+                <td className="border border-gray-300 px-2 py-1">{receiver}</td>
+                <td className="border border-gray-300 px-2 py-1">₹{entry.oppChips || '0'}</td>
+                <td className="border border-gray-300 px-2 py-1">{inAmount || 0}</td>
+                <td className="border border-gray-300 px-2 py-1">{outAmount || 0}</td>
+                <td className="border border-gray-300 px-2 py-1">₹{entry.chips || '0'}</td>
+                <td className="border border-gray-300 px-2 py-1">{sender}</td>
+                <td className="border border-gray-300 px-2 py-1">{entry.trnxTypeTxt || 'N/A'}</td>
               </tr>
             );
           })}
