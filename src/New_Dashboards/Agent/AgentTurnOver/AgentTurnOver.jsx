@@ -279,7 +279,7 @@ const ATurnover = () => {
   }, [backendData, filters, isSubmitted]);
 
   return (
-    <div>
+    <div className="main-container">
       <div className="flex flex-col md:flex-row">
         <div className="flex-1 ml-[4px] mr-[4px] md:max-w-[1100px] mx-auto border border-blue-500 p-[5px]">
           <h2 className="text-blue-600 text-[18px] ml-1 md:text-xl font-bold  border-b border-blue-500 pb-1 ">
@@ -366,14 +366,14 @@ const ATurnover = () => {
                   <button
                     type="button"
                     onClick={handleFilterChange}
-                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-auto"
+                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600  md:text-base w-auto"
                   >
                     Apply Filters
                   </button>
                   <button
                     type="button"
                     onClick={handleClear}
-                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-auto"
+                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600  md:text-base w-auto"
                   >
                     Clear Filters
                   </button>
@@ -383,7 +383,7 @@ const ATurnover = () => {
           </div>
           {/* Show selected filters after submit */}
           {isSubmitted && (
-            <div className="bg-[#e6ebff] p-2 flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 mt-2 rounded-md m-2 text-sm sm:text-base">
+            <div className="bg-[#e6ebff] p-2 flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 mt-2 rounded-md m-2  sm:text-base">
               <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
                 <strong>Start Date:</strong>{" "}
                 {filters.startDate || "Not Selected"}
@@ -433,105 +433,66 @@ const ATurnover = () => {
           {/* Conditionally render the table */}
           {showTable && (
             <div>
-              <div className="overflow-x-auto mt-8">
-                <table className="table-auto border-collapse border border-gray-300 w-full text-sm sm:text-base">
+              <div className="table-container">
+                <table>
                   <thead>
-                    <tr className="bg-blue-200">
-                      {/* <th className="border border-gray-300 px-4 py-2">User ID</th> */}
-                      <th className="border border-gray-300 px-4 py-2">
-                        Username
-                      </th>
-                      <th className="border border-gray-300 px-4 py-2">
-                        Play Points
-                      </th>
-                      <th className="border border-gray-300 px-4 py-2">
-                        Won Points
-                      </th>
-                      <th className="border border-gray-300 px-4 py-2">
-                        End Points
-                      </th>
-                      <th className="border border-gray-300 px-4 py-2">
-                        Margin
-                      </th>
-                      <th className="border border-gray-300 px-4 py-2">Net</th>
-                      <th className="border border-gray-300 px-4 py-2">
-                        Created At
-                      </th>
+                    <tr>
+                      <th>Username</th>
+                      <th>Play Points</th>
+                      <th>Won Points</th>
+                      <th>End Points</th>
+                      <th>Margin</th>
+                      <th>Net</th>
+                      <th>Created At</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {/* {filteredData.map((item, index) => ( */}
                     {filteredData
                       .filter((item) => item.play !== 0)
                       .slice(startIndex, startIndex + itemsPerPage)
                       .map((item, index) => {
-                        // Calculate derived values
                         const playPoints = item.play;
                         const wonPoints = item.won;
                         const endPoints = playPoints - wonPoints;
                         const margin = (2.5 / 100) * playPoints;
                         const net = endPoints - margin;
 
-                        // Helper function to format numbers
-                        const formatValue = (value) =>
-                          value % 1 === 0 ? value : value.toFixed(2);
-
                         return (
-                          <React.Fragment key={item.uuid}>
-                            <tr
-                              key={index}
-                              className="odd:bg-white even:bg-gray-100"
-                            >
-                              {/* <td className="border border-gray-300 px-4 py-2">{item.userId}</td> */}
-                              <td className="border border-gray-300 px-4 py-2">
-                                {item.username}
-                              </td>
-                              <td className="border border-gray-300 px-4 py-2">
-                                {formatValue(playPoints)}
-                              </td>
-                              <td className="border border-gray-300 px-4 py-2">
-                                {formatValue(wonPoints)}
-                              </td>
-                              <td className="border border-gray-300 px-4 py-2">
-                                {formatValue(endPoints)}
-                              </td>
-                              <td className="border border-gray-300 px-4 py-2">
-                                {formatValue(margin)}
-                              </td>
-                              <td className="border border-gray-300 px-4 py-2">
-                                {formatValue(net)}
-                              </td>
-                              <td className="border border-gray-300 px-4 py-2">
-                                {new Date(item.createdAt).toLocaleString(
-                                  "en-GB",
-                                  {
-                                    day: "2-digit",
-                                    month: "2-digit",
-                                    year: "numeric",
-                                  }
-                                )}
-                              </td>
-                            </tr>
-                          </React.Fragment>
+                          <tr key={index}>
+                            <td>{item.username}</td>
+                            <td>{playPoints.toFixed(2)}</td>
+                            <td>{wonPoints.toFixed(2)}</td>
+                            <td>{endPoints.toFixed(2)}</td>
+                            <td>{margin.toFixed(2)}</td>
+                            <td>{net.toFixed(2)}</td>
+                            <td>
+                              {new Date(item.createdAt).toLocaleString(
+                                "en-GB",
+                                {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "numeric",
+                                }
+                              )}
+                            </td>
+                          </tr>
                         );
                       })}
                   </tbody>
                   <tfoot>
-                    <tr className="bg-blue-100 font-bold">
-                      <td className="border border-gray-300 px-4 py-2">
-                        Total
-                      </td>
-                      <td className="border border-gray-300 px-4 py-2">
+                    <tr>
+                      <td>Total</td>
+                      <td>
                         {filteredData
                           .reduce((sum, item) => sum + item.play, 0)
                           .toFixed(2)}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td>
                         {filteredData
                           .reduce((sum, item) => sum + item.won, 0)
                           .toFixed(2)}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td>
                         {filteredData
                           .reduce(
                             (sum, item) => sum + (item.play - item.won),
@@ -539,7 +500,7 @@ const ATurnover = () => {
                           )
                           .toFixed(2)}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td>
                         {filteredData
                           .reduce(
                             (sum, item) => sum + (2.5 / 100) * item.play,
@@ -547,7 +508,7 @@ const ATurnover = () => {
                           )
                           .toFixed(2)}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">
+                      <td>
                         {filteredData
                           .reduce(
                             (sum, item) =>
@@ -557,11 +518,12 @@ const ATurnover = () => {
                           )
                           .toFixed(2)}
                       </td>
-                      <td className="border border-gray-300 px-4 py-2">-</td>
+                      <td>-</td>
                     </tr>
                   </tfoot>
                 </table>
               </div>
+
               {/* Pagination controls */}
               <div className="pagination flex justify-between items-center mt-6">
                 <button

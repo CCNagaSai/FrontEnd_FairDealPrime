@@ -62,5 +62,91 @@
       flex: 1 1 auto; /* All items in one row */
     }
   }
-  
+  /* General Styles */
+.table-container {
+  margin-top: 2rem;
+}
+
+table {
+  width: 100%;
+  table-layout: fixed; /* Ensures the table fits within its parent container */
+  border-collapse: collapse;
+   border: 1px solid #d1d5db; /*Border color */
+  font-size: 14px; /* Default font size */
+}
+
+thead th {
+  background-color: #bfdbfe; /* Blue background for header */
+  border: 1px solid #d1d5db;
+  text-align: center;
+  padding: 0.5rem;
+  word-break: break-word; /* Prevents long text from breaking layout */
+}
+
+tbody td,
+tfoot td {
+  border: 1px solid #d1d5db;
+  text-align: center;
+  padding: 0.5rem;
+  word-break: break-word;
+}
+
+tfoot td {
+  font-weight: bold;
+  background-color: #e0f2fe; /* Light blue background */
+}
+
+/* Responsive Styles for Smaller Screens */
+
+@media (max-width: 1024px) {
+  table {
+    font-size: 12px; /* Further reduce font size for mobile screens */
+  }
+
+  thead th,
+  tbody td,
+  tfoot td {
+    padding: 0.5rem; /* Compact padding for very small screens */
+  }
+
+
+}
+@media screen and (max-width: 768px) {
+
+  .main-container  span{
+    font-size: 10px; /* Further reduce font size for mobile screens */
+  }
+  table {
+    font-size: 12px; /* Reduce font size for smaller screens */
+  }
+
+  thead th,
+  tbody td,
+  tfoot td {
+    padding: 0.4rem; /* Compact padding */
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .main-container  {
+    font-size: 12px; /* Further reduce font size for mobile screens */
+  }
+  .main-container  span{
+    font-size: 8px; /* Further reduce font size for mobile screens */
+  }
+  .main-container button  {
+    font-size: 11px; /* Further reduce font size for mobile screens */
+  }
+
+  table {
+    font-size: 10px; /* Further reduce font size for mobile screens */
+  }
+
+  thead th,
+  tbody td,
+  tfoot td {
+    padding: 0.3rem; /* Compact padding for very small screens */
+  }
+}
+
   

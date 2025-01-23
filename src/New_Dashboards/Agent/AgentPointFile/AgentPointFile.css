@@ -83,17 +83,6 @@
   }
   
   
-  /* Button Styling */
-  button {
-    background-color: #056cdb;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: 800;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
   
   
   
@@ -143,5 +132,15 @@
       padding: 10px 20px;
       font-size: 16px;
     }
+  }
+
+  @media (max-width: 375) {
+   
+
+    button {
+      padding: 5px 10px;
+      font-size: 10px;
+    }
+   
   }
   

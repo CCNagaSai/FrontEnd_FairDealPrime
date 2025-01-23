@@ -212,7 +212,7 @@ const AReportpointfile = () => {
   };
 
   return (
-    <div>
+    <div className="main-container">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row">
         <div className="flex-1 ml-[4px] mr-[4px] md:max-w-[1100px] mx-auto border border-blue-500 p-[5px]">
@@ -229,7 +229,9 @@ const AReportpointfile = () => {
               {/* First Row - Two Input Fields */}
               <div className="grid grid-cols-2 gap-4 mb-5 w-full">
                 <div className="flex-1 min-w-[50px]">
-                  <label className="block mb-2">Receive By:</label>
+                  <label className="block mb-2 text-xs md:text-base">
+                    Receive By:
+                  </label>
                   <input
                     type="text"
                     value={filters.receiveBy}
@@ -241,7 +243,9 @@ const AReportpointfile = () => {
                 </div>
 
                 <div className="flex-1 min-w-[50px]">
-                  <label className="block mb-2">Sent By:</label>
+                  <label className="block mb-2 text-xs md:text-base">
+                    Sent By:
+                  </label>
                   <input
                     type="text"
                     value={filters.sentBy}
@@ -257,39 +261,39 @@ const AReportpointfile = () => {
               <div className="grid grid-cols-3 gap-4 mb-5 w-full">
                 {/* Start Date */}
                 <div className="flex-1 min-w-[20px]">
-                  <label className="block mb-2 text-sm md:text-base">
+                  <label className="block mb-2 text-xs md:text-base">
                     Start Date:
                   </label>
                   <input
                     type="date"
                     value={filters.startDate}
                     onChange={(e) => handleManualDateChange(e, "startDate")}
-                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg text-sm sm:text-base"
+                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg text-xs sm:text-base"
                   />
                 </div>
 
                 {/* End Date */}
                 <div className="flex-1 min-w-[20px]">
-                  <label className="block mb-2 text-sm md:text-base">
+                  <label className="block mb-2 text-xs  md:text-base">
                     End Date:
                   </label>
                   <input
                     type="date"
                     value={filters.endDate}
                     onChange={(e) => handleManualDateChange(e, "endDate")}
-                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg text-sm sm:text-base"
+                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg text-xs sm:text-base"
                   />
                 </div>
 
                 {/* Date Range */}
                 <div className="flex-1 min-w-[20px]">
-                  <label className="block mb-2 text-sm md:text-base">
+                  <label className="block mb-2 text-xs md:text-base">
                     Date Range:
                   </label>
                   <select
                     value={filters.dateRange}
                     onChange={(e) => handleDateRangeChange(e.target.value)}
-                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg text-sm sm:text-base"
+                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg text-xs sm:text-base"
                   >
                     <option value="Select">Select</option>
                     <option value="Today">Today</option>
@@ -306,14 +310,14 @@ const AReportpointfile = () => {
                 <div className="flex gap-4">
                   <button
                     type="submit"
-                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-auto"
+                    className="bg-blue-500 text-white p-2 md:p-2 px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-xs md:text-base w-auto"
                     onClick={handleSubmit}
                   >
                     Submit
                   </button>
                   <button
                     type="button"
-                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-auto"
+                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-xs md:text-base w-auto"
                     onClick={handleClear}
                   >
                     Clear

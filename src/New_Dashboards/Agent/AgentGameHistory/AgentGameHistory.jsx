@@ -235,7 +235,7 @@ const AGameHistory = () => {
   console.log(filteredData, "cccccccc");
 
   return (
-    <div>
+    <div className="main-container">
       <div className="flex flex-col md:flex-row">
         <div className="flex-1 ml-[4px] mr-[4px] md:max-w-[1100px] mx-auto border border-blue-500 p-[5px]">
           <h2 className="text-blue-600 text-[18px] ml-1 md:text-xl font-bold  border-b border-blue-500 pb-1 ">
@@ -323,14 +323,14 @@ const AGameHistory = () => {
                   <button
                     type="button"
                     onClick={handleFilterChange}
-                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-auto"
+                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600  md:text-base w-auto"
                   >
                     Apply Filters
                   </button>
                   <button
                     type="button"
                     onClick={handleClear}
-                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm md:text-base w-auto"
+                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600  md:text-base w-auto"
                   >
                     Clear Filters
                   </button>
@@ -340,7 +340,7 @@ const AGameHistory = () => {
           </div>
           {/* Show selected filters after submit */}
           {isSubmitted && (
-            <div className="bg-[#e6ebff] p-4 flex flex-col sm:flex-row gap-2 sm:gap-6 mt-4 rounded-md m-2 text-sm sm:text-base">
+            <div className="bg-[#e6ebff] p-4 flex flex-col sm:flex-row gap-2 sm:gap-6 mt-4 rounded-md m-2  sm:text-base">
               <span className="block">
                 Start Date: {filters.startDate || "Not Selected"}
               </span>
@@ -356,31 +356,19 @@ const AGameHistory = () => {
           {/* Conditionally render the table */}
           {showTable && (
             <div>
-              <div className="overflow-x-auto mt-8">
-                <table className="table-auto border-collapse border border-gray-300 w-full text-sm sm:text-base">
+              <div className="table-container">
+                <table>
                   <thead>
-                    <tr className="bg-blue-200">
+                    <tr>
                       {/* <th className="border border-gray-300 px-4 py-2">User ID</th> */}
-                      <th className="border border-gray-300 px-4 py-2">
-                        Username
-                      </th>
-                      <th className="border border-gray-300 px-4 py-2">
-                        Before Play Points
-                      </th>
-                      <th className="border border-gray-300 px-4 py-2">
-                        Ball Position
-                      </th>
-                      <th className="border border-gray-300 px-4 py-2">Play</th>
-                      <th className="border border-gray-300 px-4 py-2">Won</th>
-                      <th className="border border-gray-300 px-4 py-2">
-                        After Play Points
-                      </th>
-                      <th className="border border-gray-300 px-4 py-2">
-                        Created At
-                      </th>
-                      <th className="border border-gray-300 px-4 py-2">
-                        View board
-                      </th>
+                      <th>Username</th>
+                      <th>Before Play Points</th>
+                      <th>Ball Position</th>
+                      <th>Play</th>
+                      <th>Won</th>
+                      <th>After Play Points</th>
+                      <th>Created At</th>
+                      <th>View board</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -391,30 +379,15 @@ const AGameHistory = () => {
                       .slice(startIndex, startIndex + itemsPerPage)
                       .map((item, index) => (
                         <React.Fragment key={item.uuid}>
-                          <tr
-                            key={index}
-                            className="odd:bg-white even:bg-gray-100"
-                          >
+                          <tr key={index}>
                             {/* <td className="border border-gray-300 px-4 py-2">{item.userId}</td> */}
-                            <td className="border border-gray-300 px-4 py-2">
-                              {item.username}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
-                              {item.beforeplaypoint}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
-                              {item.ballposition}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
-                              {item.play}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
-                              {item.won}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
-                              {item.afterplaypoint}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
+                            <td>{item.username}</td>
+                            <td>{item.beforeplaypoint}</td>
+                            <td>{item.ballposition}</td>
+                            <td>{item.play}</td>
+                            <td>{item.won}</td>
+                            <td>{item.afterplaypoint}</td>
+                            <td>
                               {new Date(item.createdAt).toLocaleString(
                                 "en-GB",
                                 {
@@ -428,22 +401,19 @@ const AGameHistory = () => {
                                 }
                               )}
                             </td>
-                            <td className="border border-gray-300 px-4 py-2">
+                            <td>
                               <button
                                 onClick={() => toggleRow(item.uuid)}
-                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                                // className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                               >
                                 {expandedRow === item.uuid ? "Close" : "Show"}
                               </button>
                             </td>
                           </tr>
                           {expandedRow === item.uuid && (
-                            <tr className="bg-gray-100">
-                              <td
-                                colSpan="10"
-                                className="border border-gray-300 px-4 py-2"
-                              >
-                                <div className="relative">
+                            <tr>
+                              <td>
+                                <div>
                                   <UserBetHistory data={item} />
                                 </div>
                               </td>
