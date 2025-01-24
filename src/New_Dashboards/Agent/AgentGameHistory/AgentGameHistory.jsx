@@ -249,64 +249,74 @@ const AGameHistory = () => {
               onSubmit={(e) => e.preventDefault()}
             >
               {/* First Row (Tablet/Mobile: Username + Start Date, Desktop: Only Username) */}
-              <div className="w-full flex flex-wrap gap-4 mb-5">
+              <div className="w-full flex flex-wrap gap-4 mb-2">
                 {/* Username */}
                 <div className="flex-1 min-w-[50px]">
-                  <label className="block mb-2">Username:</label>
+                  <label className="block mb-2 text-[clamp(0.75rem,_1vw,_1.25rem)]">
+                    Username:
+                  </label>
                   <input
                     type="text"
                     value={filters.userId}
                     onChange={(e) =>
                       setFilters({ ...filters, userId: e.target.value })
                     }
-                    className="w-full p-2 md:p-3 border border-gray-300 rounded-lg"
+                    className="w-full p-[clamp(8px,1vw,12px)] border border-gray-300 rounded-lg text-[clamp(10px,1vw,14px)]"
                     placeholder="Enter username"
                   />
                 </div>
 
                 {/* Start Date (Visible in Tablet/Mobile) */}
                 <div className="flex-1 min-w-[50px] md:hidden">
-                  <label className="block mb-2">Start Date:</label>
+                  <label className="block mb-2 text-[clamp(0.75rem,_1vw,_1.25rem)]">
+                    Start Date:
+                  </label>
                   <input
                     type="date"
                     value={filters.startDate}
                     onChange={(e) => handleManualDateChange(e, "startDate")}
-                    className="w-full p-2 md:p-3 border border-gray-300 rounded-lg"
+                    className="w-full p-[clamp(8px,1vw,12px)] border border-gray-300 rounded-lg text-[clamp(10px,1vw,14px)]"
                   />
                 </div>
               </div>
 
               {/* Second Row (Tablet/Mobile: End Date + Date Range, Desktop: Start Date, End Date, Date Range) */}
-              <div className="w-full flex flex-wrap gap-4 mb-5">
+              <div className="w-full flex flex-wrap gap-4 mb-2">
                 {/* Start Date (Visible only in Desktop) */}
                 <div className="flex-1 min-w-[50px] hidden md:block">
-                  <label className="block mb-2">Start Date:</label>
+                  <label className="block mb-2 text-[clamp(0.75rem,_1vw,_1.25rem)]">
+                    Start Date:
+                  </label>
                   <input
                     type="date"
                     value={filters.startDate}
                     onChange={(e) => handleManualDateChange(e, "startDate")}
-                    className="w-full p-2 md:p-3 border border-gray-300 rounded-lg"
+                    className="w-full p-[clamp(8px,1vw,12px)] border border-gray-300 rounded-lg text-[clamp(10px,1vw,14px)]"
                   />
                 </div>
 
                 {/* End Date */}
                 <div className="flex-1 min-w-[50px]">
-                  <label className="block mb-2">End Date:</label>
+                  <label className="block mb-2 text-[clamp(0.75rem,_1vw,_1.25rem)]">
+                    End Date:
+                  </label>
                   <input
                     type="date"
                     value={filters.endDate}
                     onChange={(e) => handleManualDateChange(e, "endDate")}
-                    className="w-full p-2 md:p-3 border border-gray-300 rounded-lg"
+                    className="w-full p-[clamp(8px,1vw,12px)] border border-gray-300 rounded-lg text-[clamp(10px,1vw,14px)]"
                   />
                 </div>
 
                 {/* Date Range */}
                 <div className="flex-1 min-w-[50px]">
-                  <label className="block mb-2">Date Range:</label>
+                  <label className="block mb-2 text-[clamp(0.75rem,_1vw,_1.25rem)]">
+                    Date Range:
+                  </label>
                   <select
                     value={dateRange}
                     onChange={(e) => handleDateRangeChange(e.target.value)}
-                    className="w-full p-2 md:p-3 border border-gray-300 rounded-lg"
+                    className="w-full p-[clamp(8px,1vw,12px)] border border-gray-300 rounded-lg text-[clamp(10px,1vw,14px)]"
                   >
                     <option value="Select">Select</option>
                     <option value="Today">Today</option>
@@ -317,27 +327,29 @@ const AGameHistory = () => {
                   </select>
                 </div>
               </div>
-              {/* Submit and Clear buttons */}
+
+              {/* Buttons */}
               <div className="flex justify-center w-full">
                 <div className="flex gap-4">
                   <button
-                    type="button"
+                    type="submit"
+                    className="bg-blue-500 text-white p-[clamp(8px,1vw,12px)] px-4 rounded-lg font-bold hover:bg-blue-600 text-[clamp(10px,1vw,14px)]"
                     onClick={handleFilterChange}
-                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600  md:text-base w-auto"
                   >
-                    Apply Filters
+                    Submit
                   </button>
                   <button
                     type="button"
+                    className="bg-blue-500 text-white p-[clamp(8px,1vw,12px)] px-4 rounded-lg font-bold hover:bg-blue-600 text-[clamp(10px,1vw,14px)]"
                     onClick={handleClear}
-                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600  md:text-base w-auto"
                   >
-                    Clear Filters
+                    Clear
                   </button>
                 </div>
               </div>
             </form>
           </div>
+
           {/* Show selected filters after submit */}
           {isSubmitted && (
             <div className="bg-[#e6ebff] p-4 flex flex-col sm:flex-row gap-2 sm:gap-6 mt-4 rounded-md m-2  sm:text-base">

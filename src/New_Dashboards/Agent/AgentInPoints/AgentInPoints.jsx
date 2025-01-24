@@ -225,69 +225,73 @@ const AReportInpoint = () => {
               onSubmit={(e) => e.preventDefault()}
             >
               {/* First Row - Two Input Fields */}
-              <div className="grid grid-cols-2 gap-4 mb-5 w-full">
-                <div className="flex-1 min-w-[50px] text-xs md:text-base">
-                  <label className="block mb-2">Receive By:</label>
+              <div className="grid grid-cols-2 gap-4 mb-2 w-full">
+                <div className="flex-1">
+                  <label className="block mb-2 text-[clamp(10px,1vw,16px)] font-bold text-gray-700">
+                    Receive By:
+                  </label>
                   <input
                     type="text"
                     value={filters.receiveBy}
                     onChange={(e) =>
                       setFilters({ ...filters, receiveBy: e.target.value })
                     }
-                    className="w-full p-3 border border-gray-300 rounded-lg"
+                    className="w-full p-[clamp(8px,1vw,12px)] border border-gray-300 rounded-lg text-[clamp(10px,1vw,14px)]"
                   />
                 </div>
 
-                <div className="flex-1 min-w-[50px] text-xs md:text-base">
-                  <label className="block mb-2 ">Sent By:</label>
+                <div className="flex-1">
+                  <label className="block mb-2 text-[clamp(10px,1vw,16px)] font-bold text-gray-700">
+                    Sent By:
+                  </label>
                   <input
                     type="text"
                     value={filters.sentBy}
                     onChange={(e) =>
                       setFilters({ ...filters, sentBy: e.target.value })
                     }
-                    className="w-full p-3 border border-gray-300 rounded-lg"
+                    className="w-full p-[clamp(8px,1vw,12px)] border border-gray-300 rounded-lg text-[clamp(10px,1vw,14px)]"
                   />
                 </div>
               </div>
 
               {/* Second Row - Three Input Fields */}
-              <div className="grid grid-cols-3 gap-4 mb-5 w-full">
+              <div className="grid grid-cols-3 gap-4 mb-2 w-full">
                 {/* Start Date */}
-                <div className="flex-1 min-w-[20px]">
-                  <label className="block mb-2 text-xs md:text-base">
+                <div className="flex-1">
+                  <label className="block mb-2 text-[clamp(10px,1vw,16px)] font-bold text-gray-700">
                     Start Date:
                   </label>
                   <input
                     type="date"
                     value={filters.startDate}
                     onChange={(e) => handleManualDateChange(e, "startDate")}
-                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg text-xs sm:text-base"
+                    className="w-full p-[clamp(8px,1vw,12px)] border border-gray-300 rounded-lg text-[clamp(10px,1vw,14px)]"
                   />
                 </div>
 
                 {/* End Date */}
-                <div className="flex-1 min-w-[20px]">
-                  <label className="block mb-2 text-xs md:text-base">
+                <div className="flex-1">
+                  <label className="block mb-2 text-[clamp(10px,1vw,16px)] font-bold text-gray-700">
                     End Date:
                   </label>
                   <input
                     type="date"
                     value={filters.endDate}
                     onChange={(e) => handleManualDateChange(e, "endDate")}
-                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg text-sm sm:text-base"
+                    className="w-full p-[clamp(8px,1vw,12px)] border border-gray-300 rounded-lg text-[clamp(10px,1vw,14px)]"
                   />
                 </div>
 
                 {/* Date Range */}
-                <div className="flex-1 min-w-[20px]">
-                  <label className="block mb-2 text-xs md:text-base">
+                <div className="flex-1">
+                  <label className="block mb-2 text-[clamp(10px,1vw,16px)] font-bold text-gray-700">
                     Date Range:
                   </label>
                   <select
                     value={filters.dateRange}
                     onChange={(e) => handleDateRangeChange(e.target.value)}
-                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg text-xs sm:text-base"
+                    className="w-full p-[clamp(8px,1vw,12px)] border border-gray-300 rounded-lg text-[clamp(10px,1vw,14px)]"
                   >
                     <option value="Select">Select</option>
                     <option value="Today">Today</option>
@@ -304,14 +308,14 @@ const AReportInpoint = () => {
                 <div className="flex gap-4">
                   <button
                     type="submit"
-                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-xs md:text-base w-auto"
+                    className="bg-blue-500 text-white p-[clamp(8px,1vw,12px)] px-4 rounded-lg font-bold hover:bg-blue-600 text-[clamp(10px,1vw,14px)]"
                     onClick={handleSubmit}
                   >
                     Submit
                   </button>
                   <button
                     type="button"
-                    className="bg-blue-500 text-white p-2 md:p-3 px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-xs md:text-base w-auto"
+                    className="bg-blue-500 text-white p-[clamp(8px,1vw,12px)] px-4 rounded-lg font-bold hover:bg-blue-600 text-[clamp(10px,1vw,14px)]"
                     onClick={handleClear}
                   >
                     Clear
