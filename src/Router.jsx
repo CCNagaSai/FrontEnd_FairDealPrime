@@ -27,6 +27,7 @@ import ProgramAndResources from "./pages/settings/program&resourses";
 import Payment from "./pages/settings/payment";
 import Faq from "./pages/settings/faq";
 import Security from "./pages/settings/security";
+import AdminTurnOver from "./New_Dashboards/Admin/AdminTurnOverReport";
 import TermsAndCondition from "./pages/settings/terms&condition";
 import HomeFive from "./pages/homeFive";
 
@@ -265,6 +266,10 @@ const router = createBrowserRouter([
       {
         path: "/security",
         element: <Chnagepwd />,
+      },
+      {
+        path: "/turn-over-report",
+        element: <AdminTurnOver />,
       },
       {
         path: "/settings",

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import UserInPointsOnSubAgent from './UserInPointsOnSubAgent';
 
 const AgentInPointTable = ({ backendData }) => {
+  const [expandedRow, setExpandedRow] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -24,6 +26,10 @@ const AgentInPointTable = ({ backendData }) => {
     if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
   };
 
+  const toggleRow = (rowId) => {
+    setExpandedRow(expandedRow === rowId ? null : rowId);
+  };
+
   return (
     <div>
     <div className="overflow-x-auto mt-6">
@@ -38,6 +44,7 @@ const AgentInPointTable = ({ backendData }) => {
             <th className="border border-gray-300 px-4 py-2">New Points</th>
             <th className="border border-gray-300 px-4 py-2">Sender</th>
             <th className="border border-gray-300 px-4 py-2">Transaction Type</th>
+            <th className="border border-gray-300 px-4 py-2">view users</th>
           </tr>
         </thead>
         <tbody>
@@ -80,6 +87,7 @@ const AgentInPointTable = ({ backendData }) => {
             }
 
             return (
+              <React.Fragment key={entry._id}>
               <tr key={entry._id}>
                 <td className="border border-gray-300 px-4 py-2">{startIndex + index + 1}</td>
                 <td className="border border-gray-300 px-4 py-2">{dateOnly}</td>
@@ -89,7 +97,25 @@ const AgentInPointTable = ({ backendData }) => {
                 <td className="border border-gray-300 px-4 py-2">₹{entry.chips || '0'}</td>
                 <td className="border border-gray-300 px-4 py-2">{sender}</td>
                 <td className="border border-gray-300 px-4 py-2">{entry.trnxTypeTxt || 'N/A'}</td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {['Sub Agent Deduct Chips Added', 'Add Chips to Sub Agent'].includes(entry.trnxTypeTxt) && (
+                    <button
+                      onClick={() => toggleRow(entry.shopid)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    >
+                      {expandedRow === entry.shopid ? 'Close' : 'Show'}
+                    </button>
+                  )}
+                </td>
               </tr>
+              {expandedRow === entry.shopid && (
+                <tr className="bg-gray-100">
+                  <td colSpan="10" className="border border-gray-300 px-4 py-2">
+                  <UserInPointsOnSubAgent subAgentId={entry.shopid} />
+                  </td>
+                </tr>
+              )}
+              </React.Fragment>
             );
           })}
         </tbody>
