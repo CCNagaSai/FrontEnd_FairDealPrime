@@ -1,28 +1,16 @@
 import { useEffect } from "react";
 import { useRef } from "react";
 
-
 function TotalWidgetCard({ id, type, bet, number, whichTable }) {
+  console.log("userdata type ", type);
+  console.log("id ", id);
+  console.log("id ", bet);
+  console.log("number ", number);
 
-  console.log("userdata type ", type)
-  console.log("id ", id)
-  console.log("id ", bet)
-  console.log("number ", number)
-
-
-
-
-  useEffect(() => {
-
-  }, []);
-
+  useEffect(() => {}, []);
 
   return (
-
-
-
     <tr className="border-b border-bgray-300 dark:border-darkblack-400">
-
       <td className="px-6 py-5 xl:px-0">
         <div className="flex w-full items-center space-x-2.5">
           <p className="text-base font-semibold text-bgray-900 dark:text-white">
@@ -48,12 +36,6 @@ function TotalWidgetCard({ id, type, bet, number, whichTable }) {
         </p>
       </td>
     </tr>
-
-
-
-
-
-
   );
 }
 

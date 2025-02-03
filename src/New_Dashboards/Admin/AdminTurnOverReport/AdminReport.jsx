@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
-import AdminAgentTurnover from './AdminAgentTurnOver';
+import AdminAgentTurnover from "./AdminAgentTurnOver";
 
 const cookies = new Cookies();
 
@@ -16,7 +16,14 @@ const AdminTurnoverReport = () => {
   const [error, setError] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [expandedRow, setExpandedRow] = useState(null);
-  const [filters, setFilters] = useState({ username: "", status: "" });
+  const [filters, setFilters] = useState({
+    username: "",
+    status: "",
+    startDate: "",
+    endDate: "",
+    dateRange: "",
+  });
+  const [dateRange, setDateRange] = useState("Select");
   const [originalData, setOriginalData] = useState([]);
   const [agents, setAgents] = useState("");
 
@@ -35,7 +42,6 @@ const AdminTurnoverReport = () => {
     typeRef.current = cookies.get("name");
     tokenRef.current = cookies.get("token");
   }, []);
-
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -167,24 +173,137 @@ const AdminTurnoverReport = () => {
     setSortConfig({ key, direction });
   };
 
+  // Handle filter change and date range calculations
+  const handleDateRangeChange = (range) => {
+    const today = new Date();
+    let startDate = new Date();
+    let endDate = new Date();
+
+    switch (range) {
+      case "Today":
+        startDate.setDate(today.getDate());
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      case "Yesterday":
+        startDate.setDate(today.getDate() - 1);
+        endDate.setDate(today.getDate() - 1);
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      case "Last 7 Days":
+        startDate.setDate(today.getDate() - 7);
+        startDate.setHours(0, 0, 0, 0);
+        break;
+      case "Last 30 Days":
+        startDate.setDate(today.getDate() - 30);
+        startDate.setHours(0, 0, 0, 0);
+        break;
+      default:
+        break;
+    }
+
+    // Set start and end date in filters and update the state
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      startDate: startDate.toISOString().split("T")[0],
+      endDate: endDate.toISOString().split("T")[0],
+    }));
+    setDateRange(range); // Update selected date range
+  };
+
+  const handleManualDateChange = (e, field) => {
+    setFilters((prevFilters) => {
+      const newFilters = { ...prevFilters, [field]: e.target.value };
+      if (newFilters.startDate && newFilters.endDate) {
+        setDateRange("Select"); // Reset Date Range to Select if custom dates are entered
+      }
+      return newFilters;
+    });
+  };
+
+  // const handleFilterChange = () => {
+  //   let filtered = backendData;
+
+  //   // Filter by date range
+  //   if (filters.startDate && filters.endDate) {
+  //     const startDate = new Date(filters.startDate);
+  //     startDate.setHours(0, 0, 0, 0); // Start of the day
+  //     const endDate = new Date(filters.endDate);
+  //     endDate.setHours(23, 59, 59, 999); // End of the day
+
+  //     filtered = filtered.filter((entry) => {
+  //       const entryDate = new Date(entry.createdAt);
+  //       return entryDate >= startDate && entryDate <= endDate;
+  //     });
+  //   }
+
+  //   // Aggregate data by username
+  //   const aggregatedData = filtered.reduce((acc, entry) => {
+  //     const existingUser = acc.find((user) => user.username === entry.username);
+
+  //     if (existingUser) {
+  //       existingUser.play += entry.play;
+  //       existingUser.won += entry.won;
+  //       existingUser.endPoints = existingUser.play - existingUser.won; // Update End Points
+  //       existingUser.createdAt =
+  //         new Date(existingUser.createdAt) > new Date(entry.createdAt)
+  //           ? existingUser.createdAt
+  //           : entry.createdAt; // Keep the most recent date
+  //     } else {
+  //       acc.push({
+  //         ...entry,
+  //         endPoints: entry.play - entry.won, // Calculate End Points
+  //       });
+  //     }
+
+  //     return acc;
+  //   }, []);
+
+  //   // Sort aggregated data by most recent `createdAt` date
+  //   aggregatedData.sort(
+  //     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  //   );
+
+  //   setFilteredData(aggregatedData);
+  //   setShowTable(aggregatedData.length > 0);
+  //   setNoResults(aggregatedData.length === 0); // Show message if no results
+  //   setIsSubmitted(true); // Indicate filters have been applied
+  // };
+
+  // const handleClear = () => {
+  //   setFilters({
+  //     gameName: "",
+  //     userId: "",
+  //     handId: "",
+  //     startDate: "",
+  //     endDate: "",
+  //   });
+  //   setCurrentPage(1);
+  //   setDateRange("Select");
+  //   setFilteredData(backendData); // Reset filters
+  //   setShowTable(false); // Hide the table when cleared
+  //   setIsSubmitted(false); // Reset the "submitted" state
+  // };
+
   const handleFilterChange = () => {
     const filteredData = originalData.filter((user) => {
       const matchesUsername =
-        !filters.username || user.name.toLowerCase().includes(filters.username.toLowerCase());
+        !filters.username ||
+        user.name.toLowerCase().includes(filters.username.toLowerCase());
       const matchesStatus =
         !filters.status ||
         (filters.status === "Active" && user.status) ||
         (filters.status === "Inactive" && !user.status);
-  
+
       return matchesUsername && matchesStatus;
     });
-  
+
     setCurrentPage(1);
     setData(filteredData);
   };
-  
+
   const handleClear = () => {
-    setFilters({ username: "", status: "" });
+    setFilters({ username: "", status: "", startDate: "", endDate: "" });
     setCurrentPage(1);
     setData(originalData); // Reset to original data
   };
@@ -210,33 +329,95 @@ const AdminTurnoverReport = () => {
         Turn Over Report
       </h1>
       {/* Filter Form */}
-      <div className="bg-[#e6ebff] p-5 rounded-lg shadow-lg m-1 sm:m-3">
-        <form className="flex flex-col items-center" onSubmit={(e) => e.preventDefault()}>
-          <div className="flex flex-col sm:flex-row justify-between sm:space-x-4 mb-0 sm:mb-5 w-full">
-            <div className="flex-1 mb-4 sm:mb-0">
+      <div className="bg-[#e6ebff] p-4 rounded-lg shadow-lg m-1 sm:m-3">
+        <form
+          className="flex flex-col items-center"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          {/* Row 1: Username (Desktop: Full row, Mobile: Shared with Start Date) */}
+          <div className="w-full flex flex-wrap gap-4 mb-5">
+            <div className="flex-1 min-w-[140px] sm:w-full">
               <label className="block mb-2">Username:</label>
               <input
                 type="text"
                 value={filters.username}
-                onChange={(e) => setFilters({ ...filters, username: e.target.value })}
+                onChange={(e) =>
+                  setFilters({ ...filters, username: e.target.value })
+                }
                 className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
                 placeholder="Enter username"
               />
             </div>
+
+            <div className="flex-1 min-w-[140px] sm:w-full sm:hidden">
+              <label className="block mb-2">Start Date:</label>
+              <input
+                type="date"
+                value={filters.startDate}
+                onChange={(e) => handleManualDateChange(e, "startDate")}
+                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+              />
+            </div>
           </div>
+
+          {/* Row 2: Start Date, End Date, and Date Range */}
+          <div className="w-full flex flex-wrap gap-4 mb-5">
+            {/* Start Date: Shown here for Desktop */}
+            <div className="flex-1 min-w-[140px] hidden sm:block">
+              <label className="block mb-2">Start Date:</label>
+              <input
+                type="date"
+                value={filters.startDate}
+                onChange={(e) => handleManualDateChange(e, "startDate")}
+                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+              />
+            </div>
+
+            {/* End Date */}
+            <div className="flex-1 min-w-[140px]">
+              <label className="block mb-2">End Date:</label>
+              <input
+                type="date"
+                value={filters.endDate}
+                onChange={(e) => handleManualDateChange(e, "endDate")}
+                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+              />
+            </div>
+
+            {/* Date Range */}
+            <div className="flex-1 min-w-[140px]">
+              <label className="block mb-2">Date Range:</label>
+              <select
+                value={dateRange}
+                onChange={(e) => handleDateRangeChange(e.target.value)}
+                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+              >
+                <option value="Select">Select</option>
+                <option value="Today">Today</option>
+                <option value="Yesterday">Yesterday</option>
+                <option value="Last 7 Days">Last 7 Days</option>
+                <option value="Last 30 Days">Last 30 Days</option>
+                <option value="Custom">Custom</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Submit and Clear Buttons */}
           <div className="flex justify-center w-full">
             <div className="flex gap-4">
               <button
                 type="button"
                 onClick={handleFilterChange}
-                className="bg-blue-500 text-white p-2 sm:p-3 rounded-lg font-bold hover:bg-blue-600"
+                className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
+                style={{ width: "150px" }}
               >
                 Apply Filters
               </button>
               <button
                 type="button"
                 onClick={handleClear}
-                className="bg-blue-500 text-white p-2 sm:p-3 rounded-lg font-bold hover:bg-blue-600"
+                className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
+                style={{ width: "150px" }}
               >
                 Clear Filters
               </button>
@@ -247,9 +428,7 @@ const AdminTurnoverReport = () => {
 
       <div className="user-details bg-white p-4 sm:p-6 rounded-md shadow-md">
         <div className="user-summary text-sm sm:text-lg font-bold mb-4">
-          <span>
-            TOTAL AGENTS: ({data.length})
-          </span>
+          <span>TOTAL AGENTS: ({data.length})</span>
         </div>
 
         <div className="overflow-x-auto">
@@ -268,93 +447,101 @@ const AdminTurnoverReport = () => {
                 >
                   Total Play Points
                 </th>
-                <th 
+                <th
                   onClick={() => handleSort("chips")}
                   className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
                 >
                   Total Won Points
                 </th>
-                <th 
+                <th
                   onClick={() => handleSort("location")}
                   className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
                 >
                   Total End Points
                 </th>
-                <th 
-                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
-                >
+                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
                   Total Margin
                 </th>
-                <th 
-                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
-                >
+                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
                   Total Net
                 </th>
-                <th 
-                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
-                >
+                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
                   View Sub Agents
                 </th>
               </tr>
             </thead>
             <tbody>
-  {displayedData.map((row, index) => {
-    const subAgentId = row._id;
-    const subAgentHistory = backendData[subAgentId] || [];
+              {displayedData.map((row, index) => {
+                const subAgentId = row._id;
+                const subAgentHistory = backendData[subAgentId] || [];
 
-    // Check if the backend data is still being fetched
-    const isDataFetched = backendData.hasOwnProperty(subAgentId);
+                // Check if the backend data is still being fetched
+                const isDataFetched = backendData.hasOwnProperty(subAgentId);
 
-    // Calculate totals for the individual sub-agent
-    const totalPlay = isDataFetched
-      ? subAgentHistory.reduce((sum, item) => sum + item.play, 0).toFixed(2)
-      : "loading";
-    const totalWon = isDataFetched
-      ? subAgentHistory.reduce((sum, item) => sum + item.won, 0).toFixed(2)
-      : "loading";
-    const totalEnd = isDataFetched
-      ? subAgentHistory.reduce((sum, item) => sum + (item.play - item.won), 0).toFixed(2)
-      : "loading";
-    const totalMargin = isDataFetched
-      ? subAgentHistory.reduce((sum, item) => sum + (2.5 / 100) * item.play, 0).toFixed(2)
-      : "loading";
-    const totalNet = isDataFetched
-      ? subAgentHistory.reduce(
-          (sum, item) => sum + (item.play - item.won - (2.5 / 100) * item.play),
-          0
-        ).toFixed(2)
-      : "loading";
+                // Calculate totals for the individual sub-agent
+                const totalPlay = isDataFetched
+                  ? subAgentHistory
+                      .reduce((sum, item) => sum + item.play, 0)
+                      .toFixed(2)
+                  : "loading";
+                const totalWon = isDataFetched
+                  ? subAgentHistory
+                      .reduce((sum, item) => sum + item.won, 0)
+                      .toFixed(2)
+                  : "loading";
+                const totalEnd = isDataFetched
+                  ? subAgentHistory
+                      .reduce((sum, item) => sum + (item.play - item.won), 0)
+                      .toFixed(2)
+                  : "loading";
+                const totalMargin = isDataFetched
+                  ? subAgentHistory
+                      .reduce((sum, item) => sum + (2.5 / 100) * item.play, 0)
+                      .toFixed(2)
+                  : "loading";
+                const totalNet = isDataFetched
+                  ? subAgentHistory
+                      .reduce(
+                        (sum, item) =>
+                          sum +
+                          (item.play - item.won - (2.5 / 100) * item.play),
+                        0
+                      )
+                      .toFixed(2)
+                  : "loading";
 
-    return (
-      <React.Fragment key={row._id}>
-        <tr key={index} className="hover:bg-gray-100">
-          <td className="px-2 sm:px-4 py-2">{row.name || "N/A"}</td>
-          <td className="px-2 sm:px-4 py-2">{totalPlay}</td>
-          <td className="px-2 sm:px-4 py-2">{totalWon}</td>
-          <td className="px-2 sm:px-4 py-2">{totalEnd}</td>
-          <td className="px-2 sm:px-4 py-2">{totalMargin}</td>
-          <td className="px-2 sm:px-4 py-2">{totalNet}</td>
-          <td className="border border-gray-300 px-4 py-2">
-            <button
-              onClick={() => toggleRow(row._id)}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              {expandedRow === row._id ? 'Close' : 'Show'}
-            </button>
-          </td>
-        </tr>
-        {expandedRow === row._id && (
-          <tr className="bg-gray-100">
-            <td colSpan="10" className="border border-gray-300 px-4 py-2">
-              <AdminAgentTurnover AgentId={row._id} />
-            </td>
-          </tr>
-        )}
-      </React.Fragment>
-    );
-  })}
-</tbody>
-
+                return (
+                  <React.Fragment key={row._id}>
+                    <tr key={index} className="hover:bg-gray-100">
+                      <td className="px-2 sm:px-4 py-2">{row.name || "N/A"}</td>
+                      <td className="px-2 sm:px-4 py-2">{totalPlay}</td>
+                      <td className="px-2 sm:px-4 py-2">{totalWon}</td>
+                      <td className="px-2 sm:px-4 py-2">{totalEnd}</td>
+                      <td className="px-2 sm:px-4 py-2">{totalMargin}</td>
+                      <td className="px-2 sm:px-4 py-2">{totalNet}</td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        <button
+                          onClick={() => toggleRow(row._id)}
+                          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        >
+                          {expandedRow === row._id ? "Close" : "Show"}
+                        </button>
+                      </td>
+                    </tr>
+                    {expandedRow === row._id && (
+                      <tr className="bg-gray-100">
+                        <td
+                          colSpan="10"
+                          className="border border-gray-300 px-4 py-2"
+                        >
+                          <AdminAgentTurnover AgentId={row._id} />
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </tbody>
           </table>
         </div>
       </div>

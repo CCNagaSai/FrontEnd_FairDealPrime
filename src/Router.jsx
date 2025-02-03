@@ -38,19 +38,17 @@ import GameLogic from "./pages/gameLogic";
 import BotList from "./pages/Bot";
 import BotUpdate from "./pages/BotUpdate";
 import Deposit from "./pages/Deposit";
-import PayoutPendding from './pages/Payoutpendding'
-import SocialURL from './pages/SocialURL'
-import NoitceText from './pages/NoticeText'
-import NotificationList from './pages/Notification'
-import BannerList from './pages/Banner'
-import Botadd from './pages/Botadd'
-import PlayerAdd from './pages/Playeradd'
-import Mail from './pages/Mail'
-import Playeredit from './pages/PlayerUpdate'
+import PayoutPendding from "./pages/Payoutpendding";
+import SocialURL from "./pages/SocialURL";
+import NoitceText from "./pages/NoticeText";
+import NotificationList from "./pages/Notification";
+import BannerList from "./pages/Banner";
+import Botadd from "./pages/Botadd";
+import PlayerAdd from "./pages/Playeradd";
+import Mail from "./pages/Mail";
+import Playeredit from "./pages/PlayerUpdate";
 
-
-
-import CoinManagement from './pages/CoinManagement'
+import CoinManagement from "./pages/CoinManagement";
 
 // import AgentDashboard from "./pages/agentdashboard";
 import {
@@ -83,29 +81,44 @@ import {
   SubAgentTurnOver,
 } from "./New_Dashboards/SubAgent/SubAgentTabs";
 
+// import AdminDashboard from "./New_Dashboards/Admin/AdminTabs";
+import {
+  AdminDashboard,
+  GamebetInformation,
+  AdminTableManagement,
+  AdminGameLogic,
+  AdminSearchUsers,
+  AdminBalanceAdjustment,
+  AdminKickoffUsers,
+  CreateAgent,
+  SearchAgent,
+  AgentBalanceAdjustments,
+  ChangeAgentPassword,
+  CreateSubAgent,
+  SearchSubAgent,
+  SubAgentBalanceAdjustments,
+  ChangeSubAgentPassword,
+} from "./New_Dashboards/Admin/AdminTabs";
+
 import ShopDashboard from "./pages/shopdashboard";
 
 import AgentManagement from "./pages/agentManagement";
-import Agentdit from './pages/AgentUpdate'
-import AgentAdd from './pages/agentadd'
-
+import Agentdit from "./pages/AgentUpdate";
+import AgentAdd from "./pages/agentadd";
 
 import ShopManagement from "./pages/ShopManagment";
-import ShopAdd from './pages/shopadd'
-import Shopdit from './pages/ShopUpdate'
+import ShopAdd from "./pages/shopadd";
+import Shopdit from "./pages/ShopUpdate";
 
+import Commission from "./pages/commission";
+import GamebetInfo from "./pages/playingtabledata";
 
-import Commission from './pages/commission'
-import GamebetInfo from './pages/playingtabledata'
+import BetHistoryinfo from "./pages/BetHistory";
 
-
-import BetHistoryinfo from './pages/BetHistory'
-
-
-import Chnagepwd from './pages/Chnagepwd'
-import SubAgentTranscation from './pages/SubAgentTranscation'
-import AgentTranscation from './pages/AgentTranscation'
-import AdminTranscation from './pages/AdminTranscation'
+import Chnagepwd from "./pages/Chnagepwd";
+import SubAgentTranscation from "./pages/SubAgentTranscation";
+import AgentTranscation from "./pages/AgentTranscation";
+import AdminTranscation from "./pages/AdminTranscation";
 
 import TableTranscation from "./pages/tableManagment";
 import Cookies from "universal-cookie";
@@ -432,6 +445,72 @@ const router = createBrowserRouter([
       {
         path: "/shopdashboard",
         element: <SubAgentdash />,
+      },
+
+      //Admin Routes
+      {
+        path: "/admindashboard",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "/admin/PlayingTableBet",
+        element: <GamebetInformation />,
+      },
+      {
+        path: "/admin/TableManagement",
+        element: <AdminTableManagement />,
+      },
+      {
+        path: "/admin/TableManagement",
+        element: <AdminTableManagement />,
+      },
+      {
+        path: "/admin/GameLogic",
+        element: <AdminGameLogic />,
+      },
+      {
+        path: "/admin/searchUsers",
+        element: <AdminSearchUsers />,
+      },
+      {
+        path: "/admin/BalanceAdjustment",
+        element: <AdminBalanceAdjustment />,
+      },
+      {
+        path: "/admin/KickoffUsers",
+        element: <AdminKickoffUsers />,
+      },
+      {
+        path: "/admin/CreateAgent",
+        element: <CreateAgent />,
+      },
+      {
+        path: "/admin/SearchAgent",
+        element: <SearchAgent />,
+      },
+      {
+        path: "/admin/AgentBalanceAdjustments",
+        element: <AgentBalanceAdjustments />,
+      },
+      {
+        path: "/admin/ChangeAgentPassword",
+        element: <ChangeAgentPassword />,
+      },
+      {
+        path: "/admin/CreateSubAgent",
+        element: <CreateSubAgent />,
+      },
+      {
+        path: "/admin/SearchSubAgent",
+        element: <SearchSubAgent />,
+      },
+      {
+        path: "/admin/SubAgentBalanceAdjustments",
+        element: <SubAgentBalanceAdjustments />,
+      },
+      {
+        path: "/admin/ChangeSubAgentPassword",
+        element: <ChangeSubAgentPassword />,
       },
     ],
   },

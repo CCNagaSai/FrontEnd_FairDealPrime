@@ -5,7 +5,7 @@ import UserTurnOverInSubAgent from "../../Agent/AgentTurnOver/UserTurnOverInSubA
 
 const cookies = new Cookies();
 
-const AdminAgentTurnover = ({AgentId}) => {
+const AdminAgentTurnover = ({ AgentId }) => {
   const navigate = useNavigate();
 
   // State
@@ -152,9 +152,7 @@ const AdminAgentTurnover = ({AgentId}) => {
 
       <div className="user-details bg-white p-4 sm:p-6 rounded-md shadow-md">
         <div className="user-summary text-sm sm:text-lg font-bold mb-4">
-          <span>
-            TOTAL SUB-AGENTS: ({data.length})
-          </span>
+          <span>TOTAL SUB-AGENTS: ({data.length})</span>
         </div>
 
         <div className="overflow-x-auto">
@@ -173,93 +171,181 @@ const AdminAgentTurnover = ({AgentId}) => {
                 >
                   Total Play Points
                 </th>
-                <th 
+                <th
                   onClick={() => handleSort("chips")}
                   className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
                 >
                   Total Won Points
                 </th>
-                <th 
+                <th
                   onClick={() => handleSort("location")}
                   className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
                 >
                   Total End Points
                 </th>
-                <th 
-                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
-                >
+                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
                   Total Margin
                 </th>
-                <th 
-                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
-                >
+                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
                   Total Net
                 </th>
-                <th 
-                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
-                >
+                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
                   view users
                 </th>
               </tr>
             </thead>
             <tbody>
-  {displayedData.map((row, index) => {
-    const subAgentId = row._id;
-    const subAgentHistory = backendData[subAgentId] || [];
+              {displayedData.map((row, index) => {
+                const subAgentId = row._id;
+                const subAgentHistory = backendData[subAgentId] || [];
 
-    // Check if the backend data is still being fetched
-    const isDataFetched = backendData.hasOwnProperty(subAgentId);
+                // Check if the backend data is still being fetched
+                const isDataFetched = backendData.hasOwnProperty(subAgentId);
 
-    // Calculate totals for the individual sub-agent
-    const totalPlay = isDataFetched
-      ? subAgentHistory.reduce((sum, item) => sum + item.play, 0).toFixed(2)
-      : "loading";
-    const totalWon = isDataFetched
-      ? subAgentHistory.reduce((sum, item) => sum + item.won, 0).toFixed(2)
-      : "loading";
-    const totalEnd = isDataFetched
-      ? subAgentHistory.reduce((sum, item) => sum + (item.play - item.won), 0).toFixed(2)
-      : "loading";
-    const totalMargin = isDataFetched
-      ? subAgentHistory.reduce((sum, item) => sum + (2.5 / 100) * item.play, 0).toFixed(2)
-      : "loading";
-    const totalNet = isDataFetched
-      ? subAgentHistory.reduce(
-          (sum, item) => sum + (item.play - item.won - (2.5 / 100) * item.play),
-          0
-        ).toFixed(2)
-      : "loading";
+                // Calculate totals for the individual sub-agent
+                const totalPlay = isDataFetched
+                  ? subAgentHistory
+                      .reduce((sum, item) => sum + item.play, 0)
+                      .toFixed(2)
+                  : "loading";
+                const totalWon = isDataFetched
+                  ? subAgentHistory
+                      .reduce((sum, item) => sum + item.won, 0)
+                      .toFixed(2)
+                  : "loading";
+                const totalEnd = isDataFetched
+                  ? subAgentHistory
+                      .reduce((sum, item) => sum + (item.play - item.won), 0)
+                      .toFixed(2)
+                  : "loading";
+                const totalMargin = isDataFetched
+                  ? subAgentHistory
+                      .reduce((sum, item) => sum + (2.5 / 100) * item.play, 0)
+                      .toFixed(2)
+                  : "loading";
+                const totalNet = isDataFetched
+                  ? subAgentHistory
+                      .reduce(
+                        (sum, item) =>
+                          sum +
+                          (item.play - item.won - (2.5 / 100) * item.play),
+                        0
+                      )
+                      .toFixed(2)
+                  : "loading";
 
-    return (
-      <React.Fragment key={row._id}>
-        <tr key={index} className="hover:bg-gray-100">
-          <td className="px-2 sm:px-4 py-2">{row.name || "N/A"}</td>
-          <td className="px-2 sm:px-4 py-2">{totalPlay}</td>
-          <td className="px-2 sm:px-4 py-2">{totalWon}</td>
-          <td className="px-2 sm:px-4 py-2">{totalEnd}</td>
-          <td className="px-2 sm:px-4 py-2">{totalMargin}</td>
-          <td className="px-2 sm:px-4 py-2">{totalNet}</td>
-          <td className="border border-gray-300 px-4 py-2">
-            <button
-              onClick={() => toggleRow(row._id)}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              {expandedRow === row._id ? 'Close' : 'Show'}
-            </button>
-          </td>
-        </tr>
-        {expandedRow === row._id && (
-          <tr className="bg-gray-100">
-            <td colSpan="10" className="border border-gray-300 px-4 py-2">
-              <UserTurnOverInSubAgent subAgentId={row._id} />
-            </td>
-          </tr>
-        )}
-      </React.Fragment>
-    );
-  })}
-</tbody>
-
+                return (
+                  <React.Fragment key={row._id}>
+                    <tr key={index} className="hover:bg-gray-100">
+                      <td className="px-2 sm:px-4 py-2">{row.name || "N/A"}</td>
+                      <td className="px-2 sm:px-4 py-2">{totalPlay}</td>
+                      <td className="px-2 sm:px-4 py-2">{totalWon}</td>
+                      <td className="px-2 sm:px-4 py-2">{totalEnd}</td>
+                      <td className="px-2 sm:px-4 py-2">{totalMargin}</td>
+                      <td className="px-2 sm:px-4 py-2">{totalNet}</td>
+                      <td className="border border-gray-300 px-4 py-2">
+                        <button
+                          onClick={() => toggleRow(row._id)}
+                          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        >
+                          {expandedRow === row._id ? "Close" : "Show"}
+                        </button>
+                      </td>
+                    </tr>
+                    {expandedRow === row._id && (
+                      <tr className="bg-gray-100">
+                        <td
+                          colSpan="10"
+                          className="border border-gray-300 px-4 py-2"
+                        >
+                          <UserTurnOverInSubAgent subAgentId={row._id} />
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </tbody>
+            <tfoot>
+              <tr className="bg-blue-100 font-bold">
+                <td className="border border-gray-300 px-4 py-2">Total</td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {data
+                    .reduce((sum, item) => {
+                      const subAgentHistory = backendData[item._id] || [];
+                      return (
+                        sum +
+                        subAgentHistory.reduce(
+                          (acc, history) => acc + history.play,
+                          0
+                        )
+                      );
+                    }, 0)
+                    .toFixed(2)}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {data
+                    .reduce((sum, item) => {
+                      const subAgentHistory = backendData[item._id] || [];
+                      return (
+                        sum +
+                        subAgentHistory.reduce(
+                          (acc, history) => acc + history.won,
+                          0
+                        )
+                      );
+                    }, 0)
+                    .toFixed(2)}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {data
+                    .reduce((sum, item) => {
+                      const subAgentHistory = backendData[item._id] || [];
+                      return (
+                        sum +
+                        subAgentHistory.reduce(
+                          (acc, history) => acc + (history.play - history.won),
+                          0
+                        )
+                      );
+                    }, 0)
+                    .toFixed(2)}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {data
+                    .reduce((sum, item) => {
+                      const subAgentHistory = backendData[item._id] || [];
+                      return (
+                        sum +
+                        subAgentHistory.reduce(
+                          (acc, history) => acc + (2.5 / 100) * history.play,
+                          0
+                        )
+                      );
+                    }, 0)
+                    .toFixed(2)}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {data
+                    .reduce((sum, item) => {
+                      const subAgentHistory = backendData[item._id] || [];
+                      return (
+                        sum +
+                        subAgentHistory.reduce(
+                          (acc, history) =>
+                            acc +
+                            (history.play -
+                              history.won -
+                              (2.5 / 100) * history.play),
+                          0
+                        )
+                      );
+                    }, 0)
+                    .toFixed(2)}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">-</td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       </div>
