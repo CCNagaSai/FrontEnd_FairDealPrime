@@ -13,6 +13,19 @@ import CreateSubAgent from "../Admin/CreateSubAgent";
 import SearchSubAgent from "../Admin/SearchSubAgent";
 import SubAgentBalanceAdjustments from "../Admin/SubAgentBalanceAdjustment";
 import ChangeSubAgentPassword from "../Admin/ChangeSubAgentPassword";
+import AdminPointFile from "../Admin/AdminPointFile";
+import AdminInPoint from "./AdminInPoints";
+import AdminOutPoint from "./AdminOutPoint";
+import AdminGameHistory from "./AdminGameHistory";
+import AdminTurnOver from "./AdminTurnOverReport";
+import AdminTranscations from "./AdminTranscation";
+import AgentTranscations from "./AgentTranscation";
+import SubAgentTranscations from "./SubAgentTransaction";
+import AdminSocialURL from "./SocialURL";
+import AdminNoticeText from "./NoticeText";
+import AdminSettings from "./Settings";
+import ChangeAdminPwd from "./ChangeAdminPassword";
+
 export {
   AdminDashboard,
   AdminSearchUsers,
@@ -29,4 +42,16 @@ export {
   SearchSubAgent,
   SubAgentBalanceAdjustments,
   ChangeSubAgentPassword,
+  AdminPointFile,
+  AdminInPoint,
+  AdminOutPoint,
+  AdminGameHistory,
+  AdminTurnOver,
+  AdminTranscations,
+  AgentTranscations,
+  SubAgentTranscations,
+  AdminSocialURL,
+  AdminNoticeText,
+  AdminSettings,
+  ChangeAdminPwd,
 };

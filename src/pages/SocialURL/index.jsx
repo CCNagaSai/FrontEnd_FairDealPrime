@@ -1,7 +1,7 @@
 import AddSocialURL from "../../component/AddSocialURL";
 import ListSocial from "../../component/AddSocialURL/listofsocial";
 function SocialURL() {
-  console.log("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG")
+  console.log("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
   return (
     <main className="w-full px-6 pb-6 pt-[100px] sm:pt-[156px] xl:px-12 xl:pb-12">
       {/* write your code here */}

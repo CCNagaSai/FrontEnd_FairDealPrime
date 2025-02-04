@@ -1,10 +1,10 @@
-import AdminTurnoverReport from "./AdminReport";
+import AgentTranscation from "../../../component/AgentTranscation";
 import Topbar from "../../Common/Topbar";
 import AdminSidebar from "../AdminSidebar"; // Adjust path to Sidebar component
 import "../AdminDash.css";
 import React from "react";
 
-const AdminTurnOver = () => {
+const AgentTranscations = () => {
   return (
     <div className="app">
       <div className="Header">
@@ -15,11 +15,11 @@ const AdminTurnOver = () => {
           <AdminSidebar />
         </div>
         <div className="Right">
-          <AdminTurnoverReport />
+          <AgentTranscation pageSize={9} />
         </div>
       </div>
     </div>
   );
 };
 
-export default AdminTurnOver;
+export default AgentTranscations;

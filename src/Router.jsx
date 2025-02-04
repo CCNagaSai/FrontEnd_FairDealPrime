@@ -27,7 +27,7 @@ import ProgramAndResources from "./pages/settings/program&resourses";
 import Payment from "./pages/settings/payment";
 import Faq from "./pages/settings/faq";
 import Security from "./pages/settings/security";
-import AdminTurnOver from "./New_Dashboards/Admin/AdminTurnOverReport";
+// import AdminTurnOver from "./New_Dashboards/Admin/AdminTurnOverReport";
 import TermsAndCondition from "./pages/settings/terms&condition";
 import HomeFive from "./pages/homeFive";
 
@@ -98,6 +98,18 @@ import {
   SearchSubAgent,
   SubAgentBalanceAdjustments,
   ChangeSubAgentPassword,
+  AdminPointFile,
+  AdminInPoint,
+  AdminOutPoint,
+  AdminGameHistory,
+  AdminTurnOver,
+  AdminTranscations,
+  AgentTranscations,
+  SubAgentTranscations,
+  AdminSocialURL,
+  AdminNoticeText,
+  AdminSettings,
+  ChangeAdminPwd,
 } from "./New_Dashboards/Admin/AdminTabs";
 
 import ShopDashboard from "./pages/shopdashboard";
@@ -511,6 +523,54 @@ const router = createBrowserRouter([
       {
         path: "/admin/ChangeSubAgentPassword",
         element: <ChangeSubAgentPassword />,
+      },
+      {
+        path: "/admin/PointFile",
+        element: <AdminPointFile />,
+      },
+      {
+        path: "/admin/InPoint",
+        element: <AdminInPoint />,
+      },
+      {
+        path: "/admin/OutPoint",
+        element: <AdminOutPoint />,
+      },
+      {
+        path: "/admin/GameHistory",
+        element: <AdminGameHistory />,
+      },
+      {
+        path: "/admin/AdminTurnOverReport",
+        element: <AdminTurnOver />,
+      },
+      {
+        path: "/admin/Transcations",
+        element: <AdminTranscations />,
+      },
+      {
+        path: "/admin/AgentTranscations",
+        element: <AgentTranscations />,
+      },
+      {
+        path: "/admin/SubAgentTranscations",
+        element: <SubAgentTranscations />,
+      },
+      {
+        path: "/admin/SocialURL",
+        element: <AdminSocialURL />,
+      },
+      {
+        path: "/admin/NoticeText",
+        element: <AdminNoticeText />,
+      },
+      {
+        path: "/admin/Settings",
+        element: <AdminSettings />,
+      },
+      {
+        path: "/admin/ChangePassword",
+        element: <ChangeAdminPwd />,
       },
     ],
   },

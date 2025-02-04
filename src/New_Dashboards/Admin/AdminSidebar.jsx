@@ -185,7 +185,7 @@ function AdminSidebar() {
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
-                  to="/agent/pointfile"
+                  to="/admin/PointFile"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Point File
@@ -193,7 +193,7 @@ function AdminSidebar() {
               </li>
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
-                  to="/agent/inpoint"
+                  to="/admin/InPoint"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   In Points
@@ -201,7 +201,7 @@ function AdminSidebar() {
               </li>
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
-                  to="/agent/outpoint"
+                  to="/admin/OutPoint"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Out Points
@@ -209,7 +209,7 @@ function AdminSidebar() {
               </li>
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
-                  to="/agent/gamehistory"
+                  to="/admin/GameHistory"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Game History
@@ -217,7 +217,7 @@ function AdminSidebar() {
               </li>
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
-                  to="/agent/Turn-over"
+                  to="/admin/AdminTurnOverReport"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Turn Over
@@ -225,7 +225,7 @@ function AdminSidebar() {
               </li>
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
-                  to="/agent/Turn-over"
+                  to="/admin/Transcations"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Admin Transcation
@@ -233,7 +233,7 @@ function AdminSidebar() {
               </li>
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
-                  to="/agent/Turn-over"
+                  to="/admin/AgentTranscations"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Agent Transcation
@@ -241,7 +241,7 @@ function AdminSidebar() {
               </li>
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
-                  to="/agent/Turn-over"
+                  to="/admin/SubAgentTranscations"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Sub-Agent Transcation
@@ -257,7 +257,7 @@ function AdminSidebar() {
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
-                  to="/agent/pointfile"
+                  to="/admin/SocialURL"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Socila URL
@@ -265,7 +265,7 @@ function AdminSidebar() {
               </li>
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
-                  to="/agent/inpoint"
+                  to="/admin/NoticeText"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Notice Text
@@ -273,7 +273,7 @@ function AdminSidebar() {
               </li>
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
-                  to="/agent/outpoint"
+                  to="/admin/Settings"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Setting
@@ -281,7 +281,7 @@ function AdminSidebar() {
               </li>
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
-                  to="/agent/gamehistory"
+                  to="/admin/ChangePassword"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Change Password
