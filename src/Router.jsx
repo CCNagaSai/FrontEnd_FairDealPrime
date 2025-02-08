@@ -110,6 +110,7 @@ import {
   AdminNoticeText,
   AdminSettings,
   ChangeAdminPwd,
+  TestingTable,
 } from "./New_Dashboards/Admin/AdminTabs";
 
 import ShopDashboard from "./pages/shopdashboard";
@@ -571,6 +572,11 @@ const router = createBrowserRouter([
       {
         path: "/admin/ChangePassword",
         element: <ChangeAdminPwd />,
+      },
+      //Testing
+      {
+        path: "/admin/TestingTable",
+        element: <TestingTable />,
       },
     ],
   },

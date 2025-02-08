@@ -1,9 +1,27 @@
 import React, { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function AdminSidebar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
+
+  const [password, setPassword] = useState("");
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [selectedPath, setSelectedPath] = useState("");
+  const navigate = useNavigate();
+
+  const correctPassword = "Admin@1234"; // Change this as needed
+
+  const handlePasswordSubmit = () => {
+    if (password === correctPassword) {
+      setShowPasswordPopup(false);
+      navigate(selectedPath); // Redirect to the selected page
+    } else {
+      alert("Incorrect password! Try again.");
+      setPassword(""); // Clear input field
+    }
+  };
 
   return (
     <div className="relative">
@@ -35,37 +53,103 @@ function AdminSidebar() {
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
-                  to="/admin/PlayingTableBet"
-                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
-                >
-                  Playing Table Bet
-                </Link>
-              </li>
-              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
-                <Link
                   to="/admin/TableManagement"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Table Management
                 </Link>
               </li>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/admin/TestingTable"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Testing Playing Table Bet
+                </Link>
+              </li>
             </ul>
           </li>
+
           <li className="mb-1">
             <strong className="text-lg text-blue-800 ml-2 cursor-default">
               Games
             </strong>
             <ul className="list-none p-0 m-0 mt-1">
-              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
-                <Link
-                  to="/admin/GameLogic"
-                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
-                >
+              {/* Games Logic Link */}
+              <li
+                className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100 cursor-pointer"
+                onClick={() => {
+                  setSelectedPath("/admin/GameLogic");
+                  setShowPasswordPopup(true);
+                }}
+              >
+                <span className="block text-sm text-black py-1 pl-6 hover:text-yellow-500">
                   Games Logic
-                </Link>
+                </span>
+              </li>
+
+              {/* Playing Table Bet Link */}
+              <li
+                className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100 cursor-pointer"
+                onClick={() => {
+                  setSelectedPath("/admin/PlayingTableBet");
+                  setShowPasswordPopup(true);
+                }}
+              >
+                <span className="block text-sm text-black py-1 pl-6 hover:text-yellow-500">
+                  Playing Table Bet
+                </span>
               </li>
             </ul>
           </li>
+
+          {/* Password Popup */}
+          {showPasswordPopup && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+              <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-2xl p-8 w-full max-w-md text-center border border-gray-200 dark:border-gray-700 backdrop-blur-lg">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                  Secure Access
+                </h2>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 mb-6">
+                  Enter your password to proceed.
+                </p>
+
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg 
+               focus:outline-none focus:ring-2 focus:ring-blue-500 
+               dark:bg-gray-700 dark:text-white text-gray-900 bg-white transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-3 bg-gray-200 dark:bg-gray-600 px-3 py-1 rounded-full 
+               text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500 transition"
+                  >
+                    {showPassword ? "🙈 Hide" : "👁 Show"}
+                  </button>
+                </div>
+
+                <button
+                  onClick={handlePasswordSubmit}
+                  className="mt-6 w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 rounded-lg shadow-lg transition-all transform hover:scale-105"
+                >
+                  Unlock Access
+                </button>
+
+                <button
+                  onClick={() => setShowPasswordPopup(false)}
+                  className="mt-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
 
           <li className="mb-1">
             <strong className="text-lg text-blue-800 ml-2 cursor-default">

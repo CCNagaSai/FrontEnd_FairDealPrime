@@ -25,6 +25,7 @@ import AdminSocialURL from "./SocialURL";
 import AdminNoticeText from "./NoticeText";
 import AdminSettings from "./Settings";
 import ChangeAdminPwd from "./ChangeAdminPassword";
+import TestingTable from "./Testing";
 
 export {
   AdminDashboard,
@@ -54,4 +55,5 @@ export {
   AdminNoticeText,
   AdminSettings,
   ChangeAdminPwd,
+  TestingTable,
 };
