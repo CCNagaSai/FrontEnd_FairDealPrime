@@ -67,6 +67,7 @@ import {
   AgentOutPoint,
   AgentGameHistory,
   AgentTurnOver,
+  SubAPointsInAgent,
 } from "./New_Dashboards/Agent/AgentTabs";
 
 import {
@@ -381,6 +382,10 @@ const router = createBrowserRouter([
       {
         path: "/agent/kickoff-users",
         element: <AgentKickoffUsers />,
+      },
+      {
+        path: "/agent/subAgents-points-history",
+        element: <SubAPointsInAgent />,
       },
 
       // SubAgents routes

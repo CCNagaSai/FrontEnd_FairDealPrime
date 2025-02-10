@@ -14,38 +14,14 @@ const AReportInpoint = () => {
     endDate: "",
     dateRange: "Select",
   });
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredData, setFilteredData] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [columns, setColumns] = useState([]);
   const [showTable, setShowTable] = useState(false);
   const [backendData, setBackendData] = useState([]);
 
   const [loading, setLoading] = useState(false);
-  const desktopColumns = [
-    "S.no",
-    "Date",
-    "Receiver",
-    "Old Points",
-    "In",
-    "Out",
-    "New Points",
-    "Sender",
-    "Trans.Id",
-    "Comments",
-  ];
 
-  const mobileColumns = [
-    "S.no",
-    "Date",
-    "Receiver",
-    "Old Points",
-    "In",
-    "Out",
-    "New Points",
-    "Sender",
-    "Trans.Id",
-    "Comments",
-  ];
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -53,10 +29,6 @@ const AReportInpoint = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  useEffect(() => {
-    setColumns(isMobile ? mobileColumns : desktopColumns);
-  }, [isMobile]);
 
   // Store id and type using useRef
   const idRef = useRef(null);
@@ -71,6 +43,10 @@ const AReportInpoint = () => {
     typeRef.current = type;
     tokenRef.current = token;
   }, []);
+
+  useEffect(() => {
+      fetchBackendData();
+    }, []);
 
   const fetchBackendData = async () => {
     try {
@@ -108,6 +84,7 @@ const AReportInpoint = () => {
 
       if (result.DepositeList) {
         setBackendData(result.DepositeList);
+        setFilteredData(result.DepositeList);
       } else {
         console.error("No data found in the response.");
       }
@@ -126,33 +103,53 @@ const AReportInpoint = () => {
 
     switch (range) {
       case "Today":
-        startDate.setDate(today.getDate());
-        endDate.setHours(23, 59, 59, 999);
+        startDate = new Date(today);
+        endDate = new Date(today);
         break;
       case "Yesterday":
         startDate.setDate(today.getDate() - 1);
         endDate.setDate(today.getDate() - 1);
-        startDate.setHours(0, 0, 0, 0);
-        endDate.setHours(23, 59, 59, 999);
         break;
-      case "Last 7 Days":
-        startDate.setDate(today.getDate() - 7);
-        startDate.setHours(0, 0, 0, 0);
+      case "This Week": {
+        const dayOfWeek = today.getDay(); // Sunday - 0, Monday - 1, ..., Saturday - 6
+        startDate = new Date(today);
+        startDate.setDate(
+          today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)
+        ); // Move to Monday
+        endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6); // Move to Sunday
         break;
-      case "Last 30 Days":
-        startDate.setDate(today.getDate() - 30);
-        startDate.setHours(0, 0, 0, 0);
+      }
+      case "Last Week": {
+        const dayOfWeek = today.getDay();
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - dayOfWeek - 6); // Move to previous week's Monday
+        endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6); // Move to Sunday of last week
+        break;
+      }
+      case "This Month":
+        startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        break;
+      case "Last Month":
+        startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        endDate = new Date(today.getFullYear(), today.getMonth(), 0);
         break;
       default:
         break;
     }
 
-    setFilters((prev) => ({
-      ...prev,
-      startDate: startDate ? startDate.toISOString().split("T")[0] : "",
-      endDate: endDate ? endDate.toISOString().split("T")[0] : "",
-      dateRange: range,
+    const formatDate = (date) => {
+      return date.toLocaleDateString("en-GB").split("/").reverse().join("-");
+    };
+
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      startDate: formatDate(startDate),
+      endDate: formatDate(endDate),
     }));
+    setDateRange(range);
   };
 
   const handleManualDateChange = (e, field) => {
@@ -164,38 +161,103 @@ const AReportInpoint = () => {
   };
 
   const handleSubmit = () => {
-    const { receiveBy, sentBy, startDate, endDate } = filters;
-
+    const { receiveBy, sentBy, startDate, endDate, username } = filters;
     let filtered = backendData;
-
-    // Filter by Receive By
+  
+    console.log("Filters:", filters); // Log filters for debugging
+  
     if (receiveBy) {
-      filtered = filtered.filter((entry) =>
-        entry.receiver.toLowerCase().includes(receiveBy.toLowerCase())
-      );
+      filtered = filtered.filter((entry) => {
+        let receiver = '';
+        switch (entry.trnxTypeTxt) {
+          case 'Sub Agent Deduct Chips Added':
+            receiver = entry.name ? entry.name.toLowerCase() : ''; // Subagent is receiver
+            break;
+          case 'Add Chips to Sub Agent':
+            receiver = entry.shopname ? entry.shopname.toLowerCase() : ''; // Admin is receiver
+            break;
+          case 'Deduct amount Addeed Chips to agent':
+            receiver = entry.name ? entry.name.toLowerCase() : ''; // User is receiver
+            break;
+          case 'Add Chips to User':
+            receiver = entry.shopname ? entry.shopname.toLowerCase() : '';
+            break;
+          case 'Admin Addeed Chips':
+            receiver = entry.name ? entry.name.toLowerCase() : '';
+            break;
+          case 'Admin duduct Chips':
+            receiver = entry.adminname ? entry.adminname.toLowerCase() : '';
+            break;
+          default:
+            receiver = '';
+        }
+        return receiver.includes(receiveBy.toLowerCase());
+      });
     }
 
     // Filter by Sent By
     if (sentBy) {
-      filtered = filtered.filter((entry) =>
-        entry.sender.toLowerCase().includes(sentBy.toLowerCase())
-      );
+      filtered = filtered.filter((entry) => {
+        let sender = '';
+        switch (entry.trnxTypeTxt) {
+          case 'Sub Agent Deduct Chips Added':
+            sender = entry.shopname ? entry.shopname.toLowerCase() : '';
+            break;
+          case 'Add Chips to Sub Agent':
+            sender = entry.name ? entry.name.toLowerCase() : '';
+            break;
+          case 'Deduct amount Addeed Chips to agent':
+            sender = entry.shopid ? entry.shopid.toLowerCase() : '';
+            break;
+          case 'Add Chips to User':
+            sender = entry.name ? entry.name.toLowerCase() : '';
+            break;
+          case 'Admin Addeed Chips':
+            sender = entry.adminname ? entry.adminname.toLowerCase() : '';
+            break;
+          case 'Admin duduct Chips':
+            sender = entry.name ? entry.name.toLowerCase() : '';
+            break;
+          default:
+            sender = '';
+        }
+        return sender.includes(sentBy.toLowerCase());
+      });
     }
 
+
+    if (username) {
+      filtered = filtered.filter((entry) => {
+        const adminName = entry.adminname ? entry.adminname.toLowerCase() : "";
+        const shopName = entry.shopname ? entry.shopname.toLowerCase() : "";
+        const Name = entry.name ? entry.name.toLowerCase() : "";
+        const shopid = entry.shopid ? entry.shopid.toLowerCase() : "";
+
+        return (
+          adminName.includes(username.toLowerCase()) ||
+          shopName.includes(username.toLowerCase()) ||
+          Name.includes(username.toLowerCase()) ||
+          shopid.includes(username.toLowerCase())
+        );
+      });
+    }
+  
     // Filter by Date Range
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
-
+  
       filtered = filtered.filter((entry) => {
-        const entryDate = new Date(entry.createdAt);
+        const entryDate = new Date(entry.createdAt.split('T')[0]); // Extract only date part for comparison
         return entryDate >= start && entryDate <= end;
       });
     }
-
+  
+    console.log("Filtered Data:", filtered); // Log filtered data for debugging
     setFilteredData(filtered);
-    setShowTable(true);
-    fetchBackendData();
+  
+    // Only show table if there is data to display
+    setShowTable(filtered.length > 0);
   };
 
   const handleClear = () => {
@@ -205,6 +267,7 @@ const AReportInpoint = () => {
       startDate: "",
       endDate: "",
       dateRange: "Select",
+      username: "",
     });
     setFilteredData(backendData); // Reset to all data
     setShowTable(false);
@@ -225,6 +288,19 @@ const AReportInpoint = () => {
               onSubmit={(e) => e.preventDefault()}
             >
               {/* First Row - Two Input Fields */}
+              <div className="grid grid-cols-2 gap-4 mb-5 w-full">
+              <div className="flex-1">
+                <label className="block mb-2">Username:</label>
+                <input
+                  type="text"
+                  value={filters.username}
+                  onChange={(e) =>
+                    setFilters({ ...filters, username: e.target.value })
+                  }
+                  className="w-full p-3 border border-gray-300 rounded-lg"
+                />
+              </div>
+              </div>
               <div className="grid grid-cols-2 gap-4 mb-5 w-full">
                 <div className="flex-1">
                   <label className="block mb-2">Receive By:</label>
@@ -273,18 +349,21 @@ const AReportInpoint = () => {
                   />
                 </div>
 
-                <div className="flex-1">
+                {/* Date Range */}
+                <div className="flex-1 min-w-[140px]">
                   <label className="block mb-2">Date Range:</label>
                   <select
                     value={filters.dateRange}
                     onChange={(e) => handleDateRangeChange(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg"
+                    className="w-full p-2 md:p-3 border border-gray-300 rounded-lg"
                   >
                     <option value="Select">Select</option>
                     <option value="Today">Today</option>
                     <option value="Yesterday">Yesterday</option>
-                    <option value="Last 7 Days">Last 7 Days</option>
-                    <option value="Last 30 Days">Last 30 Days</option>
+                    <option value="This Week">This Week</option>
+                    <option value="Last Week">Last Week</option>
+                    <option value="This Month">This Month</option>
+                    <option value="Last Month">Last Month</option>
                     <option value="Custom">Custom</option>
                   </select>
                 </div>
@@ -318,7 +397,11 @@ const AReportInpoint = () => {
           {loading ? (
             <p>Loading backend data...</p>
           ) : (
-            <AgentInPointTable backendData={backendData} />
+            showTable ? (
+            <AgentInPointTable backendData={filteredData} />
+          ) : (
+            <p></p>
+          )
           )}
         </div>
       </div>

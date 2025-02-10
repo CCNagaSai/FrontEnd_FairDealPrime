@@ -26,6 +26,7 @@ import Faq from "./pages/settings/faq";
 import Security from "./pages/settings/security";
 import TermsAndCondition from "./pages/settings/Terms&condition";
 import HomeFive from "./pages/homeFive";
+import AdminTurnOver from "./src/New_Dashboards/Admin/AdminTurnOverReport"
 
 const router = createBrowserRouter([
   {
@@ -100,6 +101,10 @@ const router = createBrowserRouter([
           {
             path: "security",
             element: <Security />,
+          },
+          {
+            path: "turn-over-report",
+            element: <AdminTurnOver />,
           },
           {
             path: "terms&conditions",

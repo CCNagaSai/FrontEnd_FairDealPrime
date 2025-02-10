@@ -11,8 +11,9 @@ import AgentInPoint from "../Agent/AgentInPoints";
 import AgentOutPoint from "../Agent/AgentOutPoints";
 import AgentGameHistory from "../Agent/AgentGameHistory";
 import AgentTurnOver from "../Agent/AgentTurnOver";
+import SubAPointsInAgent from "../Agent/Sub Agent Pointsin Agent";
 
 
 
-export { Agentdash, AgentSearchUsers, AgentSearchSubAgents, AgentBalanceAdjustment, AgentKickoffUsers, AgentCreateUser, AgentCreateSubagent, AgentChangePassword, AgentPointFile, AgentInPoint, AgentOutPoint, AgentGameHistory, AgentTurnOver,
+export { Agentdash, AgentSearchUsers, AgentSearchSubAgents, AgentBalanceAdjustment, AgentKickoffUsers, AgentCreateUser, AgentCreateSubagent, AgentChangePassword, AgentPointFile, AgentInPoint, AgentOutPoint, AgentGameHistory, AgentTurnOver, SubAPointsInAgent,
  }

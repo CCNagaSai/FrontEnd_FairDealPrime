@@ -129,6 +129,14 @@ function Sidebar() {
               </li>
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
+                  to="/agent/subAgents-points-history"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Sub Agent Point File
+                </Link>
+              </li>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
                   to="/agent/gamehistory"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
@@ -297,6 +305,14 @@ function Sidebar() {
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Out Points
+                </Link>
+              </li>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/subAgents-points-history"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Sub Agent Point File
                 </Link>
               </li>
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
