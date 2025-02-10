@@ -26,7 +26,8 @@ import AdminNoticeText from "./NoticeText";
 import AdminSettings from "./Settings";
 import ChangeAdminPwd from "./ChangeAdminPassword";
 import TestingTable from "./Testing";
-
+import ActivePlayerDetails from "./ActivePlayersDetails";
+import AgentSubAgentPointFile from "./AgentSubAgentReportPointFile";
 export {
   AdminDashboard,
   AdminSearchUsers,
@@ -56,4 +57,6 @@ export {
   AdminSettings,
   ChangeAdminPwd,
   TestingTable,
+  ActivePlayerDetails,
+  AgentSubAgentPointFile,
 };

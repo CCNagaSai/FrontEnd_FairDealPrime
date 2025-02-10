@@ -2,8 +2,8 @@ import React from "react";
 import "../AdminDash.css";
 import ReactDOM from "react-dom/client";
 import AdminSidebar from "../AdminSidebar";
-import SubACreateUser from "../../SubAgent/subagentCreateUser/subagentCreateUser";
 import Topbar from "../../Common/Topbar";
+import ACreateSubagent from "../../Agent/agentCreateSubagent/agentCreateSubagent";
 const CreateSubAgent = () => {
   return (
     <div className="app">
@@ -15,7 +15,7 @@ const CreateSubAgent = () => {
           <AdminSidebar />
         </div>
         <div className="Right">
-          <SubACreateUser />
+          <ACreateSubagent />
         </div>
       </div>
     </div>

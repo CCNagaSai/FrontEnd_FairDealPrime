@@ -44,6 +44,14 @@ function AdminSidebar() {
                   Admin Dashboard
                 </Link>
               </li>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/admin/ActivePlayerDetails"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Active Players Details
+                </Link>
+              </li>
             </ul>
           </li>
           <li className="mb-1">
@@ -204,14 +212,14 @@ function AdminSidebar() {
                   Search Agent
                 </Link>
               </li>
-              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+              {/* <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
                   to="/admin/AgentBalanceAdjustments"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Balance Adjustment
                 </Link>
-              </li>
+              </li> */}
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
                   to="/admin/ChangeAgentPassword"
@@ -243,14 +251,14 @@ function AdminSidebar() {
                   Search Sub-Agent
                 </Link>
               </li>
-              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+              {/* <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
                   to="/admin/SubAgentBalanceAdjustments"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Balance Adjustment
                 </Link>
-              </li>
+              </li> */}
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
                   to="/admin/ChangeSubAgentPassword"
@@ -289,6 +297,14 @@ function AdminSidebar() {
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Out Points
+                </Link>
+              </li>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/admin/AgentSubAgentPointFile"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Agent/Sub-Agent Point File
                 </Link>
               </li>
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">

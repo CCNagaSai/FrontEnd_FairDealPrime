@@ -1,11 +1,10 @@
 import React from "react";
-import "../Admindash.css";
+import "../AdminDash.css";
 import ReactDOM from "react-dom/client";
-import Sidebar from "../AdminSidebar"; // Adjust path to Sidebar component
+import AdminSidebar from "../AdminSidebar"; // Adjust path to Sidebar component
+import ADashboard from "../../Agent/AgentDashboard/AgentDashboard";
 import Topbar from "../../Common/Topbar";
-import AdminBalanceAdjust from "./AdminBalanceAdjustement";
-
-const AdminBalanceAdjustment = () => {
+const ActivePlayerDetails = () => {
   return (
     <div className="app">
       <div className="Header">
@@ -13,14 +12,14 @@ const AdminBalanceAdjustment = () => {
       </div>
       <div className="content">
         <div className="Left">
-          <Sidebar />
+          <AdminSidebar />
         </div>
         <div className="Right">
-          <AdminBalanceAdjust />
+          <ADashboard />
         </div>
       </div>
     </div>
   );
 };
 
-export default AdminBalanceAdjustment;
+export default ActivePlayerDetails;

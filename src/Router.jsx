@@ -111,6 +111,8 @@ import {
   AdminSettings,
   ChangeAdminPwd,
   TestingTable,
+  ActivePlayerDetails,
+  AgentSubAgentPointFile,
 } from "./New_Dashboards/Admin/AdminTabs";
 
 import ShopDashboard from "./pages/shopdashboard";
@@ -573,6 +575,15 @@ const router = createBrowserRouter([
         path: "/admin/ChangePassword",
         element: <ChangeAdminPwd />,
       },
+      {
+        path: "/admin/ActivePlayerDetails",
+        element: <ActivePlayerDetails />,
+      },
+      {
+        path: "/admin/AgentSubAgentPointFile",
+        element: <AgentSubAgentPointFile />,
+      },
+
       //Testing
       {
         path: "/admin/TestingTable",

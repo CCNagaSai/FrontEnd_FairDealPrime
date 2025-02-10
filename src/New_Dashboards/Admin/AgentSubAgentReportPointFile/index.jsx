@@ -1,11 +1,11 @@
 import React from "react";
-import "../Admindash.css";
+import "../AdminDash.css";
 import ReactDOM from "react-dom/client";
-import Sidebar from "../AdminSidebar"; // Adjust path to Sidebar component
+import AdminSidebar from "../AdminSidebar"; // Adjust path to Sidebar component
 import Topbar from "../../Common/Topbar";
-import AdminBalanceAdjust from "./AdminBalanceAdjustement";
+import AgentSubAgentPointFile from "./AgentSubAgentReportpointFile";
 
-const AdminBalanceAdjustment = () => {
+const SubAgentPointFiles = () => {
   return (
     <div className="app">
       <div className="Header">
@@ -13,14 +13,14 @@ const AdminBalanceAdjustment = () => {
       </div>
       <div className="content">
         <div className="Left">
-          <Sidebar />
+          <AdminSidebar />
         </div>
         <div className="Right">
-          <AdminBalanceAdjust />
+          <AgentSubAgentPointFile />
         </div>
       </div>
     </div>
   );
 };
 
-export default AdminBalanceAdjustment;
+export default SubAgentPointFiles;
