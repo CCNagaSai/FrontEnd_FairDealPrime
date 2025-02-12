@@ -166,10 +166,26 @@ function AdminSidebar() {
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
+                  to="/admin/CreateUser"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Create Users
+                </Link>
+              </li>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
                   to="/admin/searchUsers"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Search Users
+                </Link>
+              </li>
+              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/admin/ChangeUserPassword"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Change Password
                 </Link>
               </li>
 

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import "../AdminDash.css";
 import Sidebar from "../AdminSidebar"; // Adjust path to Sidebar component
-import AUsersList from "../../Agent/AgentSearchUsers/AgentSearchUsers";
-import AViewUser from "../../Agent/AgentSearchUsers/AgentViewUsers"; // Import the AViewUser component
 import Topbar from "../../Common/Topbar";
+import IshankViewUser from "./AdminViewUsers";
+import IshankUsersList from "./AdminSearchUsers";
 
 const AdminSearchUsers = () => {
   const [selectedUser, setSelectedUser] = useState(null); // State to store the selected user
@@ -30,10 +30,10 @@ const AdminSearchUsers = () => {
         <div className="Right">
           {selectedUser ? (
             // Render AViewUser when a user is selected
-            <AViewUser user={selectedUser} onBack={handleBackToList} />
+            <IshankViewUser user={selectedUser} onBack={handleBackToList} />
           ) : (
             // Render AUsersList when no user is selected
-            <AUsersList onUserClick={handleUserClick} />
+            <IshankUsersList onUserClick={handleUserClick} />
           )}
         </div>
       </div>

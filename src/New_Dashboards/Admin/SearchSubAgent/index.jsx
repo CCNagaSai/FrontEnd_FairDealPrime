@@ -1,12 +1,23 @@
+import React, { useState } from "react";
 import "../AdminDash.css";
-import ReactDOM from "react-dom/client";
-import ProtoTypes from "prop-types";
 import AdminSidebar from "../AdminSidebar"; // Adjust path to Sidebar component
 import Topbar from "../../Common/Topbar";
-import "../AdminDash.css";
-import PlayerTab from "../../../component/ShopManagement/PlayerTab";
+import IshankViewSubAgent from "./ViewSubAgent";
+import IshankSubAgentList from "./SearchSubAgent";
 
-function SearchSubAgent({ pageSize }) {
+const AdminSearchUsers = () => {
+  const [selectedUser, setSelectedUser] = useState(null); // State to store the selected user
+
+  // Function to handle user click and set the selected user
+  const handleUserClick = (user) => {
+    setSelectedUser(user); // Set the clicked user
+  };
+
+  // Function to handle back button click to reset user selection
+  const handleBackToList = () => {
+    setSelectedUser(null); // Reset the selected user
+  };
+
   return (
     <div className="app">
       <div className="Header">
@@ -17,23 +28,17 @@ function SearchSubAgent({ pageSize }) {
           <AdminSidebar />
         </div>
         <div className="Right">
-          <div className="w-full rounded-lg bg-white px-[24px] py-[20px] dark:bg-darkblack-600">
-            <div className="flex flex-col space-y-5">
-              <h3 className="text-2xl font-bold pb-5 text-bgray-900 dark:text-white dark:border-darkblack-400 border-b border-bgray-200">
-                Sub-Agent Management
-              </h3>
-
-              <PlayerTab pageSize={pageSize} />
-            </div>
-          </div>
+          {selectedUser ? (
+            // Render AViewUser when a user is selected
+            <IshankViewSubAgent user={selectedUser} onBack={handleBackToList} />
+          ) : (
+            // Render AUsersList when no user is selected
+            <IshankSubAgentList onUserClick={handleUserClick} />
+          )}
         </div>
       </div>
     </div>
   );
-}
-
-SearchSubAgent.propTypes = {
-  pageSize: ProtoTypes.number,
 };
 
-export default SearchSubAgent;
+export default AdminSearchUsers;

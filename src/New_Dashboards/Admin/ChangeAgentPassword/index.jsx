@@ -2,8 +2,8 @@ import React from "react";
 import "../AdminDash.css";
 import ReactDOM from "react-dom/client";
 import Sidebar from "../AdminSidebar";
-import AChangePassword from "../../Agent/AgentChangePassword/AgentChangePassword";
 import Topbar from "../../Common/Topbar";
+import IshankAChangePassword from "./ChangeAgentPassword";
 
 const ChangeAgentPassword = () => {
   return (
@@ -16,7 +16,7 @@ const ChangeAgentPassword = () => {
           <Sidebar />
         </div>
         <div className="Right">
-          <AChangePassword />
+          <IshankAChangePassword />
         </div>
       </div>
     </div>

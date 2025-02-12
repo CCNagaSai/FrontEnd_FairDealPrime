@@ -2,8 +2,8 @@ import React from "react";
 import "../AdminDash.css";
 import ReactDOM from "react-dom/client";
 import AdminSidebar from "../AdminSidebar"; // Adjust path to Sidebar component
-import AReportpointfile from "../../Agent/AgentPointFile/AgentPointFile";
 import Topbar from "../../Common/Topbar";
+import Adminpointfile from "./AdminPointFile";
 
 const AdminPointFile = () => {
   return (
@@ -16,7 +16,7 @@ const AdminPointFile = () => {
           <AdminSidebar />
         </div>
         <div className="Right">
-          <AReportpointfile />
+          <Adminpointfile />
         </div>
       </div>
     </div>

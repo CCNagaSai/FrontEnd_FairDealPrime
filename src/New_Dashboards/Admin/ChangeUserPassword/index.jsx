@@ -1,11 +1,11 @@
 import React from "react";
 import "../AdminDash.css";
 import ReactDOM from "react-dom/client";
-import AdminSidebar from "../AdminSidebar";
+import Sidebar from "../AdminSidebar";
+import AChangePassword from "../../Agent/AgentChangePassword/AgentChangePassword";
 import Topbar from "../../Common/Topbar";
-import IshankChangeSubAgentPassword from "./ChangeSubAgentPwd";
 
-const ChangeSubAgentPassword = () => {
+const ChangeUserPassword = () => {
   return (
     <div className="app">
       <div className="Header">
@@ -13,14 +13,14 @@ const ChangeSubAgentPassword = () => {
       </div>
       <div className="content">
         <div className="Left">
-          <AdminSidebar />
+          <Sidebar />
         </div>
         <div className="Right">
-          <IshankChangeSubAgentPassword />
+          <AChangePassword />
         </div>
       </div>
     </div>
   );
 };
 
-export default ChangeSubAgentPassword;
+export default ChangeUserPassword;

@@ -1,9 +1,9 @@
 import React from "react";
 import "../AdminDash.css";
 import ReactDOM from "react-dom/client";
-import Sidebar from "../AdminSidebar";
-import ACreateUser from "../../Agent/agentCreateUser/agentCreateUser";
+import AdminSidebar from "../AdminSidebar";
 import Topbar from "../../Common/Topbar";
+import IshankCreateAgent from "./CreateAgent";
 const CreateAgent = () => {
   return (
     <div className="app">
@@ -12,10 +12,10 @@ const CreateAgent = () => {
       </div>
       <div className="content">
         <div className="Left">
-          <Sidebar />
+          <AdminSidebar />
         </div>
         <div className="Right">
-          <ACreateUser />
+          <IshankCreateAgent />
         </div>
       </div>
     </div>

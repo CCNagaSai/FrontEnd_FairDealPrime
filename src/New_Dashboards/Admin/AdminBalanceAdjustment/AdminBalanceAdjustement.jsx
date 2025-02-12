@@ -6,10 +6,10 @@ const cookies = new Cookies();
 
 const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
   // const [type, setType] = useState(prefilledType || "");
-  const [selectedUser, setSelectedUser] = useState(prefilledUser || "");
+  // const [selectedUser, setSelectedUser] = useState(prefilledUser || "");
   const [users, setUsers] = useState([]);
   const [type, setType] = useState(""); // New field for Type (User/Sub Agent)
-  // const [selectedUser, setSelectedUser] = useState("");
+  const [selectedUser, setSelectedUser] = useState("");
   const [adjustType, setAdjustType] = useState("add"); // Default to 'add'
   const [amount, setAmount] = useState("");
   const [transactionPassword, setTransactionPassword] = useState("");
@@ -23,7 +23,7 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
   const logintype = cookies.get("logintype");
   const email = cookies.get("email");
 
-  // Fetch users or subagents based on selected type
+  // Fetch users, Agents or subagents based on selected type
   useEffect(() => {
     const fetchPartners = async () => {
       if (!type) {
@@ -37,8 +37,12 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
 
         const url =
           type === "User"
-            ? `http://93.127.194.87:9999/admin/user/agent/UserList?Id=${id}&type=${logintype}`
-            : `http://93.127.194.87:9999/admin/shop/ShopList?agentId=${id}`;
+            ? `http://93.127.194.87:9999/admin/user/UserList?Id=id&type=Admin`
+            : type === "Shop"
+            ? `http://93.127.194.87:9999/admin/shop/ShopList?agentId=Admin`
+            : type === "Agent"
+            ? `http://93.127.194.87:9999/admin/agent/AgentList`
+            : null;
 
         const response = await fetch(url, {
           method: "GET",
@@ -53,7 +57,7 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
         }
 
         const result = await response.json();
-        setUsers(result.userList || result.shopList || []);
+        setUsers(result.userList || result.shopList || result.agentList || []);
       } catch (err) {
         console.error("Error fetching partners:", err.message);
         setError("Failed to load partners. Please try again.");
@@ -80,21 +84,27 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
     const previousPoints = selectedUserDetails?.chips || 0;
 
     const payload = {
-      money: amount,
-      type: adjustType === "add" ? "Deposit" : "Deduct",
-      userId: selectedUser,
-      adminname: email,
-      adminid: id,
+      money: "100",
+      type: "Deposit",
+      userId: "67a354e6813bc442da304c4e",
+      adminname: "Super Admin",
+      adminid: "67821d92cfa2484794079d87",
     };
 
     const apiUrl =
-      type === "User"
+      type === "Agent"
         ? adjustType === "add"
-          ? "http://93.127.194.87:9999/admin/agent/addMoneyToUser"
-          : "http://93.127.194.87:9999/admin/agent/deductMoneyToUser"
-        : adjustType === "add"
-        ? "http://93.127.194.87:9999/admin/shop/shopAddMoney"
-        : "http://93.127.194.87:9999/admin/shop/shopDeductMoney";
+          ? "http://93.127.194.87:9999/admin/agent/agentAddMoney"
+          : "http://93.127.194.87:9999/admin/agent/agentDeductMoney"
+        : type === "Shop"
+        ? adjustType === "add"
+          ? "http://93.127.194.87:9999/admin/shop/shopAddMoney"
+          : "http://93.127.194.87:9999/admin/shop/shopDeductMoney"
+        : type === "User"
+        ? adjustType === "add"
+          ? "http://93.127.194.87:9999/admin/user/addMoney"
+          : "http://93.127.194.87:9999/admin/user/deductMoney"
+        : null;
 
     try {
       const response = await fetch(apiUrl, {
@@ -223,7 +233,7 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
             </option>
             <option value="User">User</option>
             <option value="Agent">Agent</option>
-            <option value="Sub Agent">Sub Agent</option>
+            <option value="Shop">Sub Agent</option>
           </select>
         </div>
 

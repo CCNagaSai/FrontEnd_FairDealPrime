@@ -6,75 +6,81 @@ import SubAReportInpoint from "../../SubAgent/subAgentInPoints/subAgentInPoints"
 import SubAReportOutpoint from "../../SubAgent/subAgentOutPoints/subAgentOutPoints";
 
 const AgentSubAgentPointFile = () => {
-  const [shopList, setShopList] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [userList, setUserList] = useState([]); // Store agents/sub-agents
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedShop, setSelectedShop] = useState("");
+  const [selectedUser, setSelectedUser] = useState("");
   const [selectedType, setSelectedType] = useState("");
   const [showReport, setShowReport] = useState(false);
-  const [originalData, setOriginalData] = useState([]);
-  const [selectedRole, setSelectedRole] = useState("");
+  const [selectedRole, setSelectedRole] = useState(""); // Role: Agent / Sub Agent
   const navigate = useNavigate();
   const cookies = new Cookies();
   const id = cookies.get("LoginUserId");
   const type = "Shop";
 
+  // Fetch Agents or Sub Agents based on Role Selection
   useEffect(() => {
-    const fetchShopList = async () => {
+    if (!selectedRole) return; // Stop if no role selected
+
+    const fetchUsers = async () => {
       try {
         setLoading(true);
         setError(null);
+        setUserList([]); // Clear previous list
         const token = cookies.get("token");
-        if (!id) {
-          throw new Error("Missing id from cookies");
-        }
+        if (!id) throw new Error("Missing id from cookies");
 
-        const response = await fetch(
-          `http://93.127.194.87:9999/admin/shop/ShopList?agentId=${id}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              token: token,
-            },
-          }
-        );
+        let endpoint =
+          selectedRole === "Agent"
+            ? `http://93.127.194.87:9999/admin/agent/AgentList`
+            : `http://93.127.194.87:9999/admin/shop/ShopList?agentId=Admin`;
 
-        if (!response.ok) {
+        const response = await fetch(endpoint, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+        });
+
+        if (!response.ok)
           throw new Error(`HTTP error! Status: ${response.status}`);
-        }
 
         const result = await response.json();
-        console.log("Fetched result:", result);
-        const sortedShopList = (result.shopList || []).sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
-        setOriginalData(sortedShopList);
-        setShopList(sortedShopList);
+        console.log("Fetched Data:", result);
+
+        // FIXED: Use correct key from API response
+        const userKey = selectedRole === "Agent" ? "agentList" : "shopList";
+        setUserList(result[userKey] || []); // Set the data
       } catch (err) {
-        console.error("Error fetching shop data:", err.message);
-        setError("Failed to load shop data. Please try again.");
+        console.error("Error fetching data:", err.message);
+        setError("Failed to load data. Please try again.");
       } finally {
         setLoading(false);
       }
     };
-    fetchShopList();
-  }, []);
 
+    fetchUsers();
+  }, [selectedRole]); // Runs when `selectedRole` changes
+
+  // Submit button handler
   const handleSubmit = () => {
     setShowReport(true);
   };
 
+  // Clear button handler
   const handleClear = () => {
-    setSelectedShop("");
+    setSelectedUser("");
     setSelectedType("");
     setSelectedRole("");
     setShowReport(false);
+    setUserList([]); // Reset user list
   };
 
   return (
     <div className="p-4 flex flex-col">
       <h2 className="text-lg font-bold mb-4">Agent/Sub Agent Points File</h2>
+
       <div className="mb-4 flex justify-center space-x-4 w-full">
         {/* Role Selection */}
         <div className="w-1/3">
@@ -90,22 +96,29 @@ const AgentSubAgentPointFile = () => {
           </select>
         </div>
 
+        {/* Dynamic User List (Agents or Sub Agents) */}
         <div className="w-1/3">
-          <label className="block mb-1">Select Agent/Sub Agent:</label>
+          <label className="block mb-1">Select {selectedRole}:</label>
           <select
-            value={selectedShop}
-            onChange={(e) => setSelectedShop(e.target.value)}
+            value={selectedUser}
+            onChange={(e) => setSelectedUser(e.target.value)}
             className="p-2 border rounded w-full"
+            disabled={!selectedRole || loading} // Disable if no role is selected or loading
           >
-            <option value="">Select Agent/Sub Agent</option>
-            {shopList.map((shop) => (
-              <option key={shop._id} value={shop._id}>
-                {shop.name}
-              </option>
-            ))}
+            <option value="">Select {selectedRole}</option>
+            {loading ? (
+              <option>Loading...</option>
+            ) : (
+              userList.map((user) => (
+                <option key={user._id} value={user._id}>
+                  {user.name}
+                </option>
+              ))
+            )}
           </select>
         </div>
 
+        {/* Select Report Type */}
         <div className="w-1/3">
           <label className="block mb-1">Select Type:</label>
           <select
@@ -121,10 +134,12 @@ const AgentSubAgentPointFile = () => {
         </div>
       </div>
 
+      {/* Submit & Clear Buttons */}
       <div className="flex justify-center space-x-4 mt-4 mb-4">
         <button
           onClick={handleSubmit}
           className="bg-blue-500 text-white p-2 rounded w-32"
+          disabled={!selectedUser || !selectedType}
         >
           Submit
         </button>
@@ -136,16 +151,15 @@ const AgentSubAgentPointFile = () => {
         </button>
       </div>
 
+      {/* Report Components */}
       {showReport && selectedType === "InPoints" && (
-        <SubAReportInpoint subAgentId={selectedShop} type={type} />
+        <SubAReportInpoint subAgentId={selectedUser} type={type} />
       )}
-
       {showReport && selectedType === "OutPoints" && (
-        <SubAReportOutpoint subAgentId={selectedShop} type={type} />
+        <SubAReportOutpoint subAgentId={selectedUser} type={type} />
       )}
-
       {showReport && selectedType === "Points File" && (
-        <SubAReportpointfile subAgentId={selectedShop} type={type} />
+        <SubAReportpointfile subAgentId={selectedUser} type={type} />
       )}
     </div>
   );
