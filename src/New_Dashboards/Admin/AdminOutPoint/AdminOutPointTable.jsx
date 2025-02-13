@@ -1,19 +1,26 @@
 import React, { useState, useEffect } from "react";
 
-const AdminPointFileTable = ({ backendData }) => {
+const AdminOutPointTable = ({ backendData }) => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [inputPage, setInputPage] = useState("");
   const itemsPerPage = 10;
-  if (!backendData || backendData.length === 0) {
-    return <p></p>;
+
+  // Filter the data first
+  const filteredData =
+    backendData?.filter((entry) => entry.trnxAmount < 0) || [];
+
+  if (filteredData.length === 0) {
+    return;
   }
+
+  // Pagination calculations based on the filtered data
   useEffect(() => {
-    setTotalPages(Math.ceil(backendData.length / itemsPerPage));
-  }, [backendData]);
+    setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
+  }, [filteredData]);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const displayedData = backendData.slice(
+  const displayedData = filteredData.slice(
     startIndex,
     startIndex + itemsPerPage
   );
@@ -57,7 +64,6 @@ const AdminPointFileTable = ({ backendData }) => {
               <th className="border border-gray-300 px-14 py-2">Date</th>
               <th className="border border-gray-300 px-4 py-2">Receiver</th>
               <th className="border border-gray-300 px-4 py-2">Old Points</th>
-              <th className="border border-gray-300 px-4 py-2">In</th>
               <th className="border border-gray-300 px-4 py-2">Out</th>
               <th className="border border-gray-300 px-4 py-2">New Points</th>
               <th className="border border-gray-300 px-4 py-2">Sender</th>
@@ -68,10 +74,8 @@ const AdminPointFileTable = ({ backendData }) => {
           </thead>
           <tbody>
             {displayedData.map((entry, index) => {
-              const inAmount =
-                entry.trnxAmount > 0 ? `₹${entry.trnxAmount}` : ""; // In amount
-              const outAmount =
-                entry.trnxAmount < 0 ? `₹${Math.abs(entry.trnxAmount)}` : ""; // Out amount
+              const isPositive = entry.trnxAmount > 0;
+              const outAmount = `₹${Math.abs(entry.trnxAmount)}`; // Show the absolute value in "Out"
 
               // Determine sender and receiver based on trnxTypeTxt
               let sender = "";
@@ -137,10 +141,7 @@ const AdminPointFileTable = ({ backendData }) => {
                       ₹{entry.oppChips || "0"}
                     </td>
                     <td className="border border-gray-300 px-4 py-2">
-                      {inAmount || 0}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {outAmount || 0}
+                      {outAmount}
                     </td>
                     <td className="border border-gray-300 px-4 py-2">
                       ₹{entry.chips || "0"}
@@ -212,4 +213,4 @@ const AdminPointFileTable = ({ backendData }) => {
   );
 };
 
-export default AdminPointFileTable;
+export default AdminOutPointTable;

@@ -2,8 +2,8 @@ import React from "react";
 import "../AdminDash.css";
 import ReactDOM from "react-dom/client";
 import AdminSidebar from "../AdminSidebar"; // Adjust path to Sidebar component
-import AGameHistory from "../../Agent/AgentGameHistory/AgentGameHistory";
 import Topbar from "../../Common/Topbar";
+import IAdminGameHistory from "./AdminGameHistory";
 
 const AdminGameHistory = () => {
   return (
@@ -16,7 +16,7 @@ const AdminGameHistory = () => {
           <AdminSidebar />
         </div>
         <div className="Right">
-          <AGameHistory />
+          <IAdminGameHistory />
         </div>
       </div>
     </div>

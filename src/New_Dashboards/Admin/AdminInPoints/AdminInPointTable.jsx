@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from "react";
 
-const AdminPointFileTable = ({ backendData }) => {
+const AdminInPointTable = ({ backendData }) => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [inputPage, setInputPage] = useState("");
   const itemsPerPage = 10;
-  if (!backendData || backendData.length === 0) {
-    return <p></p>;
+
+  // Filter the data first
+  const filteredData =
+    backendData?.filter((entry) => entry.trnxAmount > 0) || [];
+
+  if (filteredData.length === 0) {
+    return;
   }
+
   useEffect(() => {
-    setTotalPages(Math.ceil(backendData.length / itemsPerPage));
-  }, [backendData]);
+    setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
+  }, [filteredData]);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const displayedData = backendData.slice(
+  const displayedData = filteredData.slice(
     startIndex,
     startIndex + itemsPerPage
   );
@@ -58,7 +64,6 @@ const AdminPointFileTable = ({ backendData }) => {
               <th className="border border-gray-300 px-4 py-2">Receiver</th>
               <th className="border border-gray-300 px-4 py-2">Old Points</th>
               <th className="border border-gray-300 px-4 py-2">In</th>
-              <th className="border border-gray-300 px-4 py-2">Out</th>
               <th className="border border-gray-300 px-4 py-2">New Points</th>
               <th className="border border-gray-300 px-4 py-2">Sender</th>
               <th className="border border-gray-300 px-10 py-2">
@@ -68,39 +73,36 @@ const AdminPointFileTable = ({ backendData }) => {
           </thead>
           <tbody>
             {displayedData.map((entry, index) => {
-              const inAmount =
-                entry.trnxAmount > 0 ? `₹${entry.trnxAmount}` : ""; // In amount
-              const outAmount =
-                entry.trnxAmount < 0 ? `₹${Math.abs(entry.trnxAmount)}` : ""; // Out amount
+              const isPositive = entry.trnxAmount > 0;
+              const inAmount = isPositive ? `₹${entry.trnxAmount}` : "";
 
-              // Determine sender and receiver based on trnxTypeTxt
               let sender = "";
               let receiver = "";
 
               switch (entry.trnxTypeTxt) {
                 case "Sub Agent Deduct Chips Added":
-                  receiver = entry.name || "N/A"; // Subagent is receiver
-                  sender = entry.shopname || "N/A"; // Agent is sender
+                  receiver = entry.name || "N/A";
+                  sender = entry.shopname || "N/A";
                   break;
                 case "Add Chips to Sub Agent":
-                  receiver = entry.shopname || "N/A"; // Subagent is receiver
-                  sender = entry.name || "N/A"; // Agent is sender
+                  receiver = entry.shopname || "N/A";
+                  sender = entry.name || "N/A";
                   break;
                 case "Deduct amount Addeed Chips to agent":
-                  receiver = entry.name || "N/A"; // Agent is receiver
-                  sender = entry.shopid || "N/A"; // User is sender
+                  receiver = entry.name || "N/A";
+                  sender = entry.shopid || "N/A";
                   break;
                 case "Add Chips to User":
-                  receiver = entry.shopname || "N/A"; // User is receiver
-                  sender = entry.name || "N/A"; // Agent is sender
+                  receiver = entry.shopname || "N/A";
+                  sender = entry.name || "N/A";
                   break;
                 case "Admin Addeed Chips":
-                  receiver = entry.name || "N/A"; // Admin is receiver
-                  sender = entry.adminname || "N/A"; // Super Admin is sender
+                  receiver = entry.name || "N/A";
+                  sender = entry.adminname || "N/A";
                   break;
                 case "Admin duduct Chips":
-                  receiver = entry.adminname || "N/A"; // Super Admin is receiver
-                  sender = entry.name || "N/A"; // Admin is sender
+                  receiver = entry.adminname || "N/A";
+                  sender = entry.name || "N/A";
                   break;
                 default:
                   receiver = "N/A";
@@ -111,7 +113,7 @@ const AdminPointFileTable = ({ backendData }) => {
                 <React.Fragment key={entry._id}>
                   <tr key={entry._id}>
                     <td className="border border-gray-300 px-4 py-2">
-                      {index + 1}
+                      {startIndex + index + 1}
                     </td>
                     <td className="border border-gray-300 px-4 py-2">
                       {(() => {
@@ -137,10 +139,7 @@ const AdminPointFileTable = ({ backendData }) => {
                       ₹{entry.oppChips || "0"}
                     </td>
                     <td className="border border-gray-300 px-4 py-2">
-                      {inAmount || 0}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {outAmount || 0}
+                      {inAmount}
                     </td>
                     <td className="border border-gray-300 px-4 py-2">
                       ₹{entry.chips || "0"}
@@ -159,7 +158,7 @@ const AdminPointFileTable = ({ backendData }) => {
         </table>
       </div>
       {/* Pagination Controls */}
-      <div className="pagination mt-4 flex justify-center items-center gap-4">
+      <div className="pagination flex justify-between items-center mt-6">
         <button
           onClick={handlePrevious}
           disabled={currentPage === 1}
@@ -212,4 +211,4 @@ const AdminPointFileTable = ({ backendData }) => {
   );
 };
 
-export default AdminPointFileTable;
+export default AdminInPointTable;
