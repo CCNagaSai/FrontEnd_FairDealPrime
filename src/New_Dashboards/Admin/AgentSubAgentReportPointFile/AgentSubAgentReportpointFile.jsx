@@ -4,6 +4,9 @@ import Cookies from "universal-cookie";
 import SubAReportpointfile from "../../SubAgent/subAgentPointFile/subAgentPointFile";
 import SubAReportInpoint from "../../SubAgent/subAgentInPoints/subAgentInPoints";
 import SubAReportOutpoint from "../../SubAgent/subAgentOutPoints/subAgentOutPoints";
+import AReportpointfile from "../../Agent/AgentPointFile/AgentPointFile";
+import AReportOutpoint from "../../Agent/AgentOutPoints/AgentOutPoints";
+import AReportInpoint from "../../Agent/AgentInPoints/AgentInPoints";
 
 const AgentSubAgentPointFile = () => {
   const [userList, setUserList] = useState([]); // Store agents/sub-agents
@@ -16,7 +19,8 @@ const AgentSubAgentPointFile = () => {
   const navigate = useNavigate();
   const cookies = new Cookies();
   const id = cookies.get("LoginUserId");
-  const type = "Shop";
+  // Dynamically set type based on role
+  const type = selectedRole === "Agent" ? "Agent" : "Shop";
 
   // Fetch Agents or Sub Agents based on Role Selection
   useEffect(() => {
@@ -65,6 +69,7 @@ const AgentSubAgentPointFile = () => {
 
   // Submit button handler
   const handleSubmit = () => {
+    console.log("Submitting with selected user:", selectedUser);
     setShowReport(true);
   };
 
@@ -151,15 +156,34 @@ const AgentSubAgentPointFile = () => {
         </button>
       </div>
 
-      {/* Report Components */}
-      {showReport && selectedType === "InPoints" && (
-        <SubAReportInpoint subAgentId={selectedUser} type={type} />
+      {/* Report Components for Sub-Agent */}
+      {showReport && selectedRole === "Sub Agent" && (
+        <>
+          {selectedType === "InPoints" && (
+            <SubAReportInpoint subAgentId={selectedUser} type={type} />
+          )}
+          {selectedType === "OutPoints" && (
+            <SubAReportOutpoint subAgentId={selectedUser} type={type} />
+          )}
+          {selectedType === "Points File" && (
+            <SubAReportpointfile subAgentId={selectedUser} type={type} />
+          )}
+        </>
       )}
-      {showReport && selectedType === "OutPoints" && (
-        <SubAReportOutpoint subAgentId={selectedUser} type={type} />
-      )}
-      {showReport && selectedType === "Points File" && (
-        <SubAReportpointfile subAgentId={selectedUser} type={type} />
+
+      {/* Report Components for Agent */}
+      {showReport && selectedRole === "Agent" && (
+        <>
+          {selectedType === "InPoints" && (
+            <AReportInpoint agentId={selectedUser} type={type} />
+          )}
+          {selectedType === "OutPoints" && (
+            <AReportOutpoint agentId={selectedUser} type={type} />
+          )}
+          {selectedType === "Points File" && (
+            <AReportpointfile agentId={selectedUser} type={type} />
+          )}
+        </>
       )}
     </div>
   );

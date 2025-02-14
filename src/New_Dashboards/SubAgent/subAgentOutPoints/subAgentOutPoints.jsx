@@ -6,7 +6,7 @@ import SubAgentOutPointTable from "./subAgentOutPointsTable";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
-const SubAReportOutpoint = () => {
+const SubAReportOutpoint = ({ subAgentId, type }) => {
   const [filters, setFilters] = useState({
     receiveBy: "",
     sentBy: "",
@@ -62,14 +62,23 @@ const SubAReportOutpoint = () => {
   const idRef = useRef(null);
   const typeRef = useRef(null);
   const tokenRef = useRef(null);
+
   useEffect(() => {
-    const id = cookies.get("LoginUserId");
-    const type = cookies.get("name");
+    console.log("Location State:", location.state); // Debugging: check received state
+
+    const id = subAgentId || cookies.get("LoginUserId");
+    const types = type || cookies.get("name");
     const token = cookies.get("token");
-    console.log("Cookies:", { id, type, token });
+
+    console.log("Received from First Code:", { id, types });
+
     idRef.current = id;
     typeRef.current = type;
     tokenRef.current = token;
+  }, [subAgentId, type]);
+
+  useEffect(() => {
+    fetchBackendData();
   }, []);
 
   const fetchBackendData = async () => {
@@ -126,33 +135,53 @@ const SubAReportOutpoint = () => {
 
     switch (range) {
       case "Today":
-        startDate.setDate(today.getDate());
-        endDate.setHours(23, 59, 59, 999);
+        startDate = new Date(today);
+        endDate = new Date(today);
         break;
       case "Yesterday":
         startDate.setDate(today.getDate() - 1);
         endDate.setDate(today.getDate() - 1);
-        startDate.setHours(0, 0, 0, 0);
-        endDate.setHours(23, 59, 59, 999);
         break;
-      case "Last 7 Days":
-        startDate.setDate(today.getDate() - 7);
-        startDate.setHours(0, 0, 0, 0);
+      case "This Week": {
+        const dayOfWeek = today.getDay(); // Sunday - 0, Monday - 1, ..., Saturday - 6
+        startDate = new Date(today);
+        startDate.setDate(
+          today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)
+        ); // Move to Monday
+        endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6); // Move to Sunday
         break;
-      case "Last 30 Days":
-        startDate.setDate(today.getDate() - 30);
-        startDate.setHours(0, 0, 0, 0);
+      }
+      case "Last Week": {
+        const dayOfWeek = today.getDay();
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - dayOfWeek - 6); // Move to previous week's Monday
+        endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6); // Move to Sunday of last week
+        break;
+      }
+      case "This Month":
+        startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        break;
+      case "Last Month":
+        startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        endDate = new Date(today.getFullYear(), today.getMonth(), 0);
         break;
       default:
         break;
     }
 
-    setFilters((prev) => ({
-      ...prev,
-      startDate: startDate ? startDate.toISOString().split("T")[0] : "",
-      endDate: endDate ? endDate.toISOString().split("T")[0] : "",
-      dateRange: range,
+    const formatDate = (date) => {
+      return date.toLocaleDateString("en-GB").split("/").reverse().join("-");
+    };
+
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      startDate: formatDate(startDate),
+      endDate: formatDate(endDate),
     }));
+    setDateRange(range);
   };
 
   const handleManualDateChange = (e, field) => {
@@ -164,22 +193,73 @@ const SubAReportOutpoint = () => {
   };
 
   const handleSubmit = () => {
-    const { receiveBy, sentBy, startDate, endDate } = filters;
-
+    const { receiveBy, sentBy, startDate, endDate, username } = filters;
     let filtered = backendData;
+
+    console.log("Filters:", filters); // Log filters for debugging
 
     // Filter by Receive By
     if (receiveBy) {
-      filtered = filtered.filter((entry) =>
-        entry.receiver.toLowerCase().includes(receiveBy.toLowerCase())
-      );
+      filtered = filtered.filter((entry) => {
+        let receiver = "";
+        switch (entry.trnxTypeTxt) {
+          case "Agent Addeed Chips":
+            receiver = entry.name ? entry.name.toLowerCase() : ""; // Subagent is receiver
+            break;
+          case "Agent duduct Chips":
+            receiver = entry.adminname ? entry.adminname.toLowerCase() : ""; // Admin is receiver
+            break;
+          case "Add Chips to User":
+            receiver = entry.username ? entry.username.toLowerCase() : ""; // User is receiver
+            break;
+          case "User Deduct Chips Added":
+            receiver = entry.adminname ? entry.adminname.toLowerCase() : "";
+            break;
+          default:
+            receiver = "";
+        }
+        return receiver.includes(receiveBy.toLowerCase());
+      });
     }
 
     // Filter by Sent By
     if (sentBy) {
-      filtered = filtered.filter((entry) =>
-        entry.sender.toLowerCase().includes(sentBy.toLowerCase())
-      );
+      filtered = filtered.filter((entry) => {
+        let sender = "";
+        switch (entry.trnxTypeTxt) {
+          case "Agent Addeed Chips":
+            sender = entry.adminname ? entry.adminname.toLowerCase() : "";
+            break;
+          case "Agent duduct Chips":
+            sender = entry.name ? entry.name.toLowerCase() : "";
+            break;
+          case "Add Chips to User":
+            sender = entry.adminname ? entry.adminname.toLowerCase() : "";
+            break;
+          case "User Deduct Chips Added":
+            sender = entry.username ? entry.username.toLowerCase() : "";
+            break;
+          default:
+            sender = "";
+        }
+        return sender.includes(sentBy.toLowerCase());
+      });
+    }
+
+    // Filter by Username (either receiver or sender)
+    // Filter by Username (either receiver or sender)
+    if (username) {
+      filtered = filtered.filter((entry) => {
+        const adminName = entry.adminname ? entry.adminname.toLowerCase() : "";
+        const agentName = entry.name ? entry.name.toLowerCase() : "";
+        const userName = entry.username ? entry.username.toLowerCase() : "";
+
+        return (
+          adminName.includes(username.toLowerCase()) ||
+          agentName.includes(username.toLowerCase()) ||
+          userName.includes(username.toLowerCase())
+        );
+      });
     }
 
     // Filter by Date Range
@@ -188,14 +268,16 @@ const SubAReportOutpoint = () => {
       const end = new Date(endDate);
 
       filtered = filtered.filter((entry) => {
-        const entryDate = new Date(entry.createdAt);
+        const entryDate = new Date(entry.createdAt.split("T")[0]); // Extract only date part for comparison
         return entryDate >= start && entryDate <= end;
       });
     }
 
+    console.log("Filtered Data:", filtered); // Log filtered data for debugging
     setFilteredData(filtered);
-    setShowTable(true);
-    fetchBackendData();
+
+    // Only show table if there is data to display
+    setShowTable(filtered.length > 0);
   };
 
   const handleClear = () => {
@@ -319,7 +401,7 @@ const SubAReportOutpoint = () => {
           {loading ? (
             <p>Loading backend data...</p>
           ) : (
-            <SubAgentOutPointTable backendData={backendData} />
+            <SubAgentOutPointTable backendData={filteredData} />
           )}
         </div>
       </div>

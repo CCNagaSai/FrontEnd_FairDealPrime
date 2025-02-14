@@ -196,7 +196,7 @@ const IAdminGameHistory = () => {
       const fetchBackendData = async () => {
         setIsLoading(true);
         try {
-          let url = `http://93.127.194.87:9999/admin/userhistory/RouletteGameHistory/?page=${currentPage}&limit=5`;
+          let url = `http://93.127.194.87:9999/admin/userhistory/RouletteGameHistory/?page=${currentPage}&limit=10`;
 
           if (filters.userId) {
             url += `&username=${encodeURIComponent(filters.userId)}`;

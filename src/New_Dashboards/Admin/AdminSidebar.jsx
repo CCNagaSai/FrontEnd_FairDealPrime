@@ -77,7 +77,6 @@ function AdminSidebar() {
               </li>
             </ul>
           </li>
-
           <li className="mb-1">
             <strong className="text-lg text-blue-800 ml-2 cursor-default">
               Games
@@ -110,11 +109,10 @@ function AdminSidebar() {
               </li>
             </ul>
           </li>
-
           {/* Password Popup */}
           {showPasswordPopup && (
-            <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-              <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-2xl p-8 w-full max-w-md text-center border border-gray-200 dark:border-gray-700 backdrop-blur-lg">
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 backdrop-blur-md z-50">
+              <div className="bg-white dark:bg-gray-800 shadow-2xl rounded-2xl p-8 w-full max-w-md text-center border border-gray-200 dark:border-gray-700">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                   Secure Access
                 </h2>
@@ -129,14 +127,14 @@ function AdminSidebar() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg 
-               focus:outline-none focus:ring-2 focus:ring-blue-500 
-               dark:bg-gray-700 dark:text-white text-gray-900 bg-white transition-all"
+         focus:outline-none focus:ring-2 focus:ring-blue-500 
+         dark:bg-gray-700 dark:text-white text-gray-900 bg-white transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-3 bg-gray-200 dark:bg-gray-600 px-3 py-1 rounded-full 
-               text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500 transition"
+         text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500 transition"
                   >
                     {showPassword ? "🙈 Hide" : "👁 Show"}
                   </button>
@@ -285,7 +283,6 @@ function AdminSidebar() {
               </li>
             </ul>
           </li>
-
           <li className="mb-1">
             <strong className="text-lg text-blue-800 ml-2 cursor-default">
               Reports
@@ -365,7 +362,6 @@ function AdminSidebar() {
               </li>
             </ul>
           </li>
-
           <li className="mb-1">
             <strong className="text-lg text-blue-800 ml-2 cursor-default">
               Others
