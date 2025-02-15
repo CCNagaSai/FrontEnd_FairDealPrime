@@ -57,7 +57,7 @@ const IshankViewUser = ({ user, onBack }) => {
   const handleLockStatusUpdate = async () => {
     try {
       const response = await fetch(
-        `http://93.127.194.87:9999/admin/agent/changeUserStatus?agentId=${agentId}&userId=${user._id}`,
+        `http://93.127.194.87:9999/admin/user/UpdatePassword`,
         {
           method: "PUT",
           headers: {
@@ -65,6 +65,7 @@ const IshankViewUser = ({ user, onBack }) => {
             token: token,
           },
           body: JSON.stringify({
+            userId: user._id,
             status: lockStatus === "Active", // Converts "Active"/"Inactive" to true/false
           }),
         }

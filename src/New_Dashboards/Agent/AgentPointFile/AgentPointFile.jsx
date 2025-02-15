@@ -14,7 +14,6 @@ const AReportpointfile = ({ agentId, type }) => {
     endDate: "",
     dateRange: "Select",
   });
-
   const [filteredData, setFilteredData] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [columns, setColumns] = useState([]);
@@ -22,7 +21,6 @@ const AReportpointfile = ({ agentId, type }) => {
   const [backendData, setBackendData] = useState([]);
 
   const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -35,16 +33,13 @@ const AReportpointfile = ({ agentId, type }) => {
   const idRef = useRef(null);
   const typeRef = useRef(null);
   const tokenRef = useRef(null);
-
   useEffect(() => {
     const id = agentId || cookies.get("LoginUserId");
     const types = type || cookies.get("name");
     const token = cookies.get("token");
-
-    console.log("Received from First Code:", { id, types });
-
+    console.log("Cookies:", { id, type, token });
     idRef.current = id;
-    typeRef.current = types;
+    typeRef.current = type;
     tokenRef.current = token;
   }, [agentId, type]);
 
@@ -55,6 +50,7 @@ const AReportpointfile = ({ agentId, type }) => {
   const fetchBackendData = async () => {
     try {
       setLoading(true);
+      console.log("Attempting to fetch backend data...");
       const id = idRef.current;
       const type = typeRef.current;
       const token = tokenRef.current;
@@ -65,6 +61,7 @@ const AReportpointfile = ({ agentId, type }) => {
       }
 
       console.log("Fetching with:", { id, type, token });
+      // http://93.127.194.87:9999/admin/usertransction/AgentTranscationData?Id=6767e33077c3a26d681a3e25&type=Agent
 
       const response = await fetch(
         `http://93.127.194.87:9999/admin/usertransction/AgentTranscationData?Id=${id}&type=${type}`,
@@ -83,10 +80,11 @@ const AReportpointfile = ({ agentId, type }) => {
       }
 
       const result = await response.json();
+      console.log("Backend Data:", result);
 
       if (result.DepositeList) {
         setBackendData(result.DepositeList);
-        setFilteredData(result.DepositeList); // Initialize filtered data
+        setFilteredData(result.DepositeList);
       } else {
         console.error("No data found in the response.");
       }
@@ -172,16 +170,22 @@ const AReportpointfile = ({ agentId, type }) => {
       filtered = filtered.filter((entry) => {
         let receiver = "";
         switch (entry.trnxTypeTxt) {
-          case "Agent Addeed Chips":
+          case "Sub Agent Deduct Chips Added":
             receiver = entry.name ? entry.name.toLowerCase() : ""; // Subagent is receiver
             break;
-          case "Agent duduct Chips":
-            receiver = entry.adminname ? entry.adminname.toLowerCase() : ""; // Admin is receiver
+          case "Add Chips to Sub Agent":
+            receiver = entry.shopname ? entry.shopname.toLowerCase() : ""; // Admin is receiver
+            break;
+          case "Deduct amount Addeed Chips to agent":
+            receiver = entry.name ? entry.name.toLowerCase() : ""; // User is receiver
             break;
           case "Add Chips to User":
-            receiver = entry.username ? entry.username.toLowerCase() : ""; // User is receiver
+            receiver = entry.shopname ? entry.shopname.toLowerCase() : "";
             break;
-          case "User Deduct Chips Added":
+          case "Admin Addeed Chips":
+            receiver = entry.name ? entry.name.toLowerCase() : "";
+            break;
+          case "Admin duduct Chips":
             receiver = entry.adminname ? entry.adminname.toLowerCase() : "";
             break;
           default:
@@ -196,17 +200,23 @@ const AReportpointfile = ({ agentId, type }) => {
       filtered = filtered.filter((entry) => {
         let sender = "";
         switch (entry.trnxTypeTxt) {
-          case "Agent Addeed Chips":
-            sender = entry.adminname ? entry.adminname.toLowerCase() : "";
+          case "Sub Agent Deduct Chips Added":
+            sender = entry.shopname ? entry.shopname.toLowerCase() : "";
             break;
-          case "Agent duduct Chips":
+          case "Add Chips to Sub Agent":
             sender = entry.name ? entry.name.toLowerCase() : "";
             break;
+          case "Deduct amount Addeed Chips to agent":
+            sender = entry.shopid ? entry.shopid.toLowerCase() : "";
+            break;
           case "Add Chips to User":
+            sender = entry.name ? entry.name.toLowerCase() : "";
+            break;
+          case "Admin Addeed Chips":
             sender = entry.adminname ? entry.adminname.toLowerCase() : "";
             break;
-          case "User Deduct Chips Added":
-            sender = entry.username ? entry.username.toLowerCase() : "";
+          case "Admin duduct Chips":
+            sender = entry.name ? entry.name.toLowerCase() : "";
             break;
           default:
             sender = "";
@@ -215,18 +225,18 @@ const AReportpointfile = ({ agentId, type }) => {
       });
     }
 
-    // Filter by Username (either receiver or sender)
-    // Filter by Username (either receiver or sender)
     if (username) {
       filtered = filtered.filter((entry) => {
         const adminName = entry.adminname ? entry.adminname.toLowerCase() : "";
-        const agentName = entry.name ? entry.name.toLowerCase() : "";
-        const userName = entry.username ? entry.username.toLowerCase() : "";
+        const shopName = entry.shopname ? entry.shopname.toLowerCase() : "";
+        const Name = entry.name ? entry.name.toLowerCase() : "";
+        const shopid = entry.shopid ? entry.shopid.toLowerCase() : "";
 
         return (
           adminName.includes(username.toLowerCase()) ||
-          agentName.includes(username.toLowerCase()) ||
-          userName.includes(username.toLowerCase())
+          shopName.includes(username.toLowerCase()) ||
+          Name.includes(username.toLowerCase()) ||
+          shopid.includes(username.toLowerCase())
         );
       });
     }
@@ -382,6 +392,7 @@ const AReportpointfile = ({ agentId, type }) => {
               </div>
             </form>
           </div>
+
           {/* Backend Data Table */}
           {loading ? (
             <p>Loading backend data...</p>
@@ -395,4 +406,5 @@ const AReportpointfile = ({ agentId, type }) => {
     </div>
   );
 };
+
 export default AReportpointfile;

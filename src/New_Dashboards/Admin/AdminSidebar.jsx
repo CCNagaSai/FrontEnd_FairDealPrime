@@ -178,14 +178,14 @@ function AdminSidebar() {
                   Search Users
                 </Link>
               </li>
-              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+              {/* <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
                   to="/admin/ChangeUserPassword"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Change Password
                 </Link>
-              </li>
+              </li> */}
 
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
@@ -234,14 +234,14 @@ function AdminSidebar() {
                   Balance Adjustment
                 </Link>
               </li> */}
-              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+              {/* <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
                   to="/admin/ChangeAgentPassword"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Change Password
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </li>
           <li className="mb-1">
@@ -273,14 +273,14 @@ function AdminSidebar() {
                   Balance Adjustment
                 </Link>
               </li> */}
-              <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+              {/* <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
                   to="/admin/ChangeSubAgentPassword"
                   className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
                 >
                   Change Password
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </li>
           <li className="mb-1">

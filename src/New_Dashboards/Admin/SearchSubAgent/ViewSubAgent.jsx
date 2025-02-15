@@ -26,7 +26,7 @@ const IshankViewSubAgent = ({ user, onBack }) => {
   const handlePasswordUpdate = async () => {
     try {
       const response = await fetch(
-        "http://93.127.194.87:9999/admin/user/UpdatePassword",
+        "http://93.127.194.87:9999/admin/shop/ShopUpdate",
         {
           method: "PUT",
           headers: {
@@ -34,8 +34,14 @@ const IshankViewSubAgent = ({ user, onBack }) => {
             token: token,
           },
           body: JSON.stringify({
+            // userId: "67aac027813bc442da34f045",
+            // password: "87654321",
+
             userId: user._id,
             password: newPassword,
+            name: user.name,
+            location: "India",
+            status: "active",
           }),
         }
       );
@@ -57,7 +63,7 @@ const IshankViewSubAgent = ({ user, onBack }) => {
   const handleLockStatusUpdate = async () => {
     try {
       const response = await fetch(
-        `http://93.127.194.87:9999/admin/agent/changeUserStatus?agentId=${agentId}&userId=${user._id}`,
+        `http://93.127.194.87:9999/admin/shop/ShopUpdate`,
         {
           method: "PUT",
           headers: {
@@ -65,6 +71,10 @@ const IshankViewSubAgent = ({ user, onBack }) => {
             token: token,
           },
           body: JSON.stringify({
+            userId: user._id,
+            password: newPassword,
+            name: user.name,
+            location: "India",
             status: lockStatus === "Active", // Converts "Active"/"Inactive" to true/false
           }),
         }

@@ -21,31 +21,7 @@ const AReportOutpoint = ({ agentId, type }) => {
   const [backendData, setBackendData] = useState([]);
 
   const [loading, setLoading] = useState(false);
-  const desktopColumns = [
-    "S.no",
-    "Date",
-    "Receiver",
-    "Old Points",
-    "In",
-    "Out",
-    "New Points",
-    "Sender",
-    "Trans.Id",
-    "Comments",
-  ];
 
-  const mobileColumns = [
-    "S.no",
-    "Date",
-    "Receiver",
-    "Old Points",
-    "In",
-    "Out",
-    "New Points",
-    "Sender",
-    "Trans.Id",
-    "Comments",
-  ];
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -54,23 +30,15 @@ const AReportOutpoint = ({ agentId, type }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    setColumns(isMobile ? mobileColumns : desktopColumns);
-  }, [isMobile]);
-
   // Store id and type using useRef
   const idRef = useRef(null);
   const typeRef = useRef(null);
   const tokenRef = useRef(null);
   useEffect(() => {
-    console.log("Location State:", location.state); // Debugging: check received state
-
     const id = agentId || cookies.get("LoginUserId");
     const types = type || cookies.get("name");
     const token = cookies.get("token");
-
-    console.log("Received from First Code:", { id, types });
-
+    console.log("Cookies:", { id, type, token });
     idRef.current = id;
     typeRef.current = type;
     tokenRef.current = token;
@@ -116,6 +84,7 @@ const AReportOutpoint = ({ agentId, type }) => {
 
       if (result.DepositeList) {
         setBackendData(result.DepositeList);
+        setFilteredData(result.DepositeList);
       } else {
         console.error("No data found in the response.");
       }
@@ -197,21 +166,26 @@ const AReportOutpoint = ({ agentId, type }) => {
 
     console.log("Filters:", filters); // Log filters for debugging
 
-    // Filter by Receive By
     if (receiveBy) {
       filtered = filtered.filter((entry) => {
         let receiver = "";
         switch (entry.trnxTypeTxt) {
-          case "Agent Addeed Chips":
+          case "Sub Agent Deduct Chips Added":
             receiver = entry.name ? entry.name.toLowerCase() : ""; // Subagent is receiver
             break;
-          case "Agent duduct Chips":
-            receiver = entry.adminname ? entry.adminname.toLowerCase() : ""; // Admin is receiver
+          case "Add Chips to Sub Agent":
+            receiver = entry.shopname ? entry.shopname.toLowerCase() : ""; // Admin is receiver
+            break;
+          case "Deduct amount Addeed Chips to agent":
+            receiver = entry.name ? entry.name.toLowerCase() : ""; // User is receiver
             break;
           case "Add Chips to User":
-            receiver = entry.username ? entry.username.toLowerCase() : ""; // User is receiver
+            receiver = entry.shopname ? entry.shopname.toLowerCase() : "";
             break;
-          case "User Deduct Chips Added":
+          case "Admin Addeed Chips":
+            receiver = entry.name ? entry.name.toLowerCase() : "";
+            break;
+          case "Admin duduct Chips":
             receiver = entry.adminname ? entry.adminname.toLowerCase() : "";
             break;
           default:
@@ -226,17 +200,23 @@ const AReportOutpoint = ({ agentId, type }) => {
       filtered = filtered.filter((entry) => {
         let sender = "";
         switch (entry.trnxTypeTxt) {
-          case "Agent Addeed Chips":
-            sender = entry.adminname ? entry.adminname.toLowerCase() : "";
+          case "Sub Agent Deduct Chips Added":
+            sender = entry.shopname ? entry.shopname.toLowerCase() : "";
             break;
-          case "Agent duduct Chips":
+          case "Add Chips to Sub Agent":
             sender = entry.name ? entry.name.toLowerCase() : "";
             break;
+          case "Deduct amount Addeed Chips to agent":
+            sender = entry.shopid ? entry.shopid.toLowerCase() : "";
+            break;
           case "Add Chips to User":
+            sender = entry.name ? entry.name.toLowerCase() : "";
+            break;
+          case "Admin Addeed Chips":
             sender = entry.adminname ? entry.adminname.toLowerCase() : "";
             break;
-          case "User Deduct Chips Added":
-            sender = entry.username ? entry.username.toLowerCase() : "";
+          case "Admin duduct Chips":
+            sender = entry.name ? entry.name.toLowerCase() : "";
             break;
           default:
             sender = "";
@@ -245,18 +225,18 @@ const AReportOutpoint = ({ agentId, type }) => {
       });
     }
 
-    // Filter by Username (either receiver or sender)
-    // Filter by Username (either receiver or sender)
     if (username) {
       filtered = filtered.filter((entry) => {
         const adminName = entry.adminname ? entry.adminname.toLowerCase() : "";
-        const agentName = entry.name ? entry.name.toLowerCase() : "";
-        const userName = entry.username ? entry.username.toLowerCase() : "";
+        const shopName = entry.shopname ? entry.shopname.toLowerCase() : "";
+        const Name = entry.name ? entry.name.toLowerCase() : "";
+        const shopid = entry.shopid ? entry.shopid.toLowerCase() : "";
 
         return (
           adminName.includes(username.toLowerCase()) ||
-          agentName.includes(username.toLowerCase()) ||
-          userName.includes(username.toLowerCase())
+          shopName.includes(username.toLowerCase()) ||
+          Name.includes(username.toLowerCase()) ||
+          shopid.includes(username.toLowerCase())
         );
       });
     }
@@ -286,6 +266,7 @@ const AReportOutpoint = ({ agentId, type }) => {
       startDate: "",
       endDate: "",
       dateRange: "Select",
+      username: "",
     });
     setFilteredData(backendData); // Reset to all data
     setShowTable(false);
@@ -307,6 +288,19 @@ const AReportOutpoint = ({ agentId, type }) => {
               onSubmit={(e) => e.preventDefault()}
             >
               {/* First Row - Two Input Fields */}
+              <div className="grid grid-cols-2 gap-4 mb-5 w-full">
+                <div className="flex-1">
+                  <label className="block mb-2">Username:</label>
+                  <input
+                    type="text"
+                    value={filters.username}
+                    onChange={(e) =>
+                      setFilters({ ...filters, username: e.target.value })
+                    }
+                    className="w-full p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
+              </div>
               <div className="grid grid-cols-2 gap-4 mb-5 w-full">
                 <div className="flex-1">
                   <label className="block mb-2">Receive By:</label>
@@ -355,18 +349,21 @@ const AReportOutpoint = ({ agentId, type }) => {
                   />
                 </div>
 
-                <div className="flex-1">
+                {/* Date Range */}
+                <div className="flex-1 min-w-[140px]">
                   <label className="block mb-2">Date Range:</label>
                   <select
                     value={filters.dateRange}
                     onChange={(e) => handleDateRangeChange(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg"
+                    className="w-full p-2 md:p-3 border border-gray-300 rounded-lg"
                   >
                     <option value="Select">Select</option>
                     <option value="Today">Today</option>
                     <option value="Yesterday">Yesterday</option>
-                    <option value="Last 7 Days">Last 7 Days</option>
-                    <option value="Last 30 Days">Last 30 Days</option>
+                    <option value="This Week">This Week</option>
+                    <option value="Last Week">Last Week</option>
+                    <option value="This Month">This Month</option>
+                    <option value="Last Month">Last Month</option>
                     <option value="Custom">Custom</option>
                   </select>
                 </div>
@@ -399,8 +396,10 @@ const AReportOutpoint = ({ agentId, type }) => {
           {/* Backend Data Table */}
           {loading ? (
             <p>Loading backend data...</p>
-          ) : (
+          ) : showTable ? (
             <AgentOutPointTable backendData={filteredData} />
+          ) : (
+            <p></p>
           )}
         </div>
       </div>
