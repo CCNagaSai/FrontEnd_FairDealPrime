@@ -5,6 +5,7 @@ import AdminSidebar from "../AdminSidebar"; // Adjust path to Sidebar component
 import AGameHistory from "../../Agent/AgentGameHistory/AgentGameHistory";
 import Topbar from "../../Common/Topbar";
 import Testing from "./Testing";
+import TestPlayingTableData from "./TestPlayingTableData";
 
 const TestingTable = () => {
   return (
@@ -17,7 +18,7 @@ const TestingTable = () => {
           <AdminSidebar />
         </div>
         <div className="Right">
-          <Testing />
+          <TestPlayingTableData />
         </div>
       </div>
     </div>

@@ -188,12 +188,11 @@ const AGameHistory = () => {
 
           if (response.ok) {
             const data = await response.json();
-            if (data && Array.isArray(data.gameHistoryData)) {
-              const flattenedHistory = data.gameHistoryData.flatMap(
-                (entry) => entry.history || []
+            if (data && Array.isArray(data.historyData)) {
+              const flattenedHistory = data.historyData;
+              flattenedHistory.sort(
+                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
               );
-
-              flattenedHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
               console.log("history", flattenedHistory);
               setBackendData(flattenedHistory);

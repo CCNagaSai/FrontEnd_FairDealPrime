@@ -3,131 +3,86 @@ import { useNavigate, useLocation } from "react-router-dom";
 import React, { useState, useContext, useEffect } from "react";
 // import offerContext from "../../context/offerContext";
 import "./style.css";
-function Testing(data) {
-  console.log("BET ::::::::::::::", data.data);
 
+function Testing({ data }) {
+  console.log("Playing Table Data", data);
   const [betinfo, setBetinfo] = useState({});
 
+  //   useEffect(() => {
+  //     if (data && data.referid?.length > 0) {
+  //       const datajson = {};
+  //       data.referid.forEach((ref) => {
+  //         if (ref.type) {
+  //           datajson[ref.betIndex] =
+  //             (datajson[ref.betIndex] || 0) + ref.bet;
+  //         }
+  //       });
+
+  //       for (let j = 0; j <= 155; j++) {
+  //         datajson[j.toString()] = convertRupees(datajson[j.toString()]);
+  //       }
+
+  //       setBetinfo(datajson);
+  //     }
+  //   }, [data]);
+
   useEffect(() => {
+    console.log("Data received:", data); // Log the incoming data to check its structure
+
     const submitdata = async () => {
-      if (
-        data != undefined &&
-        data.data != undefined &&
-        data.data.referid.length > 0
-      ) {
+      if (data && Array.isArray(data) && data.length > 0) {
         let datajson = {};
-        for (let i = 0; i <= data.data.referid.length - 1; i++) {
-          if (data.data.referid[i].type != undefined) {
-            datajson[data.data.referid[i].betIndex] =
-              datajson[data.data.referid[i].betIndex] != undefined
-                ? datajson[data.data.referid[i].betIndex] +
-                  data.data.referid[i].bet
-                : data.data.referid[i].bet;
+
+        // Iterate through data array
+        for (let i = 0; i < data.length; i++) {
+          const bet = data[i];
+          console.log("Processing bet:", bet); // Log individual bet
+
+          if (bet.number !== undefined) {
+            // If 'number' exists, accumulate the bet value
+            datajson[bet.number] = datajson[bet.number]
+              ? datajson[bet.number] + bet.bet
+              : bet.bet;
           }
         }
 
-        for (let j = 0; j <= 155; j++) {
-          datajson[j.toString()] = convertRupees(datajson[j.toString()]);
+        console.log("Accumulated Data:", datajson); // Log the final accumulated data
+
+        // Format the accumulated data into rupees (if needed)
+        for (let j in datajson) {
+          datajson[j] = convertRupees(datajson[j]);
         }
 
-        setBetinfo(datajson);
+        setBetinfo(datajson); // Update the state with the accumulated data
+      } else {
+        console.error("Data format is incorrect or empty.");
       }
     };
-    submitdata();
-  }, []);
 
-  console.log("sssskdjskjj", setBetinfo);
+    submitdata();
+  }, [data]); // Dependency on data to trigger this effect whenever data changes
 
   function convertRupees(number) {
-    if (number >= 10000000) {
-      return (number / 10000000).toFixed(1) + " crore";
-    } else if (number >= 100000) {
-      return (number / 10 ** 5).toFixed(1) + " lakh";
-    } else if (number >= 1000) {
-      return (number / 1000).toFixed(1) + "K";
-    } else {
-      return number;
-    }
+    if (number >= 10000000) return (number / 10000000).toFixed(1) + " crore";
+    if (number >= 100000) return (number / 10 ** 5).toFixed(1) + " lakh";
+    if (number >= 1000) return (number / 1000).toFixed(1) + "K";
+    return number;
   }
-
+  console.log("Bet Info:", betinfo);
   return (
     <div className="w-full rounded-lg bg-white px-[24px] py-[20px] dark:bg-darkblack-600">
       <div className="flex flex-col space-y-5">
         <h3 className="text-2xl font-bold pb-5 text-bgray-900 dark:text-white dark:border-darkblack-400 border-b border-bgray-200">
           Player Bet Information
         </h3>
-
-        <div className="table-content w-full overflow-x-auto">
-          <table id="tableId" className="w-full">
-            <tbody>
-              <tr className="border-b border-bgray-300 dark:border-darkblack-400">
-                <td className="w-[250px] px-6 py-5 xl:px-0">
-                  <div className="flex w-full items-center space-x-2.5">
-                    <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                      User Name
-                    </span>
-                  </div>
-                </td>
-                <td className="w-[165px] px-6 py-5 xl:px-0">
-                  <div className="flex items-center space-x-2.5">
-                    <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                      Time Of Bet
-                    </span>
-                  </div>
-                </td>
-                <td className="w-[165px] px-6 py-5 xl:px-0">
-                  <div className="flex w-full items-center space-x-2.5">
-                    <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                      Total Bet
-                    </span>
-                  </div>
-                </td>
-                <td className="w-[165px] px-6 py-5 xl:px-0">
-                  <div className="flex w-full items-center space-x-2.5">
-                    <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                      Total Won
-                    </span>
-                  </div>
-                </td>
-                <td className="w-[165px] px-6 py-5 xl:px-0">
-                  <div className="flex w-full items-center space-x-2.5">
-                    <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                      Won Number
-                    </span>
-                  </div>
-                </td>
-              </tr>
-
-              <tr className="border-b border-bgray-300 dark:border-darkblack-400">
-                <td className="w-[250px] px-6 py-5 xl:px-0">
-                  <p className="text-base font-medium text-bgray-900 dark:text-white">
-                    {/* {data.data.name} */}
-                  </p>
-                </td>
-                <td className="w-[165px] px-6 py-5 xl:px-0">
-                  <p className="text-base font-medium text-bgray-900 dark:text-white">
-                    {/* {data.data.datetime} */}
-                  </p>
-                </td>
-                <td className="w-[185px] px-6 py-5 xl:px-0">
-                  <p className="text-base font-medium text-bgray-900 dark:text-white">
-                    {/* {data.data.play} */}
-                  </p>
-                </td>
-                <td className="w-[165px] px-6 py-5 xl:px-0">
-                  <p className="text-base font-semibold text-bgray-900 dark:text-white">
-                    {/* {data.data.won} */}
-                  </p>
-                </td>
-                <td className="w-[165px] px-6 py-5 xl:px-0">
-                  <p className="text-base font-medium text-bgray-900 dark:text-white">
-                    {/* {data.data.ballposition} */}
-                  </p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        {/* 
+        <div className="testing-component">
+          <p>ID: {id}</p>
+          <p>Type: {type}</p>
+          <p>Bet: {bet}</p>
+          <p>Number: {number}</p>
+          <p>Which Table: {whichTable}</p>
+        </div> */}
 
         <div className="table-section">
           <table className="roulette-table">
