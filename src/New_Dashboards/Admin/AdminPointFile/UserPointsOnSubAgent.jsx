@@ -23,7 +23,7 @@ const IUserPointsOnSubAgent = ({ subAgentId, onUserClick }) => {
         const token = tokenRef.current;
 
         const response = await fetch(
-          `http://93.127.194.87:9999/admin/usertransction/SubAgentTranscationData?Id=${subAgentId}&type=Shop`,
+          `http://65.0.54.193:9999/admin/usertransction/SubAgentTranscationData?Id=${subAgentId}&type=Shop`,
           {
             method: "GET",
             headers: {

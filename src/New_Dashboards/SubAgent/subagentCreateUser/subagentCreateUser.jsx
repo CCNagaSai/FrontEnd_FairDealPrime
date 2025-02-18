@@ -94,7 +94,7 @@ const SubACreateUser = () => {
 
     try {
       const response = await fetch(
-        "http://93.127.194.87:9999/admin/user/check-username",
+        "http://65.0.54.193:9999/admin/user/check-username",
         {
           method: "POST",
           headers: {
@@ -165,7 +165,7 @@ const SubACreateUser = () => {
 
     try {
       const response = await fetch(
-        "http://93.127.194.87:9999/admin/user/AddUser",
+        "http://65.0.54.193:9999/admin/user/AddUser",
         {
           method: "POST",
           headers: {

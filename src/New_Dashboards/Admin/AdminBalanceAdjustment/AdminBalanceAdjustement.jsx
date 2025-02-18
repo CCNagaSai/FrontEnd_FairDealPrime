@@ -37,11 +37,11 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
 
         const url =
           type === "User"
-            ? `http://93.127.194.87:9999/admin/user/UserList?Id=id&type=Admin`
+            ? `http://65.0.54.193:9999/admin/user/UserList?Id=id&type=Admin`
             : type === "Shop"
-            ? `http://93.127.194.87:9999/admin/shop/ShopList?agentId=Admin`
+            ? `http://65.0.54.193:9999/admin/shop/ShopList?agentId=Admin`
             : type === "Agent"
-            ? `http://93.127.194.87:9999/admin/agent/AgentList`
+            ? `http://65.0.54.193:9999/admin/agent/AgentList`
             : null;
 
         const response = await fetch(url, {
@@ -94,16 +94,16 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
     const apiUrl =
       type === "Agent"
         ? adjustType === "add"
-          ? "http://93.127.194.87:9999/admin/agent/agentAddMoney"
-          : "http://93.127.194.87:9999/admin/agent/agentDeductMoney"
+          ? "http://65.0.54.193:9999/admin/agent/agentAddMoney"
+          : "http://65.0.54.193:9999/admin/agent/agentDeductMoney"
         : type === "Shop"
         ? adjustType === "add"
-          ? "http://93.127.194.87:9999/admin/shop/shopAddMoney"
-          : "http://93.127.194.87:9999/admin/shop/shopDeductMoney"
+          ? "http://65.0.54.193:9999/admin/shop/shopAddMoney"
+          : "http://65.0.54.193:9999/admin/shop/shopDeductMoney"
         : type === "User"
         ? adjustType === "add"
-          ? "http://93.127.194.87:9999/admin/user/addMoney"
-          : "http://93.127.194.87:9999/admin/user/deductMoney"
+          ? "http://65.0.54.193:9999/admin/user/addMoney"
+          : "http://65.0.54.193:9999/admin/user/deductMoney"
         : null;
 
     try {
@@ -145,7 +145,7 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
       }
 
       const updatedUserResponse = await fetch(
-        `http://93.127.194.87:9999/admin/user/UserList?Id=${id}&type=Shop`,
+        `http://65.0.54.193:9999/admin/user/UserList?Id=${id}&type=Shop`,
         {
           method: "GET",
           headers: {

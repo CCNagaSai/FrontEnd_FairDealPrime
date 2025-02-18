@@ -49,7 +49,7 @@ const AUsersList = ({ onUserClick }) => {
           throw new Error("Missing id or type from cookies");
         }
         const response = await fetch(
-          `http://93.127.194.87:9999/admin/user/agent/UserList?Id=${id}&type=${type}`,
+          `http://65.0.54.193:9999/admin/user/agent/UserList?Id=${id}&type=${type}`,
           {
             method: "GET",
             headers: {

@@ -102,7 +102,7 @@ const IshankCreateSubagent = () => {
 
     try {
       const response = await fetch(
-        "http://93.127.194.87:9999/admin/shop/check-username",
+        "http://65.0.54.193:9999/admin/shop/check-username",
         {
           method: "POST",
           headers: {
@@ -165,11 +165,11 @@ const IshankCreateSubagent = () => {
     };
 
     console.log("Payload:", payload);
-    // http://93.127.194.87:9999/admin/shop/AddShop
+    // http://65.0.54.193:9999/admin/shop/AddShop
 
     try {
       const response = await fetch(
-        "http://93.127.194.87:9999/admin/shop/AddShop",
+        "http://65.0.54.193:9999/admin/shop/AddShop",
         {
           method: "POST",
           headers: {

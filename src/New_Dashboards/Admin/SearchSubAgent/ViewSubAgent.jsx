@@ -26,7 +26,7 @@ const IshankViewSubAgent = ({ user, onBack }) => {
   const handlePasswordUpdate = async () => {
     try {
       const response = await fetch(
-        "http://93.127.194.87:9999/admin/shop/ShopUpdate",
+        "http://65.0.54.193:9999/admin/shop/ShopUpdate",
         {
           method: "PUT",
           headers: {
@@ -63,7 +63,7 @@ const IshankViewSubAgent = ({ user, onBack }) => {
   const handleLockStatusUpdate = async () => {
     try {
       const response = await fetch(
-        `http://93.127.194.87:9999/admin/shop/ShopUpdate`,
+        `http://65.0.54.193:9999/admin/shop/ShopUpdate`,
         {
           method: "PUT",
           headers: {

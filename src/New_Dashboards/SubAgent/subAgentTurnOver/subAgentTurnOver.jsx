@@ -211,7 +211,7 @@ const SubATurnover = () => {
       const fetchBackendData = async () => {
         try {
           const response = await fetch(
-            `http://93.127.194.87:9999/admin/agent/RouletteGameHistory?subAgentId=${id}`,
+            `http://65.0.54.193:9999/admin/agent/RouletteGameHistory?subAgentId=${id}`,
             {
               method: "GET",
               headers: {
@@ -386,45 +386,50 @@ const SubATurnover = () => {
 
           {/* Show selected filters after submit */}
           {isSubmitted && (
-          <div className="bg-[#e6ebff] p-2 flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 mt-2 rounded-md m-2 text-sm sm:text-base">
-            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
-              <strong>Start Date:</strong> {filters.startDate || "Not Selected"}
-            </span>
-            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
-            <strong>End Date:</strong> {filters.endDate || "Not Selected"}
-            </span>
-            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
-            <strong>Total Play Points:</strong>{" "}
-              {filteredData.reduce((sum, item) => sum + item.play, 0).toFixed(2)}
-            </span>
-            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
-            <strong>Total Won Points:</strong>{" "}
-              {filteredData.reduce((sum, item) => sum + item.won, 0).toFixed(2)}
-            </span>
-            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
-            <strong>Total End Points:</strong>{" "}
-              {filteredData
-                .reduce((sum, item) => sum + (item.play - item.won), 0)
-                .toFixed(2)}
-            </span>
-            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
-            <strong>Total Margin:</strong>{" "}
-              {filteredData
-                .reduce((sum, item) => sum + (2.5 / 100) * item.play, 0)
-                .toFixed(2)}
-            </span>
-            <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
-              <strong>Total Net:</strong>{" "}
-              {filteredData
-                .reduce(
-                  (sum, item) =>
-                    sum + (item.play - item.won - (2.5 / 100) * item.play),
-                  0
-                )
-                .toFixed(2)}
-            </span>
-          </div>
-        )}
+            <div className="bg-[#e6ebff] p-2 flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 mt-2 rounded-md m-2 text-sm sm:text-base">
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Start Date:</strong>{" "}
+                {filters.startDate || "Not Selected"}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>End Date:</strong> {filters.endDate || "Not Selected"}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Total Play Points:</strong>{" "}
+                {filteredData
+                  .reduce((sum, item) => sum + item.play, 0)
+                  .toFixed(2)}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Total Won Points:</strong>{" "}
+                {filteredData
+                  .reduce((sum, item) => sum + item.won, 0)
+                  .toFixed(2)}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Total End Points:</strong>{" "}
+                {filteredData
+                  .reduce((sum, item) => sum + (item.play - item.won), 0)
+                  .toFixed(2)}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Total Margin:</strong>{" "}
+                {filteredData
+                  .reduce((sum, item) => sum + (2.5 / 100) * item.play, 0)
+                  .toFixed(2)}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Total Net:</strong>{" "}
+                {filteredData
+                  .reduce(
+                    (sum, item) =>
+                      sum + (item.play - item.won - (2.5 / 100) * item.play),
+                    0
+                  )
+                  .toFixed(2)}
+              </span>
+            </div>
+          )}
 
           {/* Display Message if No Results */}
           {noResults && <p>No records found based on the selected filters.</p>}

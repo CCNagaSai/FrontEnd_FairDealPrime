@@ -26,7 +26,7 @@ const IshankViewUser = ({ user, onBack }) => {
   const handlePasswordUpdate = async () => {
     try {
       const response = await fetch(
-        "http://93.127.194.87:9999/admin/user/UpdatePassword",
+        "http://65.0.54.193:9999/admin/user/UpdatePassword",
         {
           method: "PUT",
           headers: {
@@ -57,7 +57,7 @@ const IshankViewUser = ({ user, onBack }) => {
   const handleLockStatusUpdate = async () => {
     try {
       const response = await fetch(
-        `http://93.127.194.87:9999/admin/user/UpdatePassword`,
+        `http://65.0.54.193:9999/admin/user/UpdatePassword`,
         {
           method: "PUT",
           headers: {

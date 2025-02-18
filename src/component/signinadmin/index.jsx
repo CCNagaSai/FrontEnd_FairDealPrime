@@ -1,45 +1,39 @@
 import logoColor from "../../assets/images/logo/logo-color.png";
 import logoWhite from "../../assets/images/logo/logo-white.png";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import PasswordResetModal from "../modal/PasswordResetModal";
 import { useState } from "react";
-import Cookies from 'universal-cookie';
+import Cookies from "universal-cookie";
 const cookies = new Cookies();
-const host = "http://93.127.194.87:9999"; //"http://192.168.0.203:9999" //
-
+const host = "http://65.0.54.193:9999"; //"http://192.168.0.203:9999" //
 
 function SigninAdmin() {
   const navigate = useNavigate();
 
-  console.log("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGLOOGGGGGGGGGGGGGGGGGGGGGGGGr ")
-
+  console.log(
+    "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGLOOGGGGGGGGGGGGGGGGGGGGGGGGr "
+  );
 
   const [modalOpen, setModalOpen] = useState(false);
   const [modalData, setModalData] = useState("");
 
   const [pin, setPin] = useState("");
 
-
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    logintype: 'Admin'
+    email: "",
+    password: "",
+    logintype: "Admin",
   });
 
   const navigateToContacts = () => {
-
     if (formData.logintype == "Shop") {
-      navigate('/shopdashboard');
-
+      navigate("/shopdashboard");
     } else if (formData.logintype == "Agent") {
-      navigate('/agentdashboard');
-
+      navigate("/agentdashboard");
     } else {
-      navigate('/dashboard');
-
+      navigate("/dashboard");
     }
-
   };
 
   const handleChange = (e) => {
@@ -50,86 +44,79 @@ function SigninAdmin() {
   };
 
   const handleChangepin = async (e) => {
-    await setPin(e.target.value)
+    await setPin(e.target.value);
   };
 
   const LoginData = async (data) => {
     try {
-      console.log("PlayerList :::::::", host)
+      console.log("PlayerList :::::::", host);
       const response = await fetch(`${host}/admin/login`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(data)
-      }).then(d => d.json())
-      console.log("data api from :latatestUser :::...", response)
-      return response
+        body: JSON.stringify(data),
+      }).then((d) => d.json());
+      console.log("data api from :latatestUser :::...", response);
+      return response;
     } catch (e) {
-      console.log("e :", e)
+      console.log("e :", e);
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    let resData = await LoginData(formData)
-    console.log(resData)
+    let resData = await LoginData(formData);
+    console.log(resData);
 
     if (resData.status) {
+      cookies.set("token", resData.data.token);
+      cookies.set("name", resData.data.type_name);
+      cookies.set("email", resData.data.name);
+      cookies.set("logintype", "Admin");
+      cookies.set("LoginUserId", resData.data._id);
 
-
-      cookies.set('token', resData.data.token);
-      cookies.set('name', resData.data.type_name);
-      cookies.set('email', resData.data.name);
-      cookies.set('logintype', "Admin");
-      cookies.set('LoginUserId', resData.data._id);
-
-
-
-
-      navigateToContacts()
-
+      navigateToContacts();
     } else {
-      alert("Please Enter valid Email Or Passward..!!")
+      alert("Please Enter valid Email Or Passward..!!");
     }
   };
 
   const OnChange = async (event) => {
     let { name, value } = event.target;
-    console.log("name ", name)
-    console.log("name ", value)
+    console.log("name ", name);
+    console.log("name ", value);
 
     await setFormData({
       ...formData,
       [name]: value,
     });
 
-    console.log("handleChange ::::::::::::::::::::::", formData)
+    console.log("handleChange ::::::::::::::::::::::", formData);
   };
 
   const sendforgotemail = async (event) => {
-    
     try {
       event.preventDefault();
-      console.log("PlayerList :::::::", host)
-      
+      console.log("PlayerList :::::::", host);
+
       const response = await fetch(`${host}/admin/sendforgotemail`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({pin:pin})
-      }).then(d => d.json())
-      console.log("data api from :latatestUser :::...", response)
-      alert(JSON.stringify(response.data))
-      return response
+        body: JSON.stringify({ pin: pin }),
+      }).then((d) => d.json());
+      console.log("data api from :latatestUser :::...", response);
+      alert(JSON.stringify(response.data));
+      return response;
     } catch (e) {
-      console.log("e :", e)
+      console.log("e :", e);
     }
-  }
+  };
 
   return (
     <div className="lg:w-1/2 px-5 xl:pl-12 pt-10">
@@ -150,8 +137,7 @@ function SigninAdmin() {
           <h2 className="text-bgray-900 dark:text-white text-4xl font-semibold font-poppins mb-2">
             Sign in to Deal-Regal Admin.
           </h2>
-          <p className="font-urbanis text-base font-medium text-bgray-600 dark:text-bgray-50">
-          </p>
+          <p className="font-urbanis text-base font-medium text-bgray-600 dark:text-bgray-50"></p>
         </header>
 
         <div className="mb-4">
@@ -173,10 +159,7 @@ function SigninAdmin() {
             className="text-bgray-800 text-base border border-bgray-300 dark:border-darkblack-400 dark:bg-darkblack-500 dark:text-white h-14 w-full focus:border-success-300 focus:ring-0 rounded-lg px-4 py-3.5 placeholder:text-bgray-500 placeholder:text-base"
             placeholder="Password"
           />
-          <button
-            aria-label="none"
-            className="absolute top-4 right-4 bottom-4"
-          >
+          <button aria-label="none" className="absolute top-4 right-4 bottom-4">
             <svg
               width="22"
               height="20"
@@ -211,7 +194,6 @@ function SigninAdmin() {
 
         <div className="flex justify-between mb-7">
           <div className="flex items-center space-x-3">
-
             <label
               htmlFor="remember"
               className="text-bgray-900 dark:text-white text-base font-semibold"
@@ -262,7 +244,6 @@ function SigninAdmin() {
 }
 
 export default SigninAdmin;
-
 
 // <div className="flex items-center space-x-3">
 // <input

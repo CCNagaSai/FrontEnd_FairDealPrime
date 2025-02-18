@@ -26,7 +26,7 @@ const IshankViewAgent = ({ user, onBack }) => {
   const handlePasswordUpdate = async () => {
     try {
       const response = await fetch(
-        "http://93.127.194.87:9999/admin/agent/AgentUpdate",
+        "http://65.0.54.193:9999/admin/agent/AgentUpdate",
         {
           method: "PUT",
           headers: {
@@ -60,11 +60,11 @@ const IshankViewAgent = ({ user, onBack }) => {
     }
   };
 
-  // `http://93.127.194.87:9999/admin/agent/changeUserStatus?agentId=${agentId}&userId=${user._id}`
+  // `http://65.0.54.193:9999/admin/agent/changeUserStatus?agentId=${agentId}&userId=${user._id}`
   const handleLockStatusUpdate = async () => {
     try {
       const response = await fetch(
-        `http://93.127.194.87:9999/admin/agent/AgentUpdate`,
+        `http://65.0.54.193:9999/admin/agent/AgentUpdate`,
         {
           method: "PUT",
           headers: {

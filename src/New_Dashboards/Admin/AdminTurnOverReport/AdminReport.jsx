@@ -58,7 +58,7 @@ const AdminTurnoverReport = () => {
         }
 
         const response = await fetch(
-          `http://93.127.194.87:9999/admin/agent/AgentList`,
+          `http://65.0.54.193:9999/admin/agent/AgentList`,
           {
             method: "GET",
             headers: {
@@ -82,7 +82,7 @@ const AdminTurnoverReport = () => {
           for (const shop of shopList) {
             const AgentId = shop._id;
             const responseBackend = await fetch(
-              `http://93.127.194.87:9999/admin/agent/RouletteGameHistory?subAgentId=${AgentId}`,
+              `http://65.0.54.193:9999/admin/agent/RouletteGameHistory?subAgentId=${AgentId}`,
               {
                 method: "GET",
                 headers: {
@@ -119,7 +119,7 @@ const AdminTurnoverReport = () => {
           for (const shop of shopList) {
             const subAgentId = shop._id;
             const responseBackend = await fetch(
-              `http://93.127.194.87:9999/admin/agent/RouletteGameHistory?subAgentId=${subAgentId}`,
+              `http://65.0.54.193:9999/admin/agent/RouletteGameHistory?subAgentId=${subAgentId}`,
               {
                 method: "GET",
                 headers: {

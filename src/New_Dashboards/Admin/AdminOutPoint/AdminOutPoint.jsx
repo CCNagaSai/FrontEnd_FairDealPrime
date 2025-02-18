@@ -64,7 +64,7 @@ const IAdminOutpoint = () => {
       console.log("Fetching with:", { id, type, token });
 
       const response = await fetch(
-        `http://93.127.194.87:9999/admin/usertransction/AdminTranscationData`,
+        `http://65.0.54.193:9999/admin/usertransction/AdminTranscationData`,
         {
           method: "GET",
           headers: {

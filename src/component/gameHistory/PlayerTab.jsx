@@ -1,121 +1,129 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from "react";
 import ProtoTypes from "prop-types";
 import CustomerInfo from "./PlayerInfo";
 import users from "../../data/user";
-import offerContext from '../../context/offerContext';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import ReactHTMLTableToExcel from 'react-html-table-to-excel';
-import Cookies from 'universal-cookie';
+import offerContext from "../../context/offerContext";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 function PlayerTab({ gameName }) {
-
   //-------------------------------------------------------------------------------------------------------
   const [active, setActive] = useState(false);
   const [pageSize, setPageSize] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortDirection, setSortDirection] = useState('asc');
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortDirection, setSortDirection] = useState("asc");
   const Dropdown = (item) => {
-    setPageSize(item)
-    setActive(!active)
-  }
+    setPageSize(item);
+    setActive(!active);
+  };
   const [totalDocuments, setTotalDocuments] = useState(0);
-  const [token, setToken] = useState(cookies.get('token'));
+  const [token, setToken] = useState(cookies.get("token"));
   //------------------------------------------------------------------------------------------------------------
-
 
   const [gameHistoryData, setGameHistoryData] = useState([]);
 
-  const context = useContext(offerContext)
+  const context = useContext(offerContext);
   // const { SoratGameHistory, SpinGameHistory, AndarBaharGameHistory, WheelofFortuneGameHistory, BaraKaDumGameHistory, RouletteGameHistory } = context
-  const { SoratGameHistory, SpinGameHistory, AndarBaharGameHistory, WheelofFortuneGameHistory, BaraKaDumGameHistory } = context
+  const {
+    SoratGameHistory,
+    SpinGameHistory,
+    AndarBaharGameHistory,
+    WheelofFortuneGameHistory,
+    BaraKaDumGameHistory,
+  } = context;
 
   const RouletteGameHistory = async (page) => {
     console.log(`Fetching page ${page} with pageSize ${pageSize}`);
     try {
-        const token = cookies.get('token');
-        if (!token) {
-            console.error("Token is missing.");
-            return [];
-        }
-
-        const response = await fetch(`http://93.127.194.87:9999/admin/userhistory/RouletteGameHistory/?page=${page}&limit=${pageSize}`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'token': token,
-            },
-        });
-
-        if (!response.ok) {
-            console.error(`API Error: ${response.status} ${response.statusText}`);
-            return [];
-        }
-
-        const json = await response.json();
-        console.log("json",json)
-
-        if (json.message && (json.message === "jwt expired" || json.message === "Unauthorized access")) {
-            console.warn("Session expired. Logging out.");
-            LogoutClick();
-            return [];
-        }
-
-        return json || [];
-    } catch (error) {
-        console.error("RouletteGameHistory API call failed:", error);
+      const token = cookies.get("token");
+      if (!token) {
+        console.error("Token is missing.");
         return [];
-    }
-};
+      }
 
-const [result, setResult] = useState({ totalPages: 1, gameHistoryData: [] });
-const [loading, setLoading] = useState(false);
+      const response = await fetch(
+        `http://65.0.54.193:9999/admin/userhistory/RouletteGameHistory/?page=${page}&limit=${pageSize}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            token: token,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        console.error(`API Error: ${response.status} ${response.statusText}`);
+        return [];
+      }
+
+      const json = await response.json();
+      console.log("json", json);
+
+      if (
+        json.message &&
+        (json.message === "jwt expired" ||
+          json.message === "Unauthorized access")
+      ) {
+        console.warn("Session expired. Logging out.");
+        LogoutClick();
+        return [];
+      }
+
+      return json || [];
+    } catch (error) {
+      console.error("RouletteGameHistory API call failed:", error);
+      return [];
+    }
+  };
+
+  const [result, setResult] = useState({ totalPages: 1, gameHistoryData: [] });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const submitdata = async () => {
       setLoading(true);
-      setGameHistoryData([])
+      setGameHistoryData([]);
 
-      let fetchedResult=[];
+      let fetchedResult = [];
 
       if (gameName == "Sorat") {
-        console.log("Sorat ")
-        setGameHistoryData(await SoratGameHistory())
+        console.log("Sorat ");
+        setGameHistoryData(await SoratGameHistory());
       } else if (gameName == "Spin") {
-        console.log("Spin ")
-        setGameHistoryData(await SpinGameHistory())
+        console.log("Spin ");
+        setGameHistoryData(await SpinGameHistory());
       } else if (gameName == "AndarBahar") {
-        console.log("AndarBahar ")
-        setGameHistoryData(await AndarBaharGameHistory())
+        console.log("AndarBahar ");
+        setGameHistoryData(await AndarBaharGameHistory());
       } else if (gameName == "WheelofFortune") {
-        console.log("WheelofFortune ")
-        setGameHistoryData(await WheelofFortuneGameHistory())
+        console.log("WheelofFortune ");
+        setGameHistoryData(await WheelofFortuneGameHistory());
       } else if (gameName == "12KaDum") {
-        console.log("12KaDum ")
-        setGameHistoryData(await BaraKaDumGameHistory())
+        console.log("12KaDum ");
+        setGameHistoryData(await BaraKaDumGameHistory());
       } else if (gameName == "Roulette") {
-        console.log("Roulette ")
+        console.log("Roulette ");
         fetchedResult = await RouletteGameHistory(currentPage);
-        setResult(fetchedResult)
-        setGameHistoryData(fetchedResult?.gameHistoryData || [])
+        setResult(fetchedResult);
+        setGameHistoryData(fetchedResult?.gameHistoryData || []);
       }
       setLoading(false);
-    }
-    submitdata()
+    };
+    submitdata();
   }, [gameName, currentPage, pageSize]);
-  console.log("gameHistoryData", gameHistoryData)
-
-  
+  console.log("gameHistoryData", gameHistoryData);
 
   //--------------------------- Paggeation and No Of Pages ------------------------------------
   // Filter the user data based on date range and search term
   const filteredUsers = gameHistoryData?.filter((user) => {
-
     const registrationDate = new Date(user.createdAt);
     const from = fromDate ? new Date(fromDate) : null;
     const to = toDate ? new Date(toDate) : null;
@@ -123,11 +131,12 @@ const [loading, setLoading] = useState(false);
     return (
       (!from || registrationDate >= from) &&
       (!to || registrationDate <= to) &&
-      (searchTerm === '' ||
-        (user.userId.toLowerCase().includes(searchTerm.toLowerCase())) ||  
-        (user.won != undefined && user.won.toString().includes(searchTerm.toLowerCase())) ||
-        (user.play != undefined && user.play.toString().includes(searchTerm.toLowerCase()))
-      )
+      (searchTerm === "" ||
+        user.userId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.won != undefined &&
+          user.won.toString().includes(searchTerm.toLowerCase())) ||
+        (user.play != undefined &&
+          user.play.toString().includes(searchTerm.toLowerCase())))
     );
   });
 
@@ -139,9 +148,8 @@ const [loading, setLoading] = useState(false);
   // const usersOnCurrentPage = filteredUsers?.slice(startIndex, endIndex);
   const usersOnCurrentPage = filteredUsers;
 
-
   const totalPages = result?.totalPages;
-  console.log("totalPages", totalPages)
+  console.log("totalPages", totalPages);
 
   const goToPage = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -150,12 +158,11 @@ const [loading, setLoading] = useState(false);
   };
 
   const resetDate = () => {
-    setFromDate("")
-    setToDate("")
-  }
+    setFromDate("");
+    setToDate("");
+  };
 
-
-  const [backgroundColor, setBackgroundColor] = useState('');
+  const [backgroundColor, setBackgroundColor] = useState("");
 
   const generatePDF = async () => {
     //style={{"background-color": "lightgray"}}
@@ -163,34 +170,32 @@ const [loading, setLoading] = useState(false);
 
     const input = document.getElementById("tableId");
 
-    console.log("input ::::::::::::::: ", input)
+    console.log("input ::::::::::::::: ", input);
     html2canvas(input)
       .then(async (canvas) => {
-        console.log("canvas ", canvas)
-        const imgData = canvas.toDataURL('image/png');
+        console.log("canvas ", canvas);
+        const imgData = canvas.toDataURL("image/png");
         const pdf = new jsPDF();
         pdf.setFillColor(204, 204, 204, 0);
 
         const imgWidth = 210;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-        pdf.save(`${new Date() + 'UserPage'}.pdf`);
+        pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+        pdf.save(`${new Date() + "UserPage"}.pdf`);
 
-        await setBackgroundColor('');
+        await setBackgroundColor("");
       })
       .catch((error) => console.log(error));
-
-
   };
-  console.log("filteredUsers", filteredUsers)
+  console.log("filteredUsers", filteredUsers);
 
   //-----------------------------------------------------------------------------------------------
 
   const handleSort = (key) => {
-    const direction = sortDirection === 'asc' ? 'desc' : 'asc';
+    const direction = sortDirection === "asc" ? "desc" : "asc";
     const sorted = [...gameHistoryData].sort((a, b) => {
-      if (a[key] < b[key]) return direction === 'asc' ? -1 : 1;
-      if (a[key] > b[key]) return direction === 'asc' ? 1 : -1;
+      if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
+      if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
       return 0;
     });
     setGameHistoryData(sorted);
@@ -241,7 +246,6 @@ const [loading, setLoading] = useState(false);
       </div>
       <div className="filter-content w-full">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
-
           <input
             type="date"
             placeholder="From Date"
@@ -255,169 +259,184 @@ const [loading, setLoading] = useState(false);
             onChange={(e) => setToDate(e.target.value)}
             style={{ marginLeft: "1rem" }}
           />
-          <button aria-label="none"
-            className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm" onClick={resetDate}>Reset</button>
+          <button
+            aria-label="none"
+            className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm"
+            onClick={resetDate}
+          >
+            Reset
+          </button>
 
-
-          <button aria-label="none"
-            className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm">
+          <button
+            aria-label="none"
+            className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm"
+          >
             <ReactHTMLTableToExcel
               id="test-table-xls-button"
               className="download-table-xls-button"
               table="tableId"
-              filename={new Date() + 'UserPage'}
+              filename={new Date() + "UserPage"}
               sheet="tablexls"
-              buttonText="Download as XLS" />
+              buttonText="Download as XLS"
+            />
           </button>
 
-          <button aria-label="none"
-            className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm" onClick={generatePDF}>
-
+          <button
+            aria-label="none"
+            className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm"
+            onClick={generatePDF}
+          >
             Download as PDF
           </button>
-
         </div>
       </div>
 
       <div className="table-content w-full overflow-x-auto">
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <table style={{ "backgroundColor": backgroundColor }} id="tableId" className="w-full">
-          <tbody>
-            <tr className="border-b border-bgray-300 dark:border-darkblack-400">
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
+          <table
+            style={{ backgroundColor: backgroundColor }}
+            id="tableId"
+            className="w-full"
+          >
+            <tbody>
+              <tr className="border-b border-bgray-300 dark:border-darkblack-400">
+                <td
+                  className="w-[250px] px-6 py-5 xl:px-0"
+                  onClick={() => handleSort("createdAt")}
+                >
+                  <div className="flex w-full items-center space-x-2.5">
+                    <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                      Date Time
+                    </span>
+                  </div>
+                </td>
+                <td className="w-[250px] px-6 py-5 xl:px-0">
+                  <div className="flex w-full items-center space-x-2.5">
+                    <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                      User Name
+                    </span>
+                  </div>
+                </td>
+                <td className="w-[165px] px-6 py-5 xl:px-0">
+                  <div className="flex items-center space-x-2.5">
+                    <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                      Boll Number
+                    </span>
+                  </div>
+                </td>
+                <td className="w-[165px] px-6 py-5 xl:px-0">
+                  <div className="flex w-full items-center space-x-2.5">
+                    <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                      Before Play
+                    </span>
+                  </div>
+                </td>
 
-              <td className="w-[250px] px-6 py-5 xl:px-0" onClick={() => handleSort('createdAt')}>
-                <div className="flex w-full items-center space-x-2.5">
-                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    Date Time
-                  </span>
-                </div>
-              </td>
-              <td className="w-[250px] px-6 py-5 xl:px-0" >
-                <div className="flex w-full items-center space-x-2.5">
-                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    User Name
-                  </span>
-                </div>
-              </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
-                <div className="flex items-center space-x-2.5">
-                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    Boll Number
-                  </span>
-                </div>
-              </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
-                <div className="flex w-full items-center space-x-2.5">
-                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    Before Play
-                  </span>
-                </div>
-              </td>
-
-              <td className="w-[165px] px-6 py-5 xl:px-0">
-                <div className="flex w-full items-center space-x-2.5">
-                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    Play Bet
-                  </span>
-                </div>
-              </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0" onClick={() => handleSort('won')}>
-                <div className="flex w-full items-center space-x-2.5">
-                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    Won Amount
-                  </span>
-                  <span>
-                    <svg
-                      width="14"
-                      height="15"
-                      viewBox="0 0 14 15"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M10.332 1.31567V13.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                <td className="w-[165px] px-6 py-5 xl:px-0">
+                  <div className="flex w-full items-center space-x-2.5">
+                    <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                      Play Bet
+                    </span>
+                  </div>
+                </td>
+                <td
+                  className="w-[165px] px-6 py-5 xl:px-0"
+                  onClick={() => handleSort("won")}
+                >
+                  <div className="flex w-full items-center space-x-2.5">
+                    <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                      Won Amount
+                    </span>
+                    <span>
+                      <svg
+                        width="14"
+                        height="15"
+                        viewBox="0 0 14 15"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M10.332 1.31567V13.3157"
+                          stroke="#718096"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
+                          stroke="#718096"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M3.66602 13.3157V1.31567"
+                          stroke="#718096"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
+                          stroke="#718096"
+                          strokeWidth="1.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </td>
+                <td className="w-[165px] px-6 py-5 xl:px-0">
+                  <div className="flex w-full items-center space-x-2.5">
+                    <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                      After Play Amount
+                    </span>
+                  </div>
+                </td>
+                <td className="w-[165px] px-6 py-5 xl:px-0">
+                  <div className="flex w-full items-center space-x-2.5">
+                    <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
+                      Refer ID
+                    </span>
+                  </div>
+                </td>
+              </tr>
+              {usersOnCurrentPage?.map((user, index) =>
+                pageSize
+                  ? index + 1 <= pageSize && (
+                      <CustomerInfo
+                        key={user._id}
+                        datetime={user.createdAt}
+                        userId={user.userId}
+                        ballposition={user.ballposition}
+                        beforeplay={user.beforeplaypoint}
+                        play={user.play}
+                        won={user.won}
+                        afterplaypoint={user.afterplaypoint}
+                        referid={user.betObjectData}
+                        name={user.username}
                       />
-                      <path
-                        d="M5.66602 11.3157L3.66602 13.3157L1.66602 11.3157"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                    )
+                  : index < 3 && (
+                      <CustomerInfo
+                        key={user._id}
+                        datetime={user.createdAt}
+                        userId={user.userId}
+                        ballposition={user.ballposition}
+                        beforeplay={user.beforeplaypoint}
+                        play={user.play}
+                        won={user.won}
+                        afterplaypoint={user.afterplaypoint}
+                        referid={user.betObjectData}
+                        name={user.username}
                       />
-                      <path
-                        d="M3.66602 13.3157V1.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <path
-                        d="M12.332 3.31567L10.332 1.31567L8.33203 3.31567"
-                        stroke="#718096"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
-                <div className="flex w-full items-center space-x-2.5">
-                  <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                    After Play Amount
-                  </span>
-                </div>
-              </td>
-              <td className="w-[165px] px-6 py-5 xl:px-0">
-              <div className="flex w-full items-center space-x-2.5">
-                <span className="text-base font-medium text-bgray-600 dark:text-bgray-50">
-                  Refer ID
-                </span>
-              </div>
-            </td>
-
-            </tr>
-            {usersOnCurrentPage?.map((user, index) =>
-              pageSize
-                ? index + 1 <= pageSize && (
-                  <CustomerInfo
-                    key={user._id}
-                    datetime={user.createdAt}
-                    userId={user.userId}
-                    ballposition={user.ballposition}
-                    beforeplay={user.beforeplaypoint}
-                    play={user.play}
-                    won={user.won}
-                    afterplaypoint={user.afterplaypoint}
-                    referid={user.betObjectData}
-                    name={user.username}
-                  
-                  />
-                )
-                : index < 3 && (
-                  <CustomerInfo
-                    key={user._id}
-                    datetime={user.createdAt}
-                    userId={user.userId}
-                    ballposition={user.ballposition}
-                    beforeplay={user.beforeplaypoint}
-                    play={user.play}
-                    won={user.won}
-                    afterplaypoint={user.afterplaypoint}
-                    referid={user.betObjectData}
-                    name={user.username}
-                  />
-                )
-            )}
-          </tbody>
-        </table>
+                    )
+              )}
+            </tbody>
+          </table>
         )}
       </div>
       <div className="pagination-content w-full">
@@ -475,7 +494,10 @@ const [loading, setLoading] = useState(false);
             </div>
           </div>
           <div className="flex items-center space-x-5 sm:space-x-[35px]">
-            <button aria-label="none" type="button" onClick={() => goToPage(currentPage - 1)}
+            <button
+              aria-label="none"
+              type="button"
+              onClick={() => goToPage(currentPage - 1)}
               disabled={currentPage === 1}
               className="text-sm font-semibold text-bgray-600 dark:text-bgray-50"
             >
@@ -503,7 +525,10 @@ const [loading, setLoading] = useState(false);
               Page {currentPage} of {totalPages}
             </span>
 
-            <button aria-label="none" type="button" onClick={() => goToPage(currentPage + 1)}
+            <button
+              aria-label="none"
+              type="button"
+              onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage === totalPages}
               className="text-sm font-semibold text-bgray-600 dark:text-bgray-50"
             >

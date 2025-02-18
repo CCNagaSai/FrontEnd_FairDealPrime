@@ -49,7 +49,7 @@ const IshankUsersList = ({ onUserClick }) => {
           throw new Error("Missing id or type from cookies");
         }
         const response = await fetch(
-          `http://93.127.194.87:9999/admin/user/UserList?Id=id&type=Admin`,
+          `http://65.0.54.193:9999/admin/user/UserList?Id=id&type=Admin`,
           {
             method: "GET",
             headers: {

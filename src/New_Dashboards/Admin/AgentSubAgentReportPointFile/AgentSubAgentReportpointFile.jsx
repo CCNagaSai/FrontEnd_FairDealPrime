@@ -36,8 +36,8 @@ const AgentSubAgentPointFile = () => {
 
         let endpoint =
           selectedRole === "Agent"
-            ? `http://93.127.194.87:9999/admin/agent/AgentList`
-            : `http://93.127.194.87:9999/admin/shop/ShopList?agentId=Admin`;
+            ? `http://65.0.54.193:9999/admin/agent/AgentList`
+            : `http://65.0.54.193:9999/admin/shop/ShopList?agentId=Admin`;
 
         const response = await fetch(endpoint, {
           method: "GET",

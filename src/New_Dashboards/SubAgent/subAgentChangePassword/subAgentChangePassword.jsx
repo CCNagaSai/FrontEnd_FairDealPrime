@@ -85,7 +85,7 @@ const ChangePassword = () => {
 
     try {
       const response = await fetch(
-        "http://93.127.194.87:9999/admin/shop/subagentChangePassword",
+        "http://65.0.54.193:9999/admin/shop/subagentChangePassword",
         {
           method: "PUT",
           headers: {
