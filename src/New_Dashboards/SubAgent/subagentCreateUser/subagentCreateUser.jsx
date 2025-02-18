@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "./subAgentCreateUser.css";
 
-import Cookies from "universal-cookie";
+import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
 const SubACreateUser = () => {
   const [selectedGames, setSelectedGames] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [agentId, setAgentId] = useState("");
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(""); 
   const [usernameStatus, setUsernameStatus] = useState(null);
   const [debounceTimeout, setDebounceTimeout] = useState(null);
 
@@ -37,21 +37,22 @@ const SubACreateUser = () => {
   ];
 
   useEffect(() => {
-    const storedAgentId = cookies.get("LoginUserId");
-    const storedToken = cookies.get("token");
-
+    const storedAgentId = cookies.get('LoginUserId');
+    const storedToken = cookies.get('token');
+  
     if (storedAgentId) {
       setAgentId(storedAgentId);
     } else {
       console.warn("No loginUserID found in cookies");
     }
-
+  
     if (storedToken) {
       setToken(storedToken); // Set the token in state
     } else {
       console.warn("No token found in cookies");
     }
   }, []);
+  
 
   const handleGameSelection = (game) => {
     if (selectedGames.includes(game)) {
@@ -164,17 +165,14 @@ const SubACreateUser = () => {
     console.log("Payload:", payload);
 
     try {
-      const response = await fetch(
-        "http://65.0.54.193:9999/admin/user/AddUser",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            token: token, // Send token from cookies
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch("http://65.0.54.193:9999/admin/user/AddUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: token, // Send token from cookies
+        },
+        body: JSON.stringify(payload),
+      });
 
       const result = await response.json();
 
@@ -267,7 +265,7 @@ const SubACreateUser = () => {
             required
           />
         </div>
-        <div className="form-group">
+        {/* <div className="form-group">
           <label>Mobile Number:</label>
           <input
             type="text"
@@ -278,8 +276,8 @@ const SubACreateUser = () => {
             onChange={handleChange}
             maxLength="10"
           />
-        </div>
-        <div className="form-group">
+        </div> */}
+        {/* <div className="form-group">
           <label>Agent Transaction Password:</label>
           <input
             type="password"
@@ -289,8 +287,8 @@ const SubACreateUser = () => {
             value={formData.transactionPassword}
             onChange={handleChange}
           />
-        </div>
-        <div className="form-group">
+        </div> */}
+        {/* <div className="form-group">
           <label>Eligible Games:</label>
           <div className="dropdown-container">
             <div className="dropdown-box" onClick={toggleDropdown}>
@@ -313,7 +311,7 @@ const SubACreateUser = () => {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
         <div className="form-actions">
           <button
             type="submit"
@@ -326,7 +324,11 @@ const SubACreateUser = () => {
           >
             Create
           </button>
-          <button type="reset" className="btn reset" onClick={handleReset}>
+          <button
+            type="reset"
+            className="btn reset"
+            onClick={handleReset}
+          >
             Reset
           </button>
         </div>
