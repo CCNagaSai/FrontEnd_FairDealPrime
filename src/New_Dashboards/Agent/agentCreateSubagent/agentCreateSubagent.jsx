@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./AgentCreateSubagent.css";
 
-import Cookies from "universal-cookie";
+import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
 const ACreateSubagent = () => {
@@ -10,7 +10,7 @@ const ACreateSubagent = () => {
   const [agentId, setAgentId] = useState("");
   const [token, setToken] = useState("");
   const [usernameStatus, setUsernameStatus] = useState(null);
-  const [debounceTimeout, setDebounceTimeout] = useState(null);
+  const [debounceTimeout, setDebounceTimeout] = useState(null); 
 
   const [formData, setFormData] = useState({
     username: "",
@@ -39,27 +39,25 @@ const ACreateSubagent = () => {
 
   useEffect(() => {
     // Get agentId and token from cookies
-    const storedAgentId = cookies.get("LoginUserId"); // Fetch loginUserID from cookies
-    const storedToken = cookies.get("token"); // Fetch token from cookies
-
-    console.log(
-      "Retrieved loginUserID (Agent ID) from cookies:",
-      storedAgentId
-    );
+    const storedAgentId = cookies.get('LoginUserId'); // Fetch loginUserID from cookies
+    const storedToken = cookies.get('token');        // Fetch token from cookies
+  
+    console.log("Retrieved loginUserID (Agent ID) from cookies:", storedAgentId);
     console.log("Retrieved token from cookies:", storedToken);
-
+  
     if (storedAgentId) {
       setAgentId(storedAgentId); // Set the agentId in state
     } else {
       console.warn("No loginUserID found in cookies");
     }
-
+  
     if (storedToken) {
       setToken(storedToken); // Set the token in state
     } else {
       console.warn("No token found in cookies");
     }
   }, []);
+  
 
   const handleGameSelection = (game) => {
     if (selectedGames.includes(game)) {
@@ -167,24 +165,21 @@ const ACreateSubagent = () => {
       Iscom: 0,
       email: "",
       retailer: "",
-      status: "active",
+      status:"active"
     };
 
     console.log("Payload:", payload);
     // http://65.0.54.193:9999/admin/shop/AddShop
-
+ 
     try {
-      const response = await fetch(
-        "http://65.0.54.193:9999/admin/shop/AddShop",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            token: token, // Send token from cookies
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch("http://65.0.54.193:9999/admin/shop/AddShop", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: token, // Send token from cookies
+        },
+        body: JSON.stringify(payload),
+      });
 
       const result = await response.json();
 
@@ -227,9 +222,7 @@ const ACreateSubagent = () => {
 
   return (
     <div className="create-user-container">
-      <h1 className="user-general-information">
-        Sub Agent - General Information
-      </h1>
+      <h1 className="user-general-information">Sub Agent - General Information</h1>
       {submissionMessage && (
         <p
           style={{
@@ -338,7 +331,11 @@ const ACreateSubagent = () => {
           >
             Create
           </button>
-          <button type="reset" className="btn reset" onClick={handleReset}>
+          <button
+            type="reset"
+            className="btn reset"
+            onClick={handleReset}
+          >
             Reset
           </button>
         </div>

@@ -13,7 +13,7 @@ const AKickoffUsers = ({ onUserClick }) => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [originalData, setOriginalData] = useState([]);
-  const [filters, setFilters] = useState({ username: "" });
+  const [filters, setFilters] = useState({ username: ""});
 
   const idRef = useRef(null);
   const typeRef = useRef(null);
@@ -111,6 +111,8 @@ const AKickoffUsers = ({ onUserClick }) => {
     setData(filteredData);
   };
 
+
+
   // Pagination
   const itemsPerPage = 5;
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -125,7 +127,7 @@ const AKickoffUsers = ({ onUserClick }) => {
     currentPage < totalPages && setCurrentPage((p) => p + 1);
 
   const handleClear = () => {
-    setFilters({ username: "" });
+    setFilters({ username: ""});
     setCurrentPage(1);
     setData(originalData);
   };

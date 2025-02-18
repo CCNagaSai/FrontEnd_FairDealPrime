@@ -62,7 +62,7 @@ const AReportInpoint = ({ agentId, type }) => {
       }
 
       console.log("Fetching with:", { id, type, token });
-      // http://65.0.54.193:9999/admin/usertransction/SubAgentTranscationData?Id=${id}&type=${type}
+
       const response = await fetch(
         `http://65.0.54.193:9999/admin/usertransction/AgentTranscationData?Id=${id}&type=${type}`,
         {

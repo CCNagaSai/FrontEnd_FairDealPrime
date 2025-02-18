@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import UserInPointsOnSubAgent from "./UserInPointsOnSubAgent";
+import React, { useState, useEffect } from 'react';
+import UserInPointsOnSubAgent from './UserInPointsOnSubAgent';
 
 const AgentInPointTable = ({ backendData }) => {
   const [expandedRow, setExpandedRow] = useState(null);
@@ -9,28 +9,24 @@ const AgentInPointTable = ({ backendData }) => {
   const itemsPerPage = 10;
 
   // Filter the data first
-  const filteredData =
-    backendData?.filter((entry) => entry.trnxAmount > 0) || [];
+  const filteredData = backendData?.filter(entry => entry.trnxAmount > 0) || [];
 
   if (filteredData.length === 0) {
-    return;
+    return ;
   }
 
   useEffect(() => {
-    setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
-  }, [filteredData]);
+        setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
+      }, [filteredData]);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const displayedData = filteredData.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  const displayedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePrevious = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+    if (currentPage > 1) setCurrentPage(prev => prev - 1);
   };
 
   const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+    if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
   };
   const handlePageInputChange = (e) => {
     setInputPage(e.target.value);
@@ -56,138 +52,114 @@ const AgentInPointTable = ({ backendData }) => {
 
   return (
     <div>
-      <div className="overflow-x-auto mt-6">
-        <table className="min-w-full bg-white border border-gray-300">
-          <thead>
-            <tr className="bg-blue-200">
-              <th className="border border-gray-300 px-4 py-2">S.No</th>
-              <th className="border border-gray-300 px-14 py-2">Date</th>
-              <th className="border border-gray-300 px-4 py-2">Receiver</th>
-              <th className="border border-gray-300 px-4 py-2">Old Points</th>
-              <th className="border border-gray-300 px-4 py-2">In</th>
-              <th className="border border-gray-300 px-4 py-2">New Points</th>
-              <th className="border border-gray-300 px-4 py-2">Sender</th>
-              <th className="border border-gray-300 px-10 py-2">
-                Transaction Type
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayedData.map((entry, index) => {
-              const isPositive = entry.trnxAmount > 0;
-              const inAmount = isPositive ? `₹${entry.trnxAmount}` : "";
+    <div className="overflow-x-auto mt-6">
+      <table className="min-w-full bg-white border border-gray-300">
+        <thead>
+          <tr className="bg-blue-200">
+            <th className="border border-gray-300 px-4 py-2">S.No</th>
+            <th className="border border-gray-300 px-14 py-2">Date</th>
+            <th className="border border-gray-300 px-4 py-2">Receiver</th>
+            <th className="border border-gray-300 px-4 py-2">Old Points</th>
+            <th className="border border-gray-300 px-4 py-2">In</th>
+            <th className="border border-gray-300 px-4 py-2">New Points</th>
+            <th className="border border-gray-300 px-4 py-2">Sender</th>
+            <th className="border border-gray-300 px-10 py-2">Transaction Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          {displayedData.map((entry, index) => {
+            const isPositive = entry.trnxAmount > 0;
+            const inAmount = isPositive ? `₹${entry.trnxAmount}` : '';
 
-              let sender = "";
-              let receiver = "";
+            let sender = '';
+            let receiver = '';
 
-              switch (entry.trnxTypeTxt) {
-                case "Sub Agent Deduct Chips Added":
-                  receiver = entry.name || "N/A";
-                  sender = entry.shopname || "N/A";
-                  break;
-                case "Add Chips to Sub Agent":
-                  receiver = entry.shopname || "N/A";
-                  sender = entry.name || "N/A";
-                  break;
-                case "Deduct amount Addeed Chips to agent":
-                  receiver = entry.name || "N/A";
-                  sender = entry.shopid || "N/A";
-                  break;
-                case "Add Chips to User":
-                  receiver = entry.shopname || "N/A";
-                  sender = entry.name || "N/A";
-                  break;
-                case "Admin Addeed Chips":
-                  receiver = entry.name || "N/A";
-                  sender = entry.adminname || "N/A";
-                  break;
-                case "Admin duduct Chips":
-                  receiver = entry.adminname || "N/A";
-                  sender = entry.name || "N/A";
-                  break;
-                default:
-                  receiver = "N/A";
-                  sender = "N/A";
-              }
+            switch (entry.trnxTypeTxt) {
+              case 'Sub Agent Deduct Chips Added':
+                receiver = entry.name || 'N/A';
+                sender = entry.shopname || 'N/A';
+                break;
+              case 'Add Chips to Sub Agent':
+                receiver = entry.shopname || 'N/A';
+                sender = entry.name || 'N/A';
+                break;
+              case 'Deduct amount Addeed Chips to agent':
+                receiver = entry.name || 'N/A';
+                sender = entry.shopid || 'N/A';
+                break;
+              case 'Add Chips to User':
+                receiver = entry.shopname || 'N/A';
+                sender = entry.name || 'N/A';
+                break;
+              case 'Admin Addeed Chips':
+                receiver = entry.name || 'N/A';
+                sender = entry.adminname || 'N/A';
+                break;
+              case 'Admin duduct Chips':
+                receiver = entry.adminname || 'N/A';
+                sender = entry.name || 'N/A';
+                break;
+              default:
+                receiver = 'N/A';
+                sender = 'N/A';
+            }
 
-              return (
-                <React.Fragment key={entry._id}>
-                  <tr key={entry._id}>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {startIndex + index + 1}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {(() => {
-                        const date = new Date(entry.createdAt);
-                        const options = {
-                          weekday: "short",
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          second: "2-digit",
-                          hour12: true,
-                          timeZone: "Asia/Kolkata",
-                        };
-                        return `${date.toLocaleString("en-GB", options)}, IST`;
-                      })()}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {receiver}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      ₹{entry.oppChips || "0"}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {inAmount}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      ₹{entry.chips || "0"}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {sender}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {entry.trnxTypeTxt || "N/A"}
-                    </td>
-                  </tr>
-                </React.Fragment>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-      {/* Pagination Controls */}
-      <div className="pagination flex justify-between items-center mt-6">
-        <button
-          onClick={handlePrevious}
-          disabled={currentPage === 1}
-          className={`px-4 py-2 rounded-lg ${
-            currentPage === 1
-              ? "bg-gray-300"
-              : "bg-blue-500 text-white hover:bg-blue-600"
-          }`}
-        >
-          Previous
-        </button>
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          onClick={handleNext}
-          disabled={currentPage === totalPages}
-          className={`px-4 py-2 rounded-lg ${
-            currentPage === totalPages
-              ? "bg-gray-300"
-              : "bg-blue-500 text-white hover:bg-blue-600"
-          }`}
-        >
-          Next
-        </button>
-      </div>
-      {/* Go to Page + Clear */}
-      <div className="go-to-page ml-10 mr-10 mt-5 flex items-center">
+            return (
+              <React.Fragment key={entry._id}>
+              <tr key={entry._id}>
+                <td className="border border-gray-300 px-4 py-2">{startIndex + index + 1}</td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {(() => {
+                    const date = new Date(entry.createdAt);
+                    const options = {
+                      weekday: "short",
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                      hour12: true,
+                      timeZone: "Asia/Kolkata",
+                    };
+                    return `${date.toLocaleString("en-GB", options)}, IST`;
+                  })()}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">{receiver}</td>
+                <td className="border border-gray-300 px-4 py-2">₹{entry.oppChips || '0'}</td>
+                <td className="border border-gray-300 px-4 py-2">{inAmount}</td>
+                <td className="border border-gray-300 px-4 py-2">₹{entry.chips || '0'}</td>
+                <td className="border border-gray-300 px-4 py-2">{sender}</td>
+                <td className="border border-gray-300 px-4 py-2">{entry.trnxTypeTxt || 'N/A'}</td>
+              </tr>
+              </React.Fragment>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+    {/* Pagination Controls */}
+    <div className="pagination flex justify-between items-center mt-6">
+    <button
+      onClick={handlePrevious}
+      disabled={currentPage === 1}
+      className={`px-4 py-2 rounded-lg ${currentPage === 1 ? 'bg-gray-300' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+    >
+      Previous
+    </button>
+    <span>
+      Page {currentPage} of {totalPages}
+    </span>
+    <button
+      onClick={handleNext}
+      disabled={currentPage === totalPages}
+      className={`px-4 py-2 rounded-lg ${currentPage === totalPages ? 'bg-gray-300' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
+    >
+      Next
+    </button>
+  </div>
+  {/* Go to Page + Clear */}
+  <div className="go-to-page ml-10 mr-10 mt-5 flex items-center">
         <input
           type="number"
           className="border border-gray-300 rounded-md px-2 py-1"
@@ -208,7 +180,7 @@ const AgentInPointTable = ({ backendData }) => {
           Clear
         </button>
       </div>
-    </div>
+  </div>
   );
 };
 

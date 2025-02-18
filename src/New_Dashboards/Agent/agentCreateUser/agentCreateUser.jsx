@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "./AgentCreateUser.css";
 
-import Cookies from "universal-cookie";
+import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
 const ACreateUser = () => {
   const [selectedGames, setSelectedGames] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [agentId, setAgentId] = useState("");
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(""); 
   const [usernameStatus, setUsernameStatus] = useState(null);
-  const [debounceTimeout, setDebounceTimeout] = useState(null);
+  const [debounceTimeout, setDebounceTimeout] = useState(null); 
 
   const [formData, setFormData] = useState({
     username: "",
@@ -38,27 +38,25 @@ const ACreateUser = () => {
 
   useEffect(() => {
     // Get agentId and token from cookies
-    const storedAgentId = cookies.get("LoginUserId"); // Fetch loginUserID from cookies
-    const storedToken = cookies.get("token"); // Fetch token from cookies
-
-    console.log(
-      "Retrieved loginUserID (Agent ID) from cookies:",
-      storedAgentId
-    );
+    const storedAgentId = cookies.get('LoginUserId'); // Fetch loginUserID from cookies
+    const storedToken = cookies.get('token');        // Fetch token from cookies
+  
+    console.log("Retrieved loginUserID (Agent ID) from cookies:", storedAgentId);
     console.log("Retrieved token from cookies:", storedToken);
-
+  
     if (storedAgentId) {
       setAgentId(storedAgentId); // Set the agentId in state
     } else {
       console.warn("No loginUserID found in cookies");
     }
-
+  
     if (storedToken) {
       setToken(storedToken); // Set the token in state
     } else {
       console.warn("No token found in cookies");
     }
   }, []);
+  
 
   const handleGameSelection = (game) => {
     if (selectedGames.includes(game)) {
@@ -170,17 +168,14 @@ const ACreateUser = () => {
     console.log("Payload:", payload);
 
     try {
-      const response = await fetch(
-        "http://65.0.54.193:9999/admin/user/AddUser",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            token: token, // Send token from cookies
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch("http://65.0.54.193:9999/admin/user/AddUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: token, // Send token from cookies
+        },
+        body: JSON.stringify(payload),
+      });
 
       const result = await response.json();
 
@@ -332,7 +327,11 @@ const ACreateUser = () => {
           >
             Create
           </button>
-          <button type="reset" className="btn reset" onClick={handleReset}>
+          <button
+            type="reset"
+            className="btn reset"
+            onClick={handleReset}
+          >
             Reset
           </button>
         </div>

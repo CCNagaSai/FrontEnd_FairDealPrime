@@ -50,26 +50,20 @@ const UserListInSubAgent = ({ subAgentId, onUserClick }) => {
 
   return (
     <div>
-      <h2 className="text-lg font-bold text-green-500">
-        Users ({userData.length})
-      </h2>
+      <h2 className="text-lg font-bold text-green-500">Users ({userData.length})</h2>
       <table className="user-table w-full border-collapse text-sm sm:text-base mt-4">
         <thead>
           <tr>
             <th className="px-2 sm:px-4 py-2 bg-green-500 text-white">Name</th>
-            <th className="px-2 sm:px-4 py-2 bg-green-500 text-white">
-              Points
-            </th>
-            <th className="px-2 sm:px-4 py-2 bg-green-500 text-white">
-              Status
-            </th>
+            <th className="px-2 sm:px-4 py-2 bg-green-500 text-white">Points</th>
+            <th className="px-2 sm:px-4 py-2 bg-green-500 text-white">Status</th>
           </tr>
         </thead>
         <tbody>
           {userData.map((user) => (
             <tr key={user._id} className="hover:bg-gray-100">
-              <td
-                className="px-2 sm:px-4 py-2"
+              <td 
+                className="px-2 sm:px-4 py-2" 
                 onClick={() => handleUserClick(user)} // Handle the click event here
               >
                 {user.name || "N/A"}

@@ -20,8 +20,8 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
 
   const id = cookies.get("LoginUserId");
   const token = cookies.get("token");
-  const logintype = cookies.get("logintype");
-  const email = cookies.get("email");
+  const logintype = cookies.get("logintype")
+  const email = cookies.get("email")
 
   // Fetch users or subagents based on selected type
   useEffect(() => {
@@ -70,9 +70,7 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
 
     // Basic validation
     if (!type || !selectedUser || !amount || parseFloat(amount) <= 0) {
-      setError(
-        "Type, Partner, and Amount fields are mandatory. Amount must be positive."
-      );
+      setError("Type, Partner, and Amount fields are mandatory. Amount must be positive.");
       return;
     }
 
@@ -110,17 +108,13 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
 
       // Check API response for success or failure
       if (result.status === "ok") {
-        const newPoints =
-          result.newPoints ||
-          (adjustType === "add"
-            ? previousPoints + parseFloat(amount)
-            : previousPoints - parseFloat(amount));
-
+        const newPoints = result.newPoints || (adjustType === "add"
+          ? previousPoints + parseFloat(amount)
+          : previousPoints - parseFloat(amount));
+  
         setTransactionResult({
           success: true,
-          message: `${
-            adjustType === "add" ? "Added" : "Deducted"
-          } ${amount} points to ${selectedUserDetails?.name}`,
+          message: `${adjustType === "add" ? "Added" : "Deducted"} ${amount} points to ${selectedUserDetails?.name}`,
           previousPoints: previousPoints,
           pointsChanged: amount,
           newPoints: newPoints,
@@ -129,45 +123,44 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
         // If status is not "ok", set the error message from the API
         setTransactionResult({
           success: false,
-          message:
-            result.msg || "Transaction failed. Please check your balance.",
+          message: result.msg || "Transaction failed. Please check your balance.",
         });
       }
 
-      const updatedUserResponse = await fetch(
-        `http://65.0.54.193:9999/admin/user/UserList?Id=${id}&type=Shop`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
+        const updatedUserResponse = await fetch(
+          `http://65.0.54.193:9999/admin/user/UserList?Id=${id}&type=Shop`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              token: token,
+            },
+          }
+        );
+
+        if (!updatedUserResponse.ok) {
+          throw new Error(`Failed to fetch updated user data`);
         }
-      );
 
-      if (!updatedUserResponse.ok) {
-        throw new Error(`Failed to fetch updated user data`);
-      }
-
-      const updatedUserData = await updatedUserResponse.json();
-      setUsers(updatedUserData.userList || []);
-
-      // Update user's points locally
-      // setUsers((prevUsers) =>
-      //   prevUsers.map((user) =>
-      //     user._id === selectedUser
-      //       ? { ...user, chips: newPoints }
-      //       : user
-      //   )
-      // );
-
-      // Clear the form
-      setType("");
-      setSelectedUser("");
-      setAmount("");
-      setTransactionPassword("");
-      setComments("");
-      setError("");
+        const updatedUserData = await updatedUserResponse.json();
+        setUsers(updatedUserData.userList || []);
+  
+        // Update user's points locally
+        // setUsers((prevUsers) =>
+        //   prevUsers.map((user) =>
+        //     user._id === selectedUser
+        //       ? { ...user, chips: newPoints }
+        //       : user
+        //   )
+        // );
+  
+        // Clear the form
+        setType("");
+        setSelectedUser("");
+        setAmount("");
+        setTransactionPassword("");
+        setComments("");
+        setError("");
     } catch (error) {
       console.error("Error submitting form:", error);
       setError("Transaction failed. Please try again.");
@@ -181,23 +174,14 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
       {transactionResult && (
         <div className="transaction-result-wrapper">
           <div
-            className={`transaction-result-card ${
-              transactionResult.success ? "success" : "failure"
-            }`}
+            className={`transaction-result-card ${transactionResult.success ? "success" : "failure"}`}
           >
-            <h2>
-              {transactionResult.success
-                ? "Transaction Successful"
-                : "Transaction Failed"}
-            </h2>
+            <h2>{transactionResult.success ? "Transaction Successful" : "Transaction Failed"}</h2>
             <p>{transactionResult.message}</p>
             {transactionResult.success ? (
               <>
                 <p>Previous Points: {transactionResult.previousPoints}</p>
-                <p>
-                  Points {adjustType === "add" ? "Added" : "Deducted"}:{" "}
-                  {transactionResult.pointsChanged}
-                </p>
+                <p>Points {adjustType === "add" ? "Added" : "Deducted"}: {transactionResult.pointsChanged}</p>
                 <p>New Points: {transactionResult.newPoints}</p>
               </>
             ) : null}
@@ -238,17 +222,13 @@ const AgentBalanceAdjust = ({ prefilledType, prefilledUser }) => {
               Select Partner
             </option>
             {users
-              ?.slice()
-              ?.sort((a, b) =>
-                (a.name || a.username || "").localeCompare(
-                  b.name || b.username || ""
-                )
-              )
-              ?.map((user) => (
-                <option key={user._id} value={user._id}>
-                  {user.name || user.username} --{user.chips || 0}
-                </option>
-              ))}
+            ?.slice()
+            ?.sort((a, b) => (a.name || a.username || "").localeCompare(b.name || b.username || ""))
+            ?.map((user) => (
+              <option key={user._id} value={user._id}>
+                {user.name || user.username} --{user.chips || 0}
+              </option>
+            ))}
           </select>
         </div>
 

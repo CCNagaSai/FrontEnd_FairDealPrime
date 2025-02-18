@@ -52,18 +52,15 @@ const UserOutPointsOnSubAgent = ({ subAgentId, onUserClick }) => {
     }
   }, [subAgentId]);
 
-  const filteredData = userData?.filter((entry) => entry.trnxAmount < 0) || [];
-
-  if (filteredData.length === 0) {
-    return;
-  }
+  const filteredData = userData?.filter(entry => entry.trnxAmount < 0) || [];
+  
+    if (filteredData.length === 0) {
+      return ;
+    }
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const displayedData = filteredData.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  const displayedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePrevious = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
@@ -88,9 +85,7 @@ const UserOutPointsOnSubAgent = ({ subAgentId, onUserClick }) => {
 
   return (
     <div>
-      <h2 className="text-lg font-bold text-green-500">
-        Users ({userData.length})
-      </h2>
+      <h2 className="text-lg font-bold text-green-500">Users ({userData.length})</h2>
       {userData.length === 0 ? (
         <p>No data available.</p>
       ) : (
@@ -105,22 +100,20 @@ const UserOutPointsOnSubAgent = ({ subAgentId, onUserClick }) => {
                 <th className="border border-gray-300 px-4 py-2">Out</th>
                 <th className="border border-gray-300 px-4 py-2">New Points</th>
                 <th className="border border-gray-300 px-4 py-2">Sender</th>
-                <th className="border border-gray-300 px-4 py-2">
-                  Transaction Type
-                </th>
+                <th className="border border-gray-300 px-4 py-2">Transaction Type</th>
               </tr>
             </thead>
             <tbody>
               {displayedData.map((entry, index) => {
-                // {backendData
-                //   .filter(entry => entry.trnxAmount < 0) // Only include rows where "Out" has a value
-                //   .map((entry, index) => {
-                const dateOnly = entry.createdAt.split("T")[0]; // Extract date
-                const outAmount = `₹${Math.abs(entry.trnxAmount)}`; // Show the absolute value in "Out"
-
-                // Determine sender and receiver based on trnxTypeTxt
-                let sender = "";
-                let receiver = "";
+                 // {backendData
+          //   .filter(entry => entry.trnxAmount < 0) // Only include rows where "Out" has a value
+          //   .map((entry, index) => {
+              const dateOnly = entry.createdAt.split('T')[0]; // Extract date
+              const outAmount = `₹${Math.abs(entry.trnxAmount)}`; // Show the absolute value in "Out"
+              
+              // Determine sender and receiver based on trnxTypeTxt
+            let sender = '';
+            let receiver = '';
 
                 switch (entry.trnxTypeTxt) {
                   case "Agent Addeed Chips":
@@ -146,30 +139,14 @@ const UserOutPointsOnSubAgent = ({ subAgentId, onUserClick }) => {
 
                 return (
                   <tr key={entry._id}>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {index + 1}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {dateOnly}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {receiver}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      ₹{entry.oppChips || "0"}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {outAmount}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      ₹{entry.chips || "0"}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {sender}
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2">
-                      {entry.trnxTypeTxt || "N/A"}
-                    </td>
+                    <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
+                    <td className="border border-gray-300 px-4 py-2">{dateOnly}</td>
+                    <td className="border border-gray-300 px-4 py-2">{receiver}</td>
+                    <td className="border border-gray-300 px-4 py-2">₹{entry.oppChips || '0'}</td>
+                    <td className="border border-gray-300 px-4 py-2">{outAmount}</td>
+                    <td className="border border-gray-300 px-4 py-2">₹{entry.chips || '0'}</td>
+                    <td className="border border-gray-300 px-4 py-2">{sender}</td>
+                    <td className="border border-gray-300 px-4 py-2">{entry.trnxTypeTxt || 'N/A'}</td>
                   </tr>
                 );
               })}
@@ -180,9 +157,7 @@ const UserOutPointsOnSubAgent = ({ subAgentId, onUserClick }) => {
               onClick={handlePrevious}
               disabled={currentPage === 1}
               className={`px-4 py-2 rounded-lg ${
-                currentPage === 1
-                  ? "bg-gray-300"
-                  : "bg-blue-500 text-white hover:bg-blue-600"
+                currentPage === 1 ? "bg-gray-300" : "bg-blue-500 text-white hover:bg-blue-600"
               }`}
             >
               Previous
@@ -194,9 +169,7 @@ const UserOutPointsOnSubAgent = ({ subAgentId, onUserClick }) => {
               onClick={handleNext}
               disabled={currentPage === totalPages}
               className={`px-4 py-2 rounded-lg ${
-                currentPage === totalPages
-                  ? "bg-gray-300"
-                  : "bg-blue-500 text-white hover:bg-blue-600"
+                currentPage === totalPages ? "bg-gray-300" : "bg-blue-500 text-white hover:bg-blue-600"
               }`}
             >
               Next

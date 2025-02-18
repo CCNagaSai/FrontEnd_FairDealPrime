@@ -8,6 +8,7 @@ import UserBetHistory from "../../Common/BoardHistory";
 const cookies = new Cookies();
 
 const AGameHistory = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [backendData, setBackendData] = useState([]);
   const [expandedRow, setExpandedRow] = useState(null);
@@ -24,7 +25,9 @@ const AGameHistory = () => {
   const [showTable, setShowTable] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [noResults, setNoResults] = useState(false);
+  const [totalPages, setTotalPages] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [inputPage, setInputPage] = useState("");
   const itemsPerPage = 10;
 
   const idRef = useRef(null);
@@ -83,34 +86,51 @@ const AGameHistory = () => {
 
     switch (range) {
       case "Today":
-        startDate.setDate(today.getDate());
-        endDate.setHours(23, 59, 59, 999);
+        startDate = new Date(today);
+        endDate = new Date(today);
         break;
       case "Yesterday":
         startDate.setDate(today.getDate() - 1);
         endDate.setDate(today.getDate() - 1);
-        startDate.setHours(0, 0, 0, 0);
-        endDate.setHours(23, 59, 59, 999);
         break;
-      case "Last 7 Days":
-        startDate.setDate(today.getDate() - 7);
-        startDate.setHours(0, 0, 0, 0);
+      case "This Week": {
+        const dayOfWeek = today.getDay(); // Sunday - 0, Monday - 1, ..., Saturday - 6
+        startDate = new Date(today);
+              startDate.setDate(today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)); // Move to Monday
+        endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6); // Move to Sunday
         break;
-      case "Last 30 Days":
-        startDate.setDate(today.getDate() - 30);
-        startDate.setHours(0, 0, 0, 0);
+      }
+      case "Last Week": {
+        const dayOfWeek = today.getDay();
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - dayOfWeek - 6); // Move to previous week's Monday
+        endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6); // Move to Sunday of last week
+        break;
+      }
+      case "This Month":
+        startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        break;
+      case "Last Month":
+        startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        endDate = new Date(today.getFullYear(), today.getMonth(), 0);
         break;
       default:
         break;
     }
 
-    // Set start and end date in filters and update the state
+    const formatDate = (date) => {
+        return date.toLocaleDateString("en-GB").split('/').reverse().join('-');
+    };
+
     setFilters((prevFilters) => ({
       ...prevFilters,
-      startDate: startDate.toISOString().split("T")[0],
-      endDate: endDate.toISOString().split("T")[0],
+      startDate: formatDate(startDate),
+      endDate: formatDate(endDate),
     }));
-    setDateRange(range); // Update selected date range
+    setDateRange(range);
   };
 
   const handleManualDateChange = (e, field) => {
@@ -150,8 +170,8 @@ const AGameHistory = () => {
     setCurrentPage(1);
     setFilteredData(filtered);
     setShowTable(filtered.length > 0);
-    setNoResults(filtered.length === 0); // Check if no results are found
-    setIsSubmitted(true); // Indicate filters have been applied
+    setNoResults(filtered.length === 0);
+    setIsSubmitted(true);
   };
 
   const handleClear = () => {
@@ -164,39 +184,54 @@ const AGameHistory = () => {
     });
     setCurrentPage(1);
     setDateRange("Select");
-    setFilteredData(backendData); // Reset filters
-    setShowTable(false); // Hide the table when cleared
-    setIsSubmitted(false); // Reset the "submitted" state
+    setFilteredData(backendData);
+    setShowTable(false);
+    setIsSubmitted(false);
   };
-
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   useEffect(() => {
     if (id && token) {
       const fetchBackendData = async () => {
+        setIsLoading(true);
         try {
-          const response = await fetch(
-            `http://65.0.54.193:9999/admin/agent/RouletteGameHistory?agentId=${id}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-                token: token,
-              },
-            }
-          );
+          let url = `http://65.0.54.193:9999/admin/agent/RouletteGameHistory?agentId=${id}&page=${currentPage}&limit=${itemsPerPage}`;
+
+          if (filters.userId) {
+            url += `&username=${encodeURIComponent(filters.userId)}`;
+          }
+          if (filters.startDate && filters.endDate) {
+            let startDate = new Date(filters.startDate);
+            const endDate = new Date(filters.endDate);
+
+            startDate.setDate(startDate.getDate() - 1);
+
+            startDate.setUTCHours(18, 30, 0, 0);
+            endDate.setUTCHours(18, 29, 59, 999);
+
+            url += `&startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`;
+          }
+
+          console.log("Fetching Data from:", url);
+
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              token: token,
+            },
+          });
 
           if (response.ok) {
             const data = await response.json();
-            if (data && Array.isArray(data.historyData)) {
-              const flattenedHistory = data.historyData;
-              flattenedHistory.sort(
-                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-              );
+            console.log("Data:", data);
 
-              console.log("history", flattenedHistory);
+            if (data && Array.isArray(data.historyData)) {
+                  const flattenedHistory = data.historyData.flatMap((entry) => entry || []);
+                  flattenedHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
               setBackendData(flattenedHistory);
               setFilteredData(flattenedHistory);
+              setTotalPages(data.totalPages);
             } else {
               console.error("Expected an array from the backend API:", data);
             }
@@ -205,31 +240,51 @@ const AGameHistory = () => {
           }
         } catch (error) {
           console.error("Error:", error);
+        } finally {
+          setIsLoading(false); // Stop loading
         }
       };
-
       fetchBackendData();
     }
-  }, [token, id]);
+  }, [token, id, filters, currentPage]);
+   
 
   const handlePrevious = () => {
-    if (currentPage > 1) setCurrentPage((prevPage) => prevPage - 1);
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
   };
 
   const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage((prevPage) => prevPage + 1);
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePageInputChange = (e) => {
+    setInputPage(e.target.value);
+  };
+
+  const handleGoToPage = () => {
+    const page = parseInt(inputPage, 10);
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    } else {
+      alert(`Please enter a page number between 1 and ${totalPages}`);
+    }
+  };
+
+  const handleClearInput = () => {
+    setInputPage("");
+    setCurrentPage(1);
   };
 
   const toggleRow = (rowId) => {
     setExpandedRow(expandedRow === rowId ? null : rowId);
   };
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const displayedData = filteredData.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
-  console.log(filteredData, "cccccccc");
+
+  console.log( "cccccccc", filteredData);
 
   return (
     <div>
@@ -308,8 +363,10 @@ const AGameHistory = () => {
                     <option value="Select">Select</option>
                     <option value="Today">Today</option>
                     <option value="Yesterday">Yesterday</option>
-                    <option value="Last 7 Days">Last 7 Days</option>
-                    <option value="Last 30 Days">Last 30 Days</option>
+                    <option value="This Week">This Week</option>
+                    <option value="Last Week">Last Week</option>
+                    <option value="This Month">This Month</option>
+                    <option value="Last Month">Last Month</option>
                     <option value="Custom">Custom</option>
                   </select>
                 </div>
@@ -349,133 +406,158 @@ const AGameHistory = () => {
               </span>
             </div>
           )}
-
-          {/* Display Message if No Results */}
-          {noResults && <p>No records found based on the selected filters.</p>}
-
-          {/* Conditionally render the table */}
-          {showTable && (
-            <div>
-              <div className="overflow-x-auto mt-8">
-                <table className="table-auto border-collapse border border-gray-300 w-full text-sm sm:text-base">
-                  <thead>
-                    <tr className="bg-blue-200">
-                      {/* <th className="border border-gray-300 px-4 py-2">User ID</th> */}
-                      <th className="border border-gray-300 px-4 py-2">
-                        Username
-                      </th>
-                      <th className="border border-gray-300 px-4 py-2">
-                        Before Play Points
-                      </th>
-                      <th className="border border-gray-300 px-4 py-2">
-                        Ball Position
-                      </th>
+          {isLoading ? (
+            <div className="text-center py-4 font-bold text-blue-500">
+              Loading data...
+            </div>
+          ) : (
+            showTable && (
+              <div>
+                <div className="overflow-x-auto mt-8">
+                  <table className="table-auto border-collapse border border-gray-300 w-full text-xs sm:text-base">
+                    <thead>
+                      <tr className="bg-blue-200">
+                        {/* <th className="border border-gray-300 px-4 py-2">User ID</th> */}
+                        <th className="border border-gray-300 px-4 py-2">
+                          Username
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2">
+                          Before Play Points
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2">
+                          Ball Position
+                        </th>
                       <th className="border border-gray-300 px-4 py-2">Play</th>
                       <th className="border border-gray-300 px-4 py-2">Won</th>
-                      <th className="border border-gray-300 px-4 py-2">
-                        After Play Points
-                      </th>
-                      <th className="border border-gray-300 px-4 py-2">
-                        Created At
-                      </th>
-                      <th className="border border-gray-300 px-4 py-2">
-                        View board
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {/* {filteredData
+                        <th className="border border-gray-300 px-4 py-2">
+                          After Play Points
+                        </th>
+                        <th className="border border-gray-300 px-14 py-2">
+                          Created At
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2">
+                          View board
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* {filteredData
                     .filter((item) => item.play !== 0) */}
-                    {filteredData
-                      .filter((item) => item.play !== 0)
-                      .slice(startIndex, startIndex + itemsPerPage)
-                      .map((item, index) => (
-                        <React.Fragment key={item.uuid}>
-                          <tr
-                            key={index}
-                            className="odd:bg-white even:bg-gray-100"
-                          >
-                            {/* <td className="border border-gray-300 px-4 py-2">{item.userId}</td> */}
-                            <td className="border border-gray-300 px-4 py-2">
-                              {item.username}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
-                              {item.beforeplaypoint}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
-                              {item.ballposition}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
-                              {item.play}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
-                              {item.won}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
-                              {item.afterplaypoint}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
-                              {new Date(item.createdAt).toLocaleString(
-                                "en-GB",
-                                {
-                                  day: "2-digit",
-                                  month: "2-digit",
-                                  year: "numeric",
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                  second: "2-digit",
-                                  hour12: true,
-                                }
-                              )}
-                            </td>
-                            <td className="border border-gray-300 px-4 py-2">
-                              <button
-                                onClick={() => toggleRow(item.uuid)}
-                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                              >
-                                {expandedRow === item.uuid ? "Close" : "Show"}
-                              </button>
-                            </td>
-                          </tr>
-                          {expandedRow === item.uuid && (
-                            <tr className="bg-gray-100">
-                              <td
-                                colSpan="10"
-                                className="border border-gray-300 px-4 py-2"
-                              >
-                                <div className="relative">
-                                  <UserBetHistory data={item} />
-                                </div>
+                      {filteredData
+                        // .filter((item) => item.play !== 0)
+                        .map((item, index) => (
+                          <React.Fragment key={item.uuid}>
+                            <tr
+                              key={index}
+                              className="odd:bg-white even:bg-gray-100"
+                            >
+                              {/* <td className="border border-gray-300 px-4 py-2">{item.userId}</td> */}
+                              <td className="border border-gray-300 px-4 py-2">
+                                {item.username}
+                              </td>
+                              <td className="border border-gray-300 px-4 py-2">
+                                {item.beforeplaypoint}
+                              </td>
+                              <td className="border border-gray-300 px-4 py-2">
+                                {item.ballposition}
+                              </td>
+                              <td className="border border-gray-300 px-4 py-2">
+                                {item.play}
+                              </td>
+                              <td className="border border-gray-300 px-4 py-2">
+                                {item.won}
+                              </td>
+                              <td className="border border-gray-300 px-4 py-2">
+                                {item.afterplaypoint}
+                              </td>
+                              <td className="border border-gray-300 px-4 py-2">
+                                {(() => {
+                                  const date = new Date(item.createdAt);
+                                  const options = {
+                                    weekday: "short",
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    second: "2-digit",
+                                    hour12: true,
+                                    timeZone: "Asia/Kolkata",
+                                  };
+                                const formattedDate = date.toLocaleString("en-GB", options);
+                                  return `${formattedDate}, IST`;
+                                })()}
+                              </td>
+                              <td className="border border-gray-300 px-4 py-2">
+                                <button
+                                  onClick={() => toggleRow(item.uuid)}
+                                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                                >
+                                  {expandedRow === item.uuid ? "Close" : "Show"}
+                                </button>
                               </td>
                             </tr>
-                          )}
-                        </React.Fragment>
-                      ))}
-                  </tbody>
-                </table>
+                            {expandedRow === item.uuid && (
+                              <tr className="bg-gray-100">
+                                <td
+                                  colSpan="10"
+                                  className="border border-gray-300 px-4 py-2"
+                                >
+                                  <div className="relative">
+                                    <UserBetHistory data={item} />
+                                  </div>
+                                </td>
+                              </tr>
+                            )}
+                          </React.Fragment>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+                {/* Pagination controls */}
+                <div className="pagination flex justify-between items-center mt-6">
+                  <button
+                    className="prev px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    disabled={currentPage === 1}
+                    onClick={handlePrevious}
+                  >
+                    Previous
+                  </button>
+                  <span className="page-info text-blue-700 font-semibold">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <button
+                    className="next px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    disabled={currentPage === totalPages}
+                    onClick={handleNext}
+                  >
+                    Next
+                  </button>
+                </div>
+                {/* Go to Page + Clear */}
+                <div className="go-to-page ml-10 mr-10 mt-5 flex items-center">
+                  <input
+                    type="number"
+                    className="border border-gray-300 rounded-md px-2 py-1"
+                    value={inputPage}
+                    onChange={handlePageInputChange}
+                    placeholder="Enter Page Number"
+                  />
+                  <button
+                    className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                    onClick={handleGoToPage}
+                  >
+                    Go
+                  </button>
+                  <button
+                    className="ml-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                    onClick={handleClearInput}
+                  >
+                    Clear
+                  </button>
+                </div>
               </div>
-              {/* Pagination controls */}
-              <div className="pagination flex justify-between items-center mt-6">
-                <button
-                  className="prev px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                  disabled={currentPage === 1}
-                  onClick={handlePrevious}
-                >
-                  Previous
-                </button>
-                <span className="page-info text-blue-700 font-semibold">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <button
-                  className="next px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                  disabled={currentPage === totalPages}
-                  onClick={handleNext}
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          )}
+          ))}
         </div>
       </div>
     </div>
