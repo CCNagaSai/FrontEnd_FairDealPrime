@@ -3,8 +3,10 @@ import React, { useState, useEffect } from "react";
 
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
-const host = "http://65.0.54.193:9999"; //"http://192.168.0.203:9999" //
+// const host = import.meta.env.VITE_HOST_URL;
+// "http://93.127.194.87:9999"; //"http://192.168.0.203:9999" //
 //const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTQ5Y2NlM2JhNDA4YTJlMjg3ZjJlYzUiLCJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQHNpc3VnYW16LmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJHhZZzVMUlNRRWxiNENOZnVocjdncmUyUjNMOUQ5eDhaWmc0c0QxSW9uY1N6ZWFTSHgzMTIuIiwiY3JlYXRlZEF0IjoiMjAyMy0xMS0wN1QwNTozNjozNS42NjBaIiwibW9kaWZpZWRBdCI6IjIwMjMtMTEtMDdUMDU6MzY6MzUuNjYwWiIsImlhdCI6MTY5OTMzNTQxMywiZXhwIjoxNjk5OTQwMjEzfQ.NrLsWSnyD09P3h30rsng_R3bygn3TsKl8nXyD7qom4c";
 
 const OfferState = (props) => {
@@ -29,7 +31,7 @@ const OfferState = (props) => {
   const dashboardData = async (id) => {
     try {
       console.log("DAshboard ::::::::::::::::::::::", id);
-      const response = await fetch(`${host}/admin/dashboard?Id=` + id, {
+      const response = await fetch(`${API_URL}/admin/dashboard?Id=` + id, {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -61,13 +63,13 @@ const OfferState = (props) => {
   const latatestUser = async (uid) => {
     try {
       console.log(
-        "${host}/admin/latatestUser",
-        `${host}/admin/dashboard/latatestUser`
+        `${API_URL}/admin/latatestUser`,
+        `${API_URL}/admin/dashboard/latatestUser`
       );
       console.log("latatestUser ::::::::::::::::::::", uid);
 
       const response = await fetch(
-        `${host}/admin/dashboard/latatestUser?Id=` + uid,
+        `${API_URL}/admin/dashboard/latatestUser?Id=` + uid,
         {
           method: "GET",
           headers: {
@@ -111,13 +113,13 @@ const OfferState = (props) => {
   const latatestShop = async (uid) => {
     try {
       console.log(
-        "${host}/admin/latatestShop",
-        `${host}/admin/dashboard/latatestShop`
+        "${API_URL}/admin/latatestShop",
+        `${API_URL}/admin/dashboard/latatestShop`
       );
       console.log("latatestShop ::::::::::::::::::::", uid);
 
       const response = await fetch(
-        `${host}/admin/dashboard/latatestShop?Id=` + uid,
+        `${API_URL}/admin/dashboard/latatestShop?Id=` + uid,
         {
           method: "GET",
           headers: {
@@ -161,12 +163,12 @@ const OfferState = (props) => {
   const latatestAgent = async () => {
     try {
       console.log(
-        "${host}/admin/latatestAgent",
-        `${host}/admin/dashboard/latatestAgent`
+        `${API_URL}/admin/latatestAgent`,
+        `${API_URL}/admin/dashboard/latatestAgent`
       );
       console.log("latatestAgent ::::::::::::::::::::");
 
-      const response = await fetch(`${host}/admin/dashboard/latatestAgent`, {
+      const response = await fetch(`${API_URL}/admin/dashboard/latatestAgent`, {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -208,8 +210,8 @@ const OfferState = (props) => {
 
   const TableList = async (uid, type) => {
     try {
-      console.log("TableList :::::::", `${host}/admin/games/TableList`);
-      const response = await fetch(`${host}/admin/games/TableList`, {
+      console.log("TableList :::::::", `${API_URL}/admin/games/TableList`);
+      const response = await fetch(`${API_URL}/admin/games/TableList`, {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -238,9 +240,9 @@ const OfferState = (props) => {
 
   const TableDelete = async (userId) => {
     try {
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
       const response = await fetch(
-        `${host}/admin/games/DeleteTable/` + userId,
+        `${API_URL}/admin/games/DeleteTable/` + userId,
         {
           method: "delete",
           headers: {
@@ -273,9 +275,9 @@ const OfferState = (props) => {
 
   const PlayerList = async (uid, type) => {
     try {
-      console.log("PlayerList :::::::", `${host}/admin/user/UserList`);
+      console.log("PlayerList :::::::", `${API_URL}/admin/user/UserList`);
       const response = await fetch(
-        `${host}/admin/user/UserList?Id=` + uid + `&type=` + type,
+        `${API_URL}/admin/user/UserList?Id=` + uid + `&type=` + type,
         {
           method: "GET",
           headers: {
@@ -306,8 +308,8 @@ const OfferState = (props) => {
 
   const PlayerAdd = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/user/AddUser`, {
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(`${API_URL}/admin/user/AddUser`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -337,15 +339,18 @@ const OfferState = (props) => {
 
   const PlayerDelete = async (userId) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/user/DeleteUser/` + userId, {
-        method: "delete",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          token: cookies.get("token"),
-        },
-      }).then((d) => d);
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(
+        `${API_URL}/admin/user/DeleteUser/` + userId,
+        {
+          method: "delete",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            token: cookies.get("token"),
+          },
+        }
+      ).then((d) => d);
 
       const json = response;
       console.log("data api from :latatestUser :::...", json);
@@ -367,9 +372,9 @@ const OfferState = (props) => {
 
   const PlayerData = async (userId) => {
     try {
-      console.log("PlayerList :::::::", `${host}/admin/user/UserData`);
+      console.log("PlayerList :::::::", `${API_URL}/admin/user/UserData`);
       const response = await fetch(
-        `${host}/admin/user/UserData?userId=` + userId,
+        `${API_URL}/admin/user/UserData?userId=` + userId,
         {
           method: "GET",
           headers: {
@@ -402,8 +407,8 @@ const OfferState = (props) => {
 
   const AgentList = async () => {
     try {
-      console.log("AgentList :::::::", `${host}/admin/agent/AgentList`);
-      const response = await fetch(`${host}/admin/agent/AgentList`, {
+      console.log("AgentList :::::::", `${API_URL}/admin/agent/AgentList`);
+      const response = await fetch(`${API_URL}/admin/agent/AgentList`, {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -433,8 +438,8 @@ const OfferState = (props) => {
 
   const AgentAdd = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/agent/AddAgent`, {
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(`${API_URL}/admin/agent/AddAgent`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -465,9 +470,9 @@ const OfferState = (props) => {
 
   const AgentDelete = async (userId) => {
     try {
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
       const response = await fetch(
-        `${host}/admin/agent/Deleteagent/` + userId,
+        `${API_URL}/admin/agent/Deleteagent/` + userId,
         {
           method: "delete",
           headers: {
@@ -499,9 +504,9 @@ const OfferState = (props) => {
 
   const AgentData = async (userId) => {
     try {
-      console.log("PlayerList :::::::", `${host}/admin/agent/AgentData`);
+      console.log("PlayerList :::::::", `${API_URL}/admin/agent/AgentData`);
       const response = await fetch(
-        `${host}/admin/agent/AgentData?userId=` + userId,
+        `${API_URL}/admin/agent/AgentData?userId=` + userId,
         {
           method: "GET",
           headers: {
@@ -533,10 +538,10 @@ const OfferState = (props) => {
 
   const AgentUpdate = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
       console.log("BotUpdate :::::::", data);
 
-      const response = await fetch(`${host}/admin/agent/AgentUpdate`, {
+      const response = await fetch(`${API_URL}/admin/agent/AgentUpdate`, {
         method: "put",
         headers: {
           Accept: "application/json",
@@ -569,10 +574,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/agent/agentAddMoney`,
+        `${API_URL}/admin/agent/agentAddMoney`,
         data
       );
-      const response = await fetch(`${host}/admin/agent/agentAddMoney`, {
+      const response = await fetch(`${API_URL}/admin/agent/agentAddMoney`, {
         method: "PUT",
         headers: {
           Accept: "application/json",
@@ -604,10 +609,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/agent/agentDeductMoney`,
+        `${API_URL}/admin/agent/agentDeductMoney`,
         data
       );
-      const response = await fetch(`${host}/admin/agent/agentDeductMoney`, {
+      const response = await fetch(`${API_URL}/admin/agent/agentDeductMoney`, {
         method: "PUT",
         headers: {
           Accept: "application/json",
@@ -640,9 +645,9 @@ const OfferState = (props) => {
 
   const ShopList = async (uid) => {
     try {
-      console.log("ShopList :::::::", `${host}/admin/shop/ShopList`);
+      console.log("ShopList :::::::", `${API_URL}/admin/shop/ShopList`);
       const response = await fetch(
-        `${host}/admin/shop/ShopList?agentId=` + uid,
+        `${API_URL}/admin/shop/ShopList?agentId=` + uid,
         {
           method: "GET",
           headers: {
@@ -674,8 +679,8 @@ const OfferState = (props) => {
 
   const ShopAdd = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/shop/AddShop`, {
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(`${API_URL}/admin/shop/AddShop`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -706,15 +711,18 @@ const OfferState = (props) => {
 
   const ShopDelete = async (userId) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/shop/Deleteshop/` + userId, {
-        method: "delete",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          token: cookies.get("token"),
-        },
-      }).then((d) => d);
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(
+        `${API_URL}/admin/shop/Deleteshop/` + userId,
+        {
+          method: "delete",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            token: cookies.get("token"),
+          },
+        }
+      ).then((d) => d);
 
       const json = response;
       console.log("data api from :latatestUser :::...", json);
@@ -737,9 +745,9 @@ const OfferState = (props) => {
 
   const ShopData = async (userId) => {
     try {
-      console.log("PlayerList :::::::", `${host}/admin/shop/ShopData`);
+      console.log("PlayerList :::::::", `${API_URL}/admin/shop/ShopData`);
       const response = await fetch(
-        `${host}/admin/shop/ShopData?userId=` + userId,
+        `${API_URL}/admin/shop/ShopData?userId=` + userId,
         {
           method: "GET",
           headers: {
@@ -771,10 +779,10 @@ const OfferState = (props) => {
 
   const ShopUpdate = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
       console.log("BotUpdate :::::::", data);
 
-      const response = await fetch(`${host}/admin/shop/ShopUpdate`, {
+      const response = await fetch(`${API_URL}/admin/shop/ShopUpdate`, {
         method: "put",
         headers: {
           Accept: "application/json",
@@ -807,10 +815,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/shop/shopAddMoney`,
+        `${API_URL}/admin/shop/shopAddMoney`,
         data
       );
-      const response = await fetch(`${host}/admin/shop/shopAddMoney`, {
+      const response = await fetch(`${API_URL}/admin/shop/shopAddMoney`, {
         method: "PUT",
         headers: {
           Accept: "application/json",
@@ -842,10 +850,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/shop/shopDeductMoney`,
+        `${API_URL}/admin/shop/shopDeductMoney`,
         data
       );
-      const response = await fetch(`${host}/admin/shop/shopDeductMoney`, {
+      const response = await fetch(`${API_URL}/admin/shop/shopDeductMoney`, {
         method: "PUT",
         headers: {
           Accept: "application/json",
@@ -877,10 +885,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/usertransction/SubAgentTranscationData`
+        `${API_URL}/admin/usertransction/SubAgentTranscationData`
       );
       const response = await fetch(
-        `${host}/admin/usertransction/SubAgentTranscationData?Id=` +
+        `${API_URL}/admin/usertransction/SubAgentTranscationData?Id=` +
           id +
           `&type=` +
           type,
@@ -916,10 +924,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/usertransction/AgentTranscationData`
+        `${API_URL}/admin/usertransction/AgentTranscationData`
       );
       const response = await fetch(
-        `${host}/admin/usertransction/AgentTranscationData?Id=` +
+        `${API_URL}/admin/usertransction/AgentTranscationData?Id=` +
           id +
           `&type=` +
           type,
@@ -955,10 +963,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/usertransction/AdminTranscationData`
+        `${API_URL}/admin/usertransction/AdminTranscationData`
       );
       const response = await fetch(
-        `${host}/admin/usertransction/AdminTranscationData`,
+        `${API_URL}/admin/usertransction/AdminTranscationData`,
         {
           method: "GET",
           headers: {
@@ -994,11 +1002,11 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/userhistory/UserData`,
+        `${API_URL}/admin/userhistory/UserData`,
         userId
       );
       const response = await fetch(
-        `${host}/admin/userhistory/GetSpinnerHistoryData?userId=` + userId,
+        `${API_URL}/admin/userhistory/GetSpinnerHistoryData?userId=` + userId,
         {
           method: "GET",
           headers: {
@@ -1035,11 +1043,11 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/userhistory/GetSoratHistoryData`,
+        `${API_URL}/admin/userhistory/GetSoratHistoryData`,
         userId
       );
       const response = await fetch(
-        `${host}/admin/userhistory/GetSoratHistoryData?userId=` + userId,
+        `${API_URL}/admin/userhistory/GetSoratHistoryData?userId=` + userId,
         {
           method: "GET",
           headers: {
@@ -1072,11 +1080,12 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/userhistory/GetandarbaharHistoryData`,
+        `${API_URL}/admin/userhistory/GetandarbaharHistoryData`,
         userId
       );
       const response = await fetch(
-        `${host}/admin/userhistory/GetandarbaharHistoryData?userId=` + userId,
+        `${API_URL}/admin/userhistory/GetandarbaharHistoryData?userId=` +
+          userId,
         {
           method: "GET",
           headers: {
@@ -1110,11 +1119,12 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/userhistory/GetOneToTwelveHistoryData`,
+        `${API_URL}/admin/userhistory/GetOneToTwelveHistoryData`,
         userId
       );
       const response = await fetch(
-        `${host}/admin/userhistory/GetOneToTwelveHistoryData?userId=` + userId,
+        `${API_URL}/admin/userhistory/GetOneToTwelveHistoryData?userId=` +
+          userId,
         {
           method: "GET",
           headers: {
@@ -1148,11 +1158,11 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/userhistory/GetRouletteHistoryData`,
+        `${API_URL}/admin/userhistory/GetRouletteHistoryData`,
         userId
       );
       const response = await fetch(
-        `${host}/admin/userhistory/GetRouletteHistoryData?userId=` + userId,
+        `${API_URL}/admin/userhistory/GetRouletteHistoryData?userId=` + userId,
         {
           method: "GET",
           headers: {
@@ -1187,11 +1197,11 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/userhistory/completeWithdrawal`,
+        `${API_URL}/admin/userhistory/completeWithdrawal`,
         userId
       );
       const response = await fetch(
-        `${host}/admin/userhistory/completeWithdrawal?userId=` + userId,
+        `${API_URL}/admin/userhistory/completeWithdrawal?userId=` + userId,
         {
           method: "GET",
           headers: {
@@ -1224,11 +1234,11 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/userhistory/completeDeposite`,
+        `${API_URL}/admin/userhistory/completeDeposite`,
         userId
       );
       const response = await fetch(
-        `${host}/admin/userhistory/completeDeposite?userId=` + userId,
+        `${API_URL}/admin/userhistory/completeDeposite?userId=` + userId,
         {
           method: "GET",
           headers: {
@@ -1260,11 +1270,11 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/userhistory/registerRaferralBonus`,
+        `${API_URL}/admin/userhistory/registerRaferralBonus`,
         userId
       );
       const response = await fetch(
-        `${host}/admin/userhistory/registerRaferralBonus?userId=` + userId,
+        `${API_URL}/admin/userhistory/registerRaferralBonus?userId=` + userId,
         {
           method: "GET",
           headers: {
@@ -1297,11 +1307,11 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/userhistory/myRaferrals`,
+        `${API_URL}/admin/userhistory/myRaferrals`,
         userId
       );
       const response = await fetch(
-        `${host}/admin/userhistory/myRaferrals?userId=` + userId,
+        `${API_URL}/admin/userhistory/myRaferrals?userId=` + userId,
         {
           method: "GET",
           headers: {
@@ -1334,10 +1344,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/user/UpdatePassword`,
+        `${API_URL}/admin/user/UpdatePassword`,
         data
       );
-      const response = await fetch(`${host}/admin/user/UpdatePassword`, {
+      const response = await fetch(`${API_URL}/admin/user/UpdatePassword`, {
         method: "PUT",
         headers: {
           Accept: "application/json",
@@ -1367,8 +1377,8 @@ const OfferState = (props) => {
 
   const AddMoney = async (data) => {
     try {
-      console.log("PlayerList :::::::", `${host}/admin/user/addMoney`, data);
-      const response = await fetch(`${host}/admin/user/addMoney`, {
+      console.log("PlayerList :::::::", `${API_URL}/admin/user/addMoney`, data);
+      const response = await fetch(`${API_URL}/admin/user/addMoney`, {
         method: "PUT",
         headers: {
           Accept: "application/json",
@@ -1398,8 +1408,12 @@ const OfferState = (props) => {
 
   const DeductMoney = async (data) => {
     try {
-      console.log("PlayerList :::::::", `${host}/admin/user/deductMoney`, data);
-      const response = await fetch(`${host}/admin/user/deductMoney`, {
+      console.log(
+        "PlayerList :::::::",
+        `${API_URL}/admin/user/deductMoney`,
+        data
+      );
+      const response = await fetch(`${API_URL}/admin/user/deductMoney`, {
         method: "PUT",
         headers: {
           Accept: "application/json",
@@ -1431,10 +1445,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/user/blockandunblock`,
+        `${API_URL}/admin/user/blockandunblock`,
         data
       );
-      const response = await fetch(`${host}/admin/user/blockandunblock`, {
+      const response = await fetch(`${API_URL}/admin/user/blockandunblock`, {
         method: "PUT",
         headers: {
           Accept: "application/json",
@@ -1464,10 +1478,10 @@ const OfferState = (props) => {
 
   const getprintdataapi = async (userId) => {
     try {
-      console.log("PlayerList :::::::", `${host}/admin/user/UserInfoPrint`);
+      console.log("PlayerList :::::::", `${API_URL}/admin/user/UserInfoPrint`);
       // + userId
       const response = await fetch(
-        `${host}/admin/user/UserInfoPrint?userId=65967296eae703374096d4dd`,
+        `${API_URL}/admin/user/UserInfoPrint?userId=65967296eae703374096d4dd`,
         {
           method: "GET",
           headers: {
@@ -1503,10 +1517,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/userhistory/SoratGameHistory`
+        `${API_URL}/admin/userhistory/SoratGameHistory`
       );
       const response = await fetch(
-        `${host}/admin/userhistory/SoratGameHistory`,
+        `${API_URL}/admin/userhistory/SoratGameHistory`,
         {
           method: "GET",
           headers: {
@@ -1539,10 +1553,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/userhistory/SpinGameHistory`
+        `${API_URL}/admin/userhistory/SpinGameHistory`
       );
       const response = await fetch(
-        `${host}/admin/userhistory/SpinGameHistory`,
+        `${API_URL}/admin/userhistory/SpinGameHistory`,
         {
           method: "GET",
           headers: {
@@ -1575,10 +1589,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/userhistory/AndarBaharGameHistory`
+        `${API_URL}/admin/userhistory/AndarBaharGameHistory`
       );
       const response = await fetch(
-        `${host}/admin/userhistory/AndarBaharGameHistory`,
+        `${API_URL}/admin/userhistory/AndarBaharGameHistory`,
         {
           method: "GET",
           headers: {
@@ -1611,10 +1625,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/userhistory/WheelofFortuneGameHistory`
+        `${API_URL}/admin/userhistory/WheelofFortuneGameHistory`
       );
       const response = await fetch(
-        `${host}/admin/userhistory/WheelofFortuneGameHistory`,
+        `${API_URL}/admin/userhistory/WheelofFortuneGameHistory`,
         {
           method: "GET",
           headers: {
@@ -1647,10 +1661,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/userhistory/BaraKaDumGameHistory`
+        `${API_URL}/admin/userhistory/BaraKaDumGameHistory`
       );
       const response = await fetch(
-        `${host}/admin/userhistory/BaraKaDumGameHistory`,
+        `${API_URL}/admin/userhistory/BaraKaDumGameHistory`,
         {
           method: "GET",
           headers: {
@@ -1683,10 +1697,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/userhistory/RouletteGameHistory`
+        `${API_URL}/admin/userhistory/RouletteGameHistory`
       );
       const response = await fetch(
-        `${host}/admin/userhistory/RouletteGameHistory`,
+        `${API_URL}/admin/userhistory/RouletteGameHistory`,
         {
           method: "GET",
           headers: {
@@ -1717,9 +1731,9 @@ const OfferState = (props) => {
 
   const GetGameLogic = async (gamename) => {
     try {
-      console.log("PlayerList :::::::", `${host}/admin/games/getgamelogic`);
+      console.log("PlayerList :::::::", `${API_URL}/admin/games/getgamelogic`);
       const response = await fetch(
-        `${host}/admin/games/getgamelogic?gamename=` + gamename,
+        `${API_URL}/admin/games/getgamelogic?gamename=` + gamename,
         {
           method: "GET",
           headers: {
@@ -1750,8 +1764,8 @@ const OfferState = (props) => {
 
   const GameLogicSet = async (data) => {
     try {
-      console.log("PlayerList :::::::", `${host}/admin/games/gameLogicSet`);
-      const response = await fetch(`${host}/admin/games/gameLogicSet`, {
+      console.log("PlayerList :::::::", `${API_URL}/admin/games/gameLogicSet`);
+      const response = await fetch(`${API_URL}/admin/games/gameLogicSet`, {
         method: "PUT",
         headers: {
           Accept: "application/json",
@@ -1781,8 +1795,11 @@ const OfferState = (props) => {
 
   const GetGameBetInfo = async () => {
     try {
-      console.log("PlayerList :::::::", `${host}/admin/games/GetGameBetInfo`);
-      const response = await fetch(`${host}/admin/games/GetGameBetInfo`, {
+      console.log(
+        "PlayerList :::::::",
+        `${API_URL}/admin/games/GetGameBetInfo`
+      );
+      const response = await fetch(`${API_URL}/admin/games/GetGameBetInfo`, {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -1813,9 +1830,9 @@ const OfferState = (props) => {
 
   const GetGameCom = async (gamename) => {
     try {
-      console.log("PlayerList :::::::", `${host}/admin/games/getgamecom`);
+      console.log("PlayerList :::::::", `${API_URL}/admin/games/getgamecom`);
       const response = await fetch(
-        `${host}/admin/games/getgamecom?gamename=` + gamename,
+        `${API_URL}/admin/games/getgamecom?gamename=` + gamename,
         {
           method: "GET",
           headers: {
@@ -1846,8 +1863,8 @@ const OfferState = (props) => {
 
   const GameComSet = async (data) => {
     try {
-      console.log("PlayerList :::::::", `${host}/admin/games/GameComSet`);
-      const response = await fetch(`${host}/admin/games/GameComSet`, {
+      console.log("PlayerList :::::::", `${API_URL}/admin/games/GameComSet`);
+      const response = await fetch(`${API_URL}/admin/games/GameComSet`, {
         method: "PUT",
         headers: {
           Accept: "application/json",
@@ -1879,8 +1896,11 @@ const OfferState = (props) => {
 
   const SocailURLsList = async () => {
     try {
-      console.log("PlayerList :::::::", `${host}//admin/social/socialURLsList`);
-      const response = await fetch(`${host}/admin/social/socialURLsList`, {
+      console.log(
+        "PlayerList :::::::",
+        `${API_URL}//admin/social/socialURLsList`
+      );
+      const response = await fetch(`${API_URL}/admin/social/socialURLsList`, {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -1909,8 +1929,8 @@ const OfferState = (props) => {
 
   const SocailURLsAdd = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/social/socialurl`, {
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(`${API_URL}/admin/social/socialurl`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -1940,9 +1960,9 @@ const OfferState = (props) => {
 
   const DeleteSocailURLs = async (socialid) => {
     try {
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
       const response = await fetch(
-        `${host}/admin/social/socialurldelete/` + socialid,
+        `${API_URL}/admin/social/socialurldelete/` + socialid,
         {
           method: "delete",
           headers: {
@@ -1976,8 +1996,8 @@ const OfferState = (props) => {
 
   const CoinsList = async () => {
     try {
-      console.log("PlayerList :::::::", `${host}//admin/coin/coinlist`);
-      const response = await fetch(`${host}/admin/coin/coinlist`, {
+      console.log("PlayerList :::::::", `${API_URL}//admin/coin/coinlist`);
+      const response = await fetch(`${API_URL}/admin/coin/coinlist`, {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -2007,8 +2027,8 @@ const OfferState = (props) => {
 
   const CoinPackeAdd = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/coin/coinadded`, {
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(`${API_URL}/admin/coin/coinadded`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -2038,9 +2058,9 @@ const OfferState = (props) => {
 
   const DeleteCoinpack = async (socialid) => {
     try {
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
       const response = await fetch(
-        `${host}/admin/coin/coindelete/` + socialid,
+        `${API_URL}/admin/coin/coindelete/` + socialid,
         {
           method: "delete",
           headers: {
@@ -2076,16 +2096,19 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}//admin/noticetext/noticeTextList`
+        `${API_URL}//admin/noticetext/noticeTextList`
       );
-      const response = await fetch(`${host}/admin/noticetext/noticeTextList`, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          token: cookies.get("token"),
-        },
-      }).then((data) => data.json());
+      const response = await fetch(
+        `${API_URL}/admin/noticetext/noticeTextList`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            token: cookies.get("token"),
+          },
+        }
+      ).then((data) => data.json());
 
       const json = response;
       console.log("data api from :latatestUser :::...", json);
@@ -2107,8 +2130,8 @@ const OfferState = (props) => {
 
   const NoticeTextLsAdd = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/noticetext/noticeText`, {
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(`${API_URL}/admin/noticetext/noticeText`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -2138,9 +2161,9 @@ const OfferState = (props) => {
 
   const DeleteNoticeText = async (id) => {
     try {
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
       const response = await fetch(
-        `${host}/admin/noticetext/noticedelete/` + id,
+        `${API_URL}/admin/noticetext/noticedelete/` + id,
         {
           method: "delete",
           headers: {
@@ -2175,8 +2198,8 @@ const OfferState = (props) => {
 
   const mailList = async () => {
     try {
-      console.log("PlayerList :::::::", `${host}//admin/mail/mailList`);
-      const response = await fetch(`${host}/admin/mail/mailList`, {
+      console.log("PlayerList :::::::", `${API_URL}//admin/mail/mailList`);
+      const response = await fetch(`${API_URL}/admin/mail/mailList`, {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -2205,8 +2228,8 @@ const OfferState = (props) => {
 
   const MailsAdd = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/mail/mailInsert`, {
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(`${API_URL}/admin/mail/mailInsert`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -2236,8 +2259,8 @@ const OfferState = (props) => {
 
   const DeleteMail = async (id) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/mail/maildelete/` + id, {
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(`${API_URL}/admin/mail/maildelete/` + id, {
         method: "delete",
         headers: {
           Accept: "application/json",
@@ -2272,10 +2295,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}//admin/gamementenance/getMentenanceStatus`
+        `${API_URL}//admin/gamementenance/getMentenanceStatus`
       );
       const response = await fetch(
-        `${host}/admin/gamementenance/getMentenanceStatus`,
+        `${API_URL}/admin/gamementenance/getMentenanceStatus`,
         {
           method: "GET",
           headers: {
@@ -2305,9 +2328,9 @@ const OfferState = (props) => {
 
   const MentenanceUpdate = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
       const response = await fetch(
-        `${host}/admin/gamementenance/mentenanceStatusUpdate`,
+        `${API_URL}/admin/gamementenance/mentenanceStatusUpdate`,
         {
           method: "put",
           headers: {
@@ -2344,10 +2367,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}//admin/notification/sendNotification`
+        `${API_URL}//admin/notification/sendNotification`
       );
       const response = await fetch(
-        `${host}/admin/notification/sendNotification`,
+        `${API_URL}/admin/notification/sendNotification`,
         {
           method: "POST",
           headers: {
@@ -2382,8 +2405,8 @@ const OfferState = (props) => {
 
   const BannerList = async () => {
     try {
-      console.log("PlayerList :::::::", `${host}//admin/banner/bannerList`);
-      const response = await fetch(`${host}/admin/banner/bannerList`, {
+      console.log("PlayerList :::::::", `${API_URL}//admin/banner/bannerList`);
+      const response = await fetch(`${API_URL}/admin/banner/bannerList`, {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -2412,8 +2435,8 @@ const OfferState = (props) => {
 
   const BannerAdd = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/banner/bannerAdd`, {
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(`${API_URL}/admin/banner/bannerAdd`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -2443,12 +2466,12 @@ const OfferState = (props) => {
 
   const UploadBanner = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
 
       const formData = new FormData();
       formData.append("image", data);
 
-      const response = await fetch(`${host}/admin/banner/BannerUpload`, {
+      const response = await fetch(`${API_URL}/admin/banner/BannerUpload`, {
         method: "POST",
         headers: {
           token: cookies.get("token"),
@@ -2482,15 +2505,18 @@ const OfferState = (props) => {
 
   const DeleteBanner = async (id) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/banner/bannerdelete/` + id, {
-        method: "delete",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          token: cookies.get("token"),
-        },
-      }).then((d) => d);
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(
+        `${API_URL}/admin/banner/bannerdelete/` + id,
+        {
+          method: "delete",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            token: cookies.get("token"),
+          },
+        }
+      ).then((d) => d);
 
       const json = response;
       console.log("data api from :latatestUser :::...", json);
@@ -2516,8 +2542,8 @@ const OfferState = (props) => {
 
   const BotList = async () => {
     try {
-      console.log("PlayerList :::::::", `${host}/admin/bot/UserList`);
-      const response = await fetch(`${host}/admin/bot/BotList`, {
+      console.log("PlayerList :::::::", `${API_URL}/admin/bot/UserList`);
+      const response = await fetch(`${API_URL}/admin/bot/BotList`, {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -2546,8 +2572,8 @@ const OfferState = (props) => {
 
   const BotAdd = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/bot/BotAdd`, {
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(`${API_URL}/admin/bot/BotAdd`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -2577,12 +2603,12 @@ const OfferState = (props) => {
 
   const UploadProfile = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
 
       const formData = new FormData();
       formData.append("image", data);
 
-      const response = await fetch(`${host}/admin/bot/ProfileUpload`, {
+      const response = await fetch(`${API_URL}/admin/bot/ProfileUpload`, {
         method: "POST",
         headers: {
           token: cookies.get("token"),
@@ -2616,8 +2642,8 @@ const OfferState = (props) => {
 
   const BotDelete = async (userId) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/bot/BotDelete/` + userId, {
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(`${API_URL}/admin/bot/BotDelete/` + userId, {
         method: "delete",
         headers: {
           Accept: "application/json",
@@ -2646,9 +2672,9 @@ const OfferState = (props) => {
 
   const BotData = async (userId) => {
     try {
-      console.log("PlayerList :::::::", `${host}/admin/bot/BotData`);
+      console.log("PlayerList :::::::", `${API_URL}/admin/bot/BotData`);
       const response = await fetch(
-        `${host}/admin/bot/BotData?userId=` + userId,
+        `${API_URL}/admin/bot/BotData?userId=` + userId,
         {
           method: "GET",
           headers: {
@@ -2679,10 +2705,10 @@ const OfferState = (props) => {
 
   const BotUpdate = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
       console.log("BotUpdate :::::::", data);
 
-      const response = await fetch(`${host}/admin/bot/BotUpdate`, {
+      const response = await fetch(`${API_URL}/admin/bot/BotUpdate`, {
         method: "put",
         headers: {
           Accept: "application/json",
@@ -2718,16 +2744,19 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/usertransction/DepositList`
+        `${API_URL}/admin/usertransction/DepositList`
       );
-      const response = await fetch(`${host}/admin/usertransction/DepositList`, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          token: cookies.get("token"),
-        },
-      }).then((data) => data.json());
+      const response = await fetch(
+        `${API_URL}/admin/usertransction/DepositList`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            token: cookies.get("token"),
+          },
+        }
+      ).then((data) => data.json());
 
       const json = response;
       console.log("data api from :latatestUser :::...", json);
@@ -2751,16 +2780,19 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/usertransction/AcceptList`
+        `${API_URL}/admin/usertransction/AcceptList`
       );
-      const response = await fetch(`${host}/admin/usertransction/AcceptList`, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          token: cookies.get("token"),
-        },
-      }).then((data) => data.json());
+      const response = await fetch(
+        `${API_URL}/admin/usertransction/AcceptList`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            token: cookies.get("token"),
+          },
+        }
+      ).then((data) => data.json());
 
       const json = response;
       console.log("data api from :latatestUser :::...", json);
@@ -2784,16 +2816,19 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/usertransction/RejectList`
+        `${API_URL}/admin/usertransction/RejectList`
       );
-      const response = await fetch(`${host}/admin/usertransction/RejectList`, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          token: cookies.get("token"),
-        },
-      }).then((data) => data.json());
+      const response = await fetch(
+        `${API_URL}/admin/usertransction/RejectList`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            token: cookies.get("token"),
+          },
+        }
+      ).then((data) => data.json());
 
       const json = response;
       console.log("data api from :latatestUser :::...", json);
@@ -2815,8 +2850,8 @@ const OfferState = (props) => {
 
   const DepositeAdd = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/bot/BotAdd`, {
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(`${API_URL}/admin/bot/BotAdd`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -2846,12 +2881,12 @@ const OfferState = (props) => {
 
   const UploadScreenshort = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
 
       const formData = new FormData();
       formData.append("image", data);
 
-      const response = await fetch(`${host}/admin/bot/ProfileUpload`, {
+      const response = await fetch(`${API_URL}/admin/bot/ProfileUpload`, {
         method: "POST",
         headers: {
           token: cookies.get("token"),
@@ -2885,8 +2920,8 @@ const OfferState = (props) => {
 
   const DepositeDelete = async (userId) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/bot/BotDelete/` + userId, {
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(`${API_URL}/admin/bot/BotDelete/` + userId, {
         method: "delete",
         headers: {
           Accept: "application/json",
@@ -2917,10 +2952,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/usertransction/DepositData?id=` + userId
+        `${API_URL}/usertransction/DepositData?id=` + userId
       );
       const response = await fetch(
-        `${host}/admin/usertransction/DepositData?id=` + userId,
+        `${API_URL}/admin/usertransction/DepositData?id=` + userId,
         {
           method: "GET",
           headers: {
@@ -2951,11 +2986,11 @@ const OfferState = (props) => {
 
   const DepositeUpdate = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
       console.log("DepositeUpdate :::::::", data);
 
       const response = await fetch(
-        `${host}/admin/usertransction/DepositeUpdate`,
+        `${API_URL}/admin/usertransction/DepositeUpdate`,
         {
           method: "put",
           headers: {
@@ -2992,16 +3027,19 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/usertransction/PayoutList`
+        `${API_URL}/admin/usertransction/PayoutList`
       );
-      const response = await fetch(`${host}/admin/usertransction/PayoutList`, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          token: cookies.get("token"),
-        },
-      }).then((data) => data.json());
+      const response = await fetch(
+        `${API_URL}/admin/usertransction/PayoutList`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            token: cookies.get("token"),
+          },
+        }
+      ).then((data) => data.json());
 
       const json = response;
       console.log("data api from :latatestUser :::...", json);
@@ -3025,10 +3063,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/usertransction/PayoutAcceptList`
+        `${API_URL}/admin/usertransction/PayoutAcceptList`
       );
       const response = await fetch(
-        `${host}/admin/usertransction/PayoutAcceptList`,
+        `${API_URL}/admin/usertransction/PayoutAcceptList`,
         {
           method: "GET",
           headers: {
@@ -3061,10 +3099,10 @@ const OfferState = (props) => {
     try {
       console.log(
         "PlayerList :::::::",
-        `${host}/admin/usertransction/PayoutRejectList`
+        `${API_URL}/admin/usertransction/PayoutRejectList`
       );
       const response = await fetch(
-        `${host}/admin/usertransction/PayoutRejectList`,
+        `${API_URL}/admin/usertransction/PayoutRejectList`,
         {
           method: "GET",
           headers: {
@@ -3095,11 +3133,11 @@ const OfferState = (props) => {
 
   const PayoutUpdate = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
       console.log("PayoutUpdate :::::::", data);
 
       const response = await fetch(
-        `${host}/admin/usertransction/payoutUpdate`,
+        `${API_URL}/admin/usertransction/payoutUpdate`,
         {
           method: "put",
           headers: {
@@ -3131,13 +3169,13 @@ const OfferState = (props) => {
 
   const UploadScreenshortPayout = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
 
       const formData = new FormData();
       formData.append("image", data);
 
       const response = await fetch(
-        `${host}/admin/usertransction/UploadScreenShortPayOut`,
+        `${API_URL}/admin/usertransction/UploadScreenShortPayOut`,
         {
           method: "POST",
           headers: {
@@ -3175,10 +3213,10 @@ const OfferState = (props) => {
 
   const Chnageidpwd = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
       console.log("PlayerList ::::::: data ", data);
 
-      const response = await fetch(`${host}/admin/signup-admin-update`, {
+      const response = await fetch(`${API_URL}/admin/signup-admin-update`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -3209,7 +3247,7 @@ const OfferState = (props) => {
   return (
     <offerContext.Provider
       value={{
-        host,
+        API_URL,
         adminname,
         adminEmail,
         dashboardData,

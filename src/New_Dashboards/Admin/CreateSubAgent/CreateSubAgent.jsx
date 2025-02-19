@@ -3,6 +3,7 @@ import "../../Agent/agentCreateSubagent/AgentCreateSubagent.css";
 
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const IshankCreateSubagent = () => {
   const [selectedGames, setSelectedGames] = useState([]);
@@ -101,17 +102,14 @@ const IshankCreateSubagent = () => {
     }
 
     try {
-      const response = await fetch(
-        "http://65.0.54.193:9999/admin/shop/check-username",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-          body: JSON.stringify({ name: username }),
-        }
-      );
+      const response = await fetch(`${API_URL}/admin/shop/check-username`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify({ name: username }),
+      });
 
       const result = await response.json();
 
@@ -165,20 +163,17 @@ const IshankCreateSubagent = () => {
     };
 
     console.log("Payload:", payload);
-    // http://65.0.54.193:9999/admin/shop/AddShop
+    // ${API_URL}/admin/shop/AddShop
 
     try {
-      const response = await fetch(
-        "http://65.0.54.193:9999/admin/shop/AddShop",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            token: token, // Send token from cookies
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch(`${API_URL}/admin/shop/AddShop`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: token, // Send token from cookies
+        },
+        body: JSON.stringify(payload),
+      });
 
       const result = await response.json();
 

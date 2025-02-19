@@ -3,6 +3,7 @@ import "../../Agent/agentCreateUser/AgentCreateUser.css";
 
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const IshankCreateAgent = () => {
   const [selectedGames, setSelectedGames] = useState([]);
@@ -100,17 +101,14 @@ const IshankCreateAgent = () => {
     }
 
     try {
-      const response = await fetch(
-        "http://65.0.54.193:9999/admin/agent/check-username",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-          body: JSON.stringify({ name: username }),
-        }
-      );
+      const response = await fetch(`${API_URL}/admin/agent/check-username`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify({ name: username }),
+      });
 
       const result = await response.json();
 
@@ -165,17 +163,14 @@ const IshankCreateAgent = () => {
     console.log("Payload:", payload);
 
     try {
-      const response = await fetch(
-        "http://65.0.54.193:9999/admin/agent/AddAgent",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            token: token, // Send token from cookies
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch(`${API_URL}/admin/agent/AddAgent`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: token, // Send token from cookies
+        },
+        body: JSON.stringify(payload),
+      });
 
       const result = await response.json();
 

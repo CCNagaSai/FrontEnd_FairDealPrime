@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import Cookies from "universal-cookie";
 import "./subAgentDashboard.css";
 
+const API_URL = import.meta.env.VITE_HOST_URL;
+
 const SubADashboard = ({ onUserClick }) => {
   const [dashboardData, setDashboardData] = useState({
     activeUsers: 0,
@@ -41,7 +43,7 @@ const SubADashboard = ({ onUserClick }) => {
         console.log("Sending request to backend with ID:", id);
 
         const response = await fetch(
-          `http://65.0.54.193:9999/admin/agent/dashboradData?agentId=${id}`,
+          `${API_URL}/admin/agent/dashboradData?agentId=${id}`,
           {
             method: "GET",
             headers: {

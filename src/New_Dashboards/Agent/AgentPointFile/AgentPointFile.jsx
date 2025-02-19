@@ -5,6 +5,7 @@ import { data } from "../../Common/data/data";
 import AgentPointFileTable from "./AgentPointfileTable";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const AReportpointfile = ({ agentId, type }) => {
   const [filters, setFilters] = useState({
@@ -37,9 +38,9 @@ const AReportpointfile = ({ agentId, type }) => {
     const id = agentId || cookies.get("LoginUserId");
     const types = type || cookies.get("name");
     const token = cookies.get("token");
-    console.log("Cookies:", { id, type, token });
+    console.log("Cookies:", { id, types, token });
     idRef.current = id;
-    typeRef.current = type;
+    typeRef.current = types;
     tokenRef.current = token;
   }, [agentId, type]);
 
@@ -61,10 +62,10 @@ const AReportpointfile = ({ agentId, type }) => {
       }
 
       console.log("Fetching with:", { id, type, token });
-      // http://65.0.54.193:9999/admin/usertransction/AgentTranscationData?Id=6767e33077c3a26d681a3e25&type=Agent
+      // ${API_URL}/admin/usertransction/AgentTranscationData?Id=6767e33077c3a26d681a3e25&type=Agent
 
       const response = await fetch(
-        `http://65.0.54.193:9999/admin/usertransction/AgentTranscationData?Id=${id}&type=${type}`,
+        `${API_URL}/admin/usertransction/AgentTranscationData?Id=${id}&type=${type}`,
         {
           method: "GET",
           headers: {

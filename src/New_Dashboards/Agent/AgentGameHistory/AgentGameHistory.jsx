@@ -6,6 +6,7 @@ import Cookies from "universal-cookie";
 import UserBetHistory from "../../Common/BoardHistory";
 
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const AGameHistory = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -96,7 +97,9 @@ const AGameHistory = () => {
       case "This Week": {
         const dayOfWeek = today.getDay(); // Sunday - 0, Monday - 1, ..., Saturday - 6
         startDate = new Date(today);
-              startDate.setDate(today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)); // Move to Monday
+        startDate.setDate(
+          today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)
+        ); // Move to Monday
         endDate = new Date(startDate);
         endDate.setDate(startDate.getDate() + 6); // Move to Sunday
         break;
@@ -122,7 +125,7 @@ const AGameHistory = () => {
     }
 
     const formatDate = (date) => {
-        return date.toLocaleDateString("en-GB").split('/').reverse().join('-');
+      return date.toLocaleDateString("en-GB").split("/").reverse().join("-");
     };
 
     setFilters((prevFilters) => ({
@@ -194,7 +197,7 @@ const AGameHistory = () => {
       const fetchBackendData = async () => {
         setIsLoading(true);
         try {
-          let url = `http://65.0.54.193:9999/admin/agent/RouletteGameHistory?agentId=${id}&page=${currentPage}&limit=${itemsPerPage}`;
+          let url = `${API_URL}/admin/agent/RouletteGameHistory?agentId=${id}&page=${currentPage}&limit=${itemsPerPage}`;
 
           if (filters.userId) {
             url += `&username=${encodeURIComponent(filters.userId)}`;
@@ -226,8 +229,12 @@ const AGameHistory = () => {
             console.log("Data:", data);
 
             if (data && Array.isArray(data.historyData)) {
-                  const flattenedHistory = data.historyData.flatMap((entry) => entry || []);
-                  flattenedHistory.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+              const flattenedHistory = data.historyData.flatMap(
+                (entry) => entry || []
+              );
+              flattenedHistory.sort(
+                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+              );
 
               setBackendData(flattenedHistory);
               setFilteredData(flattenedHistory);
@@ -247,7 +254,6 @@ const AGameHistory = () => {
       fetchBackendData();
     }
   }, [token, id, filters, currentPage]);
-   
 
   const handlePrevious = () => {
     if (currentPage > 1) {
@@ -283,8 +289,7 @@ const AGameHistory = () => {
     setExpandedRow(expandedRow === rowId ? null : rowId);
   };
 
-
-  console.log( "cccccccc", filteredData);
+  console.log("cccccccc", filteredData);
 
   return (
     <div>
@@ -427,8 +432,12 @@ const AGameHistory = () => {
                         <th className="border border-gray-300 px-4 py-2">
                           Ball Position
                         </th>
-                      <th className="border border-gray-300 px-4 py-2">Play</th>
-                      <th className="border border-gray-300 px-4 py-2">Won</th>
+                        <th className="border border-gray-300 px-4 py-2">
+                          Play
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2">
+                          Won
+                        </th>
                         <th className="border border-gray-300 px-4 py-2">
                           After Play Points
                         </th>
@@ -484,7 +493,10 @@ const AGameHistory = () => {
                                     hour12: true,
                                     timeZone: "Asia/Kolkata",
                                   };
-                                const formattedDate = date.toLocaleString("en-GB", options);
+                                  const formattedDate = date.toLocaleString(
+                                    "en-GB",
+                                    options
+                                  );
                                   return `${formattedDate}, IST`;
                                 })()}
                               </td>
@@ -557,7 +569,8 @@ const AGameHistory = () => {
                   </button>
                 </div>
               </div>
-          ))}
+            )
+          )}
         </div>
       </div>
     </div>

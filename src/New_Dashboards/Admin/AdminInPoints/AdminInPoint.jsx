@@ -5,6 +5,7 @@ import { data } from "../../Common/data/data";
 import Cookies from "universal-cookie";
 import AdminInPointTable from "./AdminInPointTable";
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const IAdminInpoint = () => {
   const [filters, setFilters] = useState({
@@ -64,7 +65,7 @@ const IAdminInpoint = () => {
       console.log("Fetching with:", { id, type, token });
 
       const response = await fetch(
-        `http://65.0.54.193:9999/admin/usertransction/AdminTranscationData`,
+        `${API_URL}/admin/usertransction/AdminTranscationData`,
         {
           method: "GET",
           headers: {

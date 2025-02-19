@@ -3,6 +3,7 @@ import "./subAgentChangePassword.css";
 
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
@@ -85,7 +86,7 @@ const ChangePassword = () => {
 
     try {
       const response = await fetch(
-        "http://65.0.54.193:9999/admin/shop/subagentChangePassword",
+        `${API_URL}/admin/shop/subagentChangePassword`,
         {
           method: "PUT",
           headers: {

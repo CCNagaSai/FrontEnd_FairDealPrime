@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import AgentBalanceAdjust from "../../Agent/AgentBalanceAdjustment/AgentBalanceAdjust";
 
+const API_URL = import.meta.env.VITE_HOST_URL;
 const cookies = new Cookies();
 
 const IshankUsersList = ({ onUserClick }) => {
@@ -49,7 +50,7 @@ const IshankUsersList = ({ onUserClick }) => {
           throw new Error("Missing id or type from cookies");
         }
         const response = await fetch(
-          `http://65.0.54.193:9999/admin/user/UserList?Id=id&type=Admin`,
+          `${API_URL}/admin/user/UserList?Id=id&type=Admin`,
           {
             method: "GET",
             headers: {

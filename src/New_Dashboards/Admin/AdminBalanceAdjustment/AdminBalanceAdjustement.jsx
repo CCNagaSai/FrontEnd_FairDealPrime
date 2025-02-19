@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./AdminBalanceAdjust.css";
 import Cookies from "universal-cookie";
 
+const API_URL = import.meta.env.VITE_HOST_URL;
 const cookies = new Cookies();
 
 const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
@@ -17,7 +18,6 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [transactionResult, setTransactionResult] = useState(null);
-
   const id = cookies.get("LoginUserId");
   const token = cookies.get("token");
   const logintype = cookies.get("logintype");
@@ -37,11 +37,11 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
 
         const url =
           type === "User"
-            ? `http://65.0.54.193:9999/admin/user/UserList?Id=id&type=Admin`
+            ? `${API_URL}/admin/user/UserList?Id=id&type=Admin`
             : type === "Shop"
-            ? `http://65.0.54.193:9999/admin/shop/ShopList?agentId=Admin`
+            ? `${API_URL}/admin/shop/ShopList?agentId=Admin`
             : type === "Agent"
-            ? `http://65.0.54.193:9999/admin/agent/AgentList`
+            ? `${API_URL}/admin/agent/AgentList`
             : null;
 
         const response = await fetch(url, {
@@ -94,16 +94,16 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
     const apiUrl =
       type === "Agent"
         ? adjustType === "add"
-          ? "http://65.0.54.193:9999/admin/agent/agentAddMoney"
-          : "http://65.0.54.193:9999/admin/agent/agentDeductMoney"
+          ? `${API_URL}/admin/agent/agentAddMoney`
+          : `${API_URL}/admin/agent/agentDeductMoney`
         : type === "Shop"
         ? adjustType === "add"
-          ? "http://65.0.54.193:9999/admin/shop/shopAddMoney"
-          : "http://65.0.54.193:9999/admin/shop/shopDeductMoney"
+          ? `${API_URL}/admin/shop/shopAddMoney`
+          : `${API_URL}/admin/shop/shopDeductMoney`
         : type === "User"
         ? adjustType === "add"
-          ? "http://65.0.54.193:9999/admin/user/addMoney"
-          : "http://65.0.54.193:9999/admin/user/deductMoney"
+          ? `${API_URL}/admin/user/addMoney`
+          : `${API_URL}/admin/user/deductMoney`
         : null;
 
     try {
@@ -145,7 +145,7 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
       }
 
       const updatedUserResponse = await fetch(
-        `http://65.0.54.193:9999/admin/user/UserList?Id=${id}&type=Shop`,
+        `${API_URL}/admin/user/UserList?Id=${id}&type=Shop`,
         {
           method: "GET",
           headers: {

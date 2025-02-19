@@ -4,6 +4,7 @@ import Cookies from "universal-cookie";
 import AgentBalanceAdjust from "../AgentBalanceAdjustment/AgentBalanceAdjust";
 
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const AUsersList = ({ onUserClick }) => {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ const AUsersList = ({ onUserClick }) => {
           throw new Error("Missing id or type from cookies");
         }
         const response = await fetch(
-          `http://65.0.54.193:9999/admin/user/agent/UserList?Id=${id}&type=${type}`,
+          `${API_URL}/admin/user/agent/UserList?Id=${id}&type=${type}`,
           {
             method: "GET",
             headers: {

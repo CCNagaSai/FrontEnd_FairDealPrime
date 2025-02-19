@@ -3,6 +3,7 @@ import "./subAgentBalanceAdjust.css";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const SubAgentBalanceAdjust = ({ prefilledUser }) => {
   const [selectedUser, setSelectedUser] = useState(prefilledUser || "");
@@ -15,30 +16,26 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
   const [loading, setLoading] = useState(false);
   const [transactionResult, setTransactionResult] = useState(null);
 
-
-
   const id = cookies.get("LoginUserId");
   const token = cookies.get("token");
-  const logintype = cookies.get("logintype")
-  const email = cookies.get("email")
+  const logintype = cookies.get("logintype");
+  const email = cookies.get("email");
 
   useEffect(() => {
     const fetchUserData = async () => {
-
       try {
         setLoading(true);
         setError(null);
 
-
         if (!id) {
           throw new Error("Missing id or type from cookies");
         }
-        
-        console.log("dataaa", id)
+
+        console.log("dataaa", id);
 
         // Fetch users on component mount
         const response = await fetch(
-          `http://65.0.54.193:9999/admin/user/UserList?Id=${id}&type=Shop`,
+          `${API_URL}/admin/user/UserList?Id=${id}&type=Shop`,
           {
             method: "GET",
             headers: {
@@ -68,13 +65,15 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedUser || !amount || parseFloat(amount) <= 0) {
-      setError("Partner and Amount fields are mandatory. Amount must be positive.");
+      setError(
+        "Partner and Amount fields are mandatory. Amount must be positive."
+      );
       return;
     }
-  
+
     const selectedUserDetails = users.find((user) => user._id === selectedUser);
     const previousPoints = selectedUserDetails?.chips || 0;
-  
+
     const payload = {
       money: amount,
       type: adjustType === "add" ? "Deposit" : "Deduct",
@@ -82,12 +81,12 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
       adminname: email,
       adminid: id,
     };
-  
+
     const apiUrl =
       adjustType === "add"
-        ? "http://65.0.54.193:9999/admin/user/addMoney"
-        : "http://65.0.54.193:9999/admin/user/deductMoney";
-  
+        ? `${API_URL}/admin/user/addMoney`
+        : `${API_URL}/admin/user/deductMoney`;
+
     try {
       const response = await fetch(apiUrl, {
         method: "PUT",
@@ -97,19 +96,23 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
         },
         body: JSON.stringify(payload),
       });
-  
+
       const result = await response.json();
       console.log("API Response:", result);
-  
+
       if (result.status === "ok") {
         // const newPoints = result.newPoints;
-        const newPoints = result.newPoints || (adjustType === "add"
-          ? previousPoints + parseFloat(amount)
-          : previousPoints - parseFloat(amount));
-  
+        const newPoints =
+          result.newPoints ||
+          (adjustType === "add"
+            ? previousPoints + parseFloat(amount)
+            : previousPoints - parseFloat(amount));
+
         setTransactionResult({
           success: true,
-          message: `${adjustType === "add" ? "Added" : "Deducted"} ${amount} points to ${selectedUserDetails?.name}`,
+          message: `${
+            adjustType === "add" ? "Added" : "Deducted"
+          } ${amount} points to ${selectedUserDetails?.name}`,
           previousPoints: previousPoints,
           pointsChanged: amount,
           newPoints: newPoints,
@@ -118,49 +121,49 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
         // If status is not "ok", set the error message from the API
         setTransactionResult({
           success: false,
-          message: result.msg || "Transaction failed. Please check your balance.",
+          message:
+            result.msg || "Transaction failed. Please check your balance.",
         });
       }
 
-        const updatedUserResponse = await fetch(
-          `http://65.0.54.193:9999/admin/user/UserList?Id=${id}&type=Shop`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              token: token,
-            },
-          }
-        );
-
-        if (!updatedUserResponse.ok) {
-          throw new Error(`Failed to fetch updated user data`);
+      const updatedUserResponse = await fetch(
+        `${API_URL}/admin/user/UserList?Id=${id}&type=Shop`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
         }
+      );
 
-        const updatedUserData = await updatedUserResponse.json();
-        setUsers(updatedUserData.userList || []);
-  
-        // Update user's points locally
-        // setUsers((prevUsers) =>
-        //   prevUsers.map((user) =>
-        //     user._id === selectedUser
-        //       ? { ...user, chips: newPoints }
-        //       : user
-        //   )
-        // );
-  
-        // Clear the form
-        setSelectedUser("");
-        setAmount("");
-        setTransactionPassword("");
-        setComments("");
-        setError("");
+      if (!updatedUserResponse.ok) {
+        throw new Error(`Failed to fetch updated user data`);
+      }
+
+      const updatedUserData = await updatedUserResponse.json();
+      setUsers(updatedUserData.userList || []);
+
+      // Update user's points locally
+      // setUsers((prevUsers) =>
+      //   prevUsers.map((user) =>
+      //     user._id === selectedUser
+      //       ? { ...user, chips: newPoints }
+      //       : user
+      //   )
+      // );
+
+      // Clear the form
+      setSelectedUser("");
+      setAmount("");
+      setTransactionPassword("");
+      setComments("");
+      setError("");
     } catch (error) {
       console.error("Error submitting form:", error);
       setError("Transaction failed. Please try again.");
     }
   };
-  
 
   return (
     <div className="partner-adjustment-container">
@@ -169,21 +172,29 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
       {transactionResult && (
         <div className="transaction-result-wrapper">
           <div
-            className={`transaction-result-card ${transactionResult.success ? "success" : "failure"}`}
+            className={`transaction-result-card ${
+              transactionResult.success ? "success" : "failure"
+            }`}
           >
-            <h2>{transactionResult.success ? "Transaction Successful" : "Transaction Failed"}</h2>
+            <h2>
+              {transactionResult.success
+                ? "Transaction Successful"
+                : "Transaction Failed"}
+            </h2>
             <p>{transactionResult.message}</p>
             {transactionResult.success ? (
               <>
                 <p>Previous Points: {transactionResult.previousPoints}</p>
-                <p>Points {adjustType === "add" ? "Added" : "Deducted"}: {transactionResult.pointsChanged}</p>
+                <p>
+                  Points {adjustType === "add" ? "Added" : "Deducted"}:{" "}
+                  {transactionResult.pointsChanged}
+                </p>
                 <p>New Points: {transactionResult.newPoints}</p>
               </>
             ) : null}
           </div>
         </div>
       )}
-
 
       <form
         className="partner-adjustment-form"
@@ -202,13 +213,17 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
               Select
             </option>
             {users
-            ?.slice()
-            ?.sort((a, b) => (a.name || a.username || "").localeCompare(b.name || b.username || ""))
-            ?.map((user) => (
-              <option key={user._id} value={user._id}>
-                {user.name || user.username} --{user.chips || 0}
-              </option>
-            ))}
+              ?.slice()
+              ?.sort((a, b) =>
+                (a.name || a.username || "").localeCompare(
+                  b.name || b.username || ""
+                )
+              )
+              ?.map((user) => (
+                <option key={user._id} value={user._id}>
+                  {user.name || user.username} --{user.chips || 0}
+                </option>
+              ))}
           </select>
         </div>
 

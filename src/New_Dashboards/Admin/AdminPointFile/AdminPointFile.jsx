@@ -5,7 +5,7 @@ import { data } from "../../Common/data/data";
 import Cookies from "universal-cookie";
 import AdminPointFileTable from "./AdminPointFileTable";
 const cookies = new Cookies();
-
+const API_URL = import.meta.env.VITE_HOST_URL;
 const Adminpointfile = () => {
   const [filters, setFilters] = useState({
     receiveBy: "",
@@ -86,10 +86,10 @@ const Adminpointfile = () => {
       }
 
       console.log("Fetching with:", { id, type, token });
-      // http://65.0.54.193:9999/admin/usertransction/AgentTranscationData?Id=6767e33077c3a26d681a3e25&type=Agent
+      // http://93.127.194.87:9999/admin/usertransction/AgentTranscationData?Id=6767e33077c3a26d681a3e25&type=Agent
 
       const response = await fetch(
-        `http://65.0.54.193:9999/admin/usertransction/AdminTranscationData`,
+        `${API_URL}/admin/usertransction/AdminTranscationData`,
         {
           method: "GET",
           headers: {

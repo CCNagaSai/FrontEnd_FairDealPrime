@@ -5,8 +5,9 @@ import { data } from "../../Common/data/data";
 import SubAgentPointFileTable from "./subAgentPointfileTable";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
-const SubAReportpointfile = ({subAgentId, type}) => {
+const SubAReportpointfile = ({ subAgentId, type }) => {
   const [filters, setFilters] = useState({
     receiveBy: "",
     sentBy: "",
@@ -31,37 +32,34 @@ const SubAReportpointfile = ({subAgentId, type}) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
   // Store id and type using useRef
   const idRef = useRef(null);
   const typeRef = useRef(null);
   const tokenRef = useRef(null);
-  
+
   useEffect(() => {
-  
-    const id = subAgentId || cookies.get("LoginUserId"); 
+    const id = subAgentId || cookies.get("LoginUserId");
     const types = type || cookies.get("name");
     const token = cookies.get("token");
-  
+
     console.log("Received from First Code:", { id, types });
-  
+
     idRef.current = id;
     typeRef.current = types;
     tokenRef.current = token;
   }, [subAgentId, type]);
-  
 
   useEffect(() => {
     fetchBackendData();
   }, []);
-  
+
   const fetchBackendData = async () => {
     try {
       setLoading(true);
       const id = idRef.current;
       const type = typeRef.current;
       const token = tokenRef.current;
-  
+
       if (!id || !type) {
         console.error("ID or type not found in cookies.");
         return;
@@ -70,7 +68,7 @@ const SubAReportpointfile = ({subAgentId, type}) => {
       console.log("Fetching with:", { id, type, token });
 
       const response = await fetch(
-        `http://65.0.54.193:9999/admin/usertransction/SubAgentTranscationData?Id=${id}&type=${type}`,
+        `${API_URL}/admin/usertransction/SubAgentTranscationData?Id=${id}&type=${type}`,
         {
           method: "GET",
           headers: {
@@ -79,14 +77,14 @@ const SubAReportpointfile = ({subAgentId, type}) => {
           },
         }
       );
-  
+
       if (!response.ok) {
         console.error("API Error:", response.statusText);
         return;
       }
-  
+
       const result = await response.json();
-  
+
       if (result.DepositeList) {
         setBackendData(result.DepositeList);
         setFilteredData(result.DepositeList); // Initialize filtered data
@@ -99,7 +97,6 @@ const SubAReportpointfile = ({subAgentId, type}) => {
       setLoading(false);
     }
   };
-  
 
   // Handle filter change and date range calculations
   const handleDateRangeChange = (range) => {
@@ -169,27 +166,27 @@ const SubAReportpointfile = ({subAgentId, type}) => {
   const handleSubmit = () => {
     const { receiveBy, sentBy, startDate, endDate, username } = filters;
     let filtered = backendData;
-  
+
     console.log("Filters:", filters); // Log filters for debugging
-  
+
     if (receiveBy) {
       filtered = filtered.filter((entry) => {
-        let receiver = '';
+        let receiver = "";
         switch (entry.trnxTypeTxt) {
-          case 'Agent Addeed Chips':
-            receiver = entry.name ? entry.name.toLowerCase() : ''; // Subagent is receiver
+          case "Agent Addeed Chips":
+            receiver = entry.name ? entry.name.toLowerCase() : ""; // Subagent is receiver
             break;
-          case 'Agent duduct Chips':
-            receiver = entry.adminname ? entry.adminname.toLowerCase() : ''; // Admin is receiver
+          case "Agent duduct Chips":
+            receiver = entry.adminname ? entry.adminname.toLowerCase() : ""; // Admin is receiver
             break;
-          case 'Add Chips to User':
-            receiver = entry.username ? entry.username.toLowerCase() : ''; // User is receiver
+          case "Add Chips to User":
+            receiver = entry.username ? entry.username.toLowerCase() : ""; // User is receiver
             break;
-          case 'User Deduct Chips Added':
-            receiver = entry.adminname ? entry.adminname.toLowerCase() : '';
+          case "User Deduct Chips Added":
+            receiver = entry.adminname ? entry.adminname.toLowerCase() : "";
             break;
           default:
-            receiver = '';
+            receiver = "";
         }
         return receiver.includes(receiveBy.toLowerCase());
       });
@@ -198,28 +195,27 @@ const SubAReportpointfile = ({subAgentId, type}) => {
     // Filter by Sent By
     if (sentBy) {
       filtered = filtered.filter((entry) => {
-        let sender = '';
+        let sender = "";
         switch (entry.trnxTypeTxt) {
-          case 'Agent Addeed Chips':
-            sender = entry.adminname ? entry.adminname.toLowerCase() : '';
+          case "Agent Addeed Chips":
+            sender = entry.adminname ? entry.adminname.toLowerCase() : "";
             break;
-          case 'Agent duduct Chips':
-            sender = entry.name ? entry.name.toLowerCase() : '';
+          case "Agent duduct Chips":
+            sender = entry.name ? entry.name.toLowerCase() : "";
             break;
-          case 'Add Chips to User':
-            sender = entry.adminname ? entry.adminname.toLowerCase() : '';
+          case "Add Chips to User":
+            sender = entry.adminname ? entry.adminname.toLowerCase() : "";
             break;
-          case 'User Deduct Chips Added':
-            sender = entry.username ? entry.username.toLowerCase() : '';
+          case "User Deduct Chips Added":
+            sender = entry.username ? entry.username.toLowerCase() : "";
             break;
           default:
-            sender = '';
+            sender = "";
         }
         return sender.includes(sentBy.toLowerCase());
       });
     }
 
-  
     // Filter by Username (either receiver or sender)
     // Filter by Username (either receiver or sender)
     if (username) {
@@ -235,26 +231,25 @@ const SubAReportpointfile = ({subAgentId, type}) => {
         );
       });
     }
-  
+
     // Filter by Date Range
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
-  
+
       filtered = filtered.filter((entry) => {
-        const entryDate = new Date(entry.createdAt.split('T')[0]); // Extract only date part for comparison
+        const entryDate = new Date(entry.createdAt.split("T")[0]); // Extract only date part for comparison
         return entryDate >= start && entryDate <= end;
       });
     }
-  
+
     console.log("Filtered Data:", filtered); // Log filtered data for debugging
     setFilteredData(filtered);
-  
+
     // Only show table if there is data to display
     setShowTable(filtered.length > 0);
   };
-  
-  
+
   const handleClear = () => {
     setFilters({
       receiveBy: "",
@@ -285,17 +280,17 @@ const SubAReportpointfile = ({subAgentId, type}) => {
             >
               {/* First Row - Two Input Fields */}
               <div className="grid grid-cols-2 gap-4 mb-5 w-full">
-              <div className="flex-1">
-                <label className="block mb-2">Username:</label>
-                <input
-                  type="text"
-                  value={filters.username}
-                  onChange={(e) =>
-                    setFilters({ ...filters, username: e.target.value })
-                  }
-                  className="w-full p-3 border border-gray-300 rounded-lg"
-                />
-              </div>
+                <div className="flex-1">
+                  <label className="block mb-2">Username:</label>
+                  <input
+                    type="text"
+                    value={filters.username}
+                    onChange={(e) =>
+                      setFilters({ ...filters, username: e.target.value })
+                    }
+                    className="w-full p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-4 mb-5 w-full">
                 <div className="flex-1">
@@ -391,12 +386,10 @@ const SubAReportpointfile = ({subAgentId, type}) => {
           {/* Backend Data Table */}
           {loading ? (
             <p>Loading backend data...</p>
+          ) : showTable ? (
+            <SubAgentPointFileTable backendData={filteredData} />
           ) : (
-            showTable ? (
-              <SubAgentPointFileTable backendData={filteredData} />
-            ) : (
-              <p></p>
-            )
+            <p></p>
           )}
         </div>
       </div>

@@ -8,6 +8,7 @@ import AReportpointfile from "../../Agent/AgentPointFile/AgentPointFile";
 import AReportOutpoint from "../../Agent/AgentOutPoints/AgentOutPoints";
 import AReportInpoint from "../../Agent/AgentInPoints/AgentInPoints";
 
+const API_URL = import.meta.env.VITE_HOST_URL;
 const AgentSubAgentPointFile = () => {
   const [userList, setUserList] = useState([]); // Store agents/sub-agents
   const [loading, setLoading] = useState(false);
@@ -36,8 +37,8 @@ const AgentSubAgentPointFile = () => {
 
         let endpoint =
           selectedRole === "Agent"
-            ? `http://65.0.54.193:9999/admin/agent/AgentList`
-            : `http://65.0.54.193:9999/admin/shop/ShopList?agentId=Admin`;
+            ? `${API_URL}/admin/agent/AgentList`
+            : `${API_URL}/admin/shop/ShopList?agentId=Admin`;
 
         const response = await fetch(endpoint, {
           method: "GET",

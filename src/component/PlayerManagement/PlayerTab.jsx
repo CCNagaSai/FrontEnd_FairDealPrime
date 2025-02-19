@@ -5,6 +5,7 @@ import offerContext from "../../context/offerContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 function PlayerTab({}) {
   //-------------------------------------------------------------------------------------------------------
@@ -46,7 +47,7 @@ function PlayerTab({}) {
           // Use the provided API for agents
           const agentId = cookies.get("LoginUserId"); // Get the Agent ID
           const response = await fetch(
-            `http://65.0.54.193:9999/admin/user/agent/UserList?Id=${agentId}&type=Agent`
+            `${API_URL}/admin/user/agent/UserList?Id=${agentId}&type=Agent`
           );
 
           if (!response.ok) {

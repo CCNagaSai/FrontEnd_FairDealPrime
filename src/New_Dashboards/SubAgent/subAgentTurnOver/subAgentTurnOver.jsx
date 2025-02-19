@@ -3,6 +3,7 @@ import "./subAgentTurnOver.css";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const SubATurnover = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -87,7 +88,7 @@ const SubATurnover = () => {
         setIsLoading(true);
 
         try {
-          let url = `http://65.0.54.193:9999/admin/agent/turnover?subAgentId=${id}`;
+          let url = `${API_URL}/admin/agent/turnover?subAgentId=${id}`;
 
           // Add filters dynamically
           if (filters.userId) {

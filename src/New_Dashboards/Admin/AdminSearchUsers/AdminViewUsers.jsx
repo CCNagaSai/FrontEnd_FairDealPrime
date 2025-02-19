@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import "../../Agent/AgentSearchUsers/AgentViewUsers.css";
 import Cookies from "universal-cookie";
 
+const API_URL = import.meta.env.VITE_HOST_URL;
 const cookies = new Cookies();
 
 const IshankViewUser = ({ user, onBack }) => {
@@ -25,20 +26,17 @@ const IshankViewUser = ({ user, onBack }) => {
 
   const handlePasswordUpdate = async () => {
     try {
-      const response = await fetch(
-        "http://65.0.54.193:9999/admin/user/UpdatePassword",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-          body: JSON.stringify({
-            userId: user._id,
-            password: newPassword,
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/admin/user/UpdatePassword`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify({
+          userId: user._id,
+          password: newPassword,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to update password.");
@@ -56,20 +54,17 @@ const IshankViewUser = ({ user, onBack }) => {
 
   const handleLockStatusUpdate = async () => {
     try {
-      const response = await fetch(
-        `http://65.0.54.193:9999/admin/user/UpdatePassword`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-          body: JSON.stringify({
-            userId: user._id,
-            status: lockStatus === "Active", // Converts "Active"/"Inactive" to true/false
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/admin/user/UpdatePassword`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify({
+          userId: user._id,
+          status: lockStatus === "Active", // Converts "Active"/"Inactive" to true/false
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to update lock status.");

@@ -3,6 +3,7 @@ import "../../Agent/AgentSearchUsers/AgentViewUsers.css";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const IshankViewAgent = ({ user, onBack }) => {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
@@ -25,26 +26,23 @@ const IshankViewAgent = ({ user, onBack }) => {
 
   const handlePasswordUpdate = async () => {
     try {
-      const response = await fetch(
-        "http://65.0.54.193:9999/admin/agent/AgentUpdate",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-          body: JSON.stringify({
-            // userId: "67aabdd7813bc442da34ef0c",
-            // password: "87654321",
+      const response = await fetch(`${API_URL}/admin/agent/AgentUpdate`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify({
+          // userId: "67aabdd7813bc442da34ef0c",
+          // password: "87654321",
 
-            userId: user._id,
-            password: newPassword,
-            name: user.name,
-            location: "India",
-            status: "active",
-          }),
-        }
-      );
+          userId: user._id,
+          password: newPassword,
+          name: user.name,
+          location: "India",
+          status: "active",
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to update password.");
@@ -60,25 +58,22 @@ const IshankViewAgent = ({ user, onBack }) => {
     }
   };
 
-  // `http://65.0.54.193:9999/admin/agent/changeUserStatus?agentId=${agentId}&userId=${user._id}`
+  // `http://93.127.194.87:9999/admin/agent/changeUserStatus?agentId=${agentId}&userId=${user._id}`
   const handleLockStatusUpdate = async () => {
     try {
-      const response = await fetch(
-        `http://65.0.54.193:9999/admin/agent/AgentUpdate`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-          body: JSON.stringify({
-            userId: "67aabdd7813bc442da34ef0c",
-            name: user.name,
-            location: "India",
-            status: lockStatus === "Active", // Converts "Active"/"Inactive" to true/false
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/admin/agent/AgentUpdate`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify({
+          userId: "67aabdd7813bc442da34ef0c",
+          name: user.name,
+          location: "India",
+          status: lockStatus === "Active", // Converts "Active"/"Inactive" to true/false
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to update lock status.");

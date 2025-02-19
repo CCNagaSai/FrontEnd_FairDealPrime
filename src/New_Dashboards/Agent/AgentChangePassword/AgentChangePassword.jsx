@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./AgentChangePassword.css";
 
-import Cookies from 'universal-cookie';
+import Cookies from "universal-cookie";
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const AChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
@@ -33,25 +34,28 @@ const AChangePassword = () => {
     }
   };
   useEffect(() => {
-      // Get agentId and token from cookies
-      const storedAgentId = cookies.get('LoginUserId'); // Fetch loginUserID from cookies
-      const storedToken = cookies.get('token');        // Fetch token from cookies
-    
-      console.log("Retrieved loginUserID (Agent ID) from cookies:", storedAgentId);
-      console.log("Retrieved token from cookies:", storedToken);
-    
-      if (storedAgentId) {
-        setAgentId(storedAgentId); // Set the agentId in state
-      } else {
-        console.warn("No loginUserID found in cookies");
-      }
-    
-      if (storedToken) {
-        setToken(storedToken); // Set the token in state
-      } else {
-        console.warn("No token found in cookies");
-      }
-    }, []);
+    // Get agentId and token from cookies
+    const storedAgentId = cookies.get("LoginUserId"); // Fetch loginUserID from cookies
+    const storedToken = cookies.get("token"); // Fetch token from cookies
+
+    console.log(
+      "Retrieved loginUserID (Agent ID) from cookies:",
+      storedAgentId
+    );
+    console.log("Retrieved token from cookies:", storedToken);
+
+    if (storedAgentId) {
+      setAgentId(storedAgentId); // Set the agentId in state
+    } else {
+      console.warn("No loginUserID found in cookies");
+    }
+
+    if (storedToken) {
+      setToken(storedToken); // Set the token in state
+    } else {
+      console.warn("No token found in cookies");
+    }
+  }, []);
 
   useEffect(() => {
     validateForm();
@@ -79,21 +83,26 @@ const AChangePassword = () => {
     console.log("Old Password:", oldPassword);
     console.log("New Password:", newPassword);
     console.log("Confirm Password:", confirmPassword);
-    // http://65.0.54.193:9999/admin/agent/agentChangePassword
+    // ${API_URL}/admin/agent/agentChangePassword
     try {
-      const response = await fetch("http://65.0.54.193:9999/admin/agent/agentChangePassword", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          token: token,
-        },
-        body: JSON.stringify({ oldPassword, newPassword, agentId }),
-      });
+      const response = await fetch(
+        `${API_URL}/admin/agent/agentChangePassword`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+          body: JSON.stringify({ oldPassword, newPassword, agentId }),
+        }
+      );
 
       const data = await response.json();
 
       if (data.isValid) {
-        console.log(`Password validation success! Proceeding with: ${actionType}`);
+        console.log(
+          `Password validation success! Proceeding with: ${actionType}`
+        );
         await updatePassword(actionType);
       } else {
         console.error("Old password is incorrect.");
@@ -210,11 +219,7 @@ const AChangePassword = () => {
           >
             Change Report
           </button>
-          <button
-            type="reset"
-            className="btn1 reset"
-            onClick={handleReset}
-          >
+          <button type="reset" className="btn1 reset" onClick={handleReset}>
             Reset
           </button>
         </div>

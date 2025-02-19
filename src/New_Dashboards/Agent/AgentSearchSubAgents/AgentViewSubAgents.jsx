@@ -2,14 +2,16 @@ import React, { useState, useRef, useEffect } from "react";
 import "./AgentViewSubAgents.css";
 import Cookies from "universal-cookie";
 
-
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const AViewSubAgents = ({ subAgent, onBack }) => {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [isEditingLock, setIsEditingLock] = useState(false);
-  const [lockStatus, setLockStatus] = useState(subAgent.status ? "Active" : "Inactive");
+  const [lockStatus, setLockStatus] = useState(
+    subAgent.status ? "Active" : "Inactive"
+  );
 
   const tokenRef = useRef(null);
   const agentIdRef = useRef(null);
@@ -24,24 +26,20 @@ const AViewSubAgents = ({ subAgent, onBack }) => {
 
   const handlePasswordUpdate = async () => {
     try {
-      const response = await fetch(
-        `http://65.0.54.193:9999/admin/shop/ShopUpdate`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-          body: JSON.stringify({
-            userId: subAgent._id,
-            name: subAgent.name,
-            password: newPassword || subAgent.password,
-            location: subAgent.location,
-            status: subAgent.status,
-
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/admin/shop/ShopUpdate`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify({
+          userId: subAgent._id,
+          name: subAgent.name,
+          password: newPassword || subAgent.password,
+          location: subAgent.location,
+          status: subAgent.status,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to update password.");
@@ -59,24 +57,20 @@ const AViewSubAgents = ({ subAgent, onBack }) => {
 
   const handleLockStatusUpdate = async () => {
     try {
-      const response = await fetch(
-        `http://65.0.54.193:9999/admin/shop/ShopUpdate`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-          body: JSON.stringify({
-            userId: subAgent._id,
-            name: subAgent.name,
-            password: newPassword || subAgent.password,
-            location: subAgent.location,
-            status: lockStatus === "Active" ? "active" : "inactive",
-
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/admin/shop/ShopUpdate`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify({
+          userId: subAgent._id,
+          name: subAgent.name,
+          password: newPassword || subAgent.password,
+          location: subAgent.location,
+          status: lockStatus === "Active" ? "active" : "inactive",
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to update lock status.");
@@ -139,10 +133,15 @@ const AViewSubAgents = ({ subAgent, onBack }) => {
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Enter new password"
                   />
-                  <button onClick={handlePasswordUpdate}>Update Password</button>
+                  <button onClick={handlePasswordUpdate}>
+                    Update Password
+                  </button>
                 </div>
               ) : (
-                <p className="edit-link" onClick={() => setIsEditingPassword(true)}>
+                <p
+                  className="edit-link"
+                  onClick={() => setIsEditingPassword(true)}
+                >
                   Edit
                 </p>
               )}
@@ -153,11 +152,16 @@ const AViewSubAgents = ({ subAgent, onBack }) => {
               </p>
               {isEditingLock ? (
                 <div>
-                  <select value={lockStatus} onChange={(e) => setLockStatus(e.target.value)}>
+                  <select
+                    value={lockStatus}
+                    onChange={(e) => setLockStatus(e.target.value)}
+                  >
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
                   </select>
-                  <button onClick={handleLockStatusUpdate}>Update Status</button>
+                  <button onClick={handleLockStatusUpdate}>
+                    Update Status
+                  </button>
                 </div>
               ) : (
                 <p className="edit-link" onClick={() => setIsEditingLock(true)}>
@@ -178,4 +182,3 @@ const AViewSubAgents = ({ subAgent, onBack }) => {
 };
 
 export default AViewSubAgents;
-

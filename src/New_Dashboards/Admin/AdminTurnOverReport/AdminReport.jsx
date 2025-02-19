@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import AdminAgentTurnover from "./AdminAgentTurnOver";
 
+const API_URL = import.meta.env.VITE_HOST_URL;
 const cookies = new Cookies();
 
 const AdminTurnoverReport = () => {
@@ -57,16 +58,13 @@ const AdminTurnoverReport = () => {
           throw new Error("Missing id or type from cookies");
         }
 
-        const response = await fetch(
-          `http://65.0.54.193:9999/admin/agent/AgentList`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              token: token,
-            },
-          }
-        );
+        const response = await fetch(`${API_URL}/admin/agent/AgentList`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -82,7 +80,7 @@ const AdminTurnoverReport = () => {
           for (const shop of shopList) {
             const AgentId = shop._id;
             const responseBackend = await fetch(
-              `http://65.0.54.193:9999/admin/agent/RouletteGameHistory?subAgentId=${AgentId}`,
+              `${API_URL}/admin/agent/RouletteGameHistory?subAgentId=${AgentId}`,
               {
                 method: "GET",
                 headers: {
@@ -119,7 +117,7 @@ const AdminTurnoverReport = () => {
           for (const shop of shopList) {
             const subAgentId = shop._id;
             const responseBackend = await fetch(
-              `http://65.0.54.193:9999/admin/agent/RouletteGameHistory?subAgentId=${subAgentId}`,
+              `${API_URL}/admin/agent/RouletteGameHistory?subAgentId=${subAgentId}`,
               {
                 method: "GET",
                 headers: {

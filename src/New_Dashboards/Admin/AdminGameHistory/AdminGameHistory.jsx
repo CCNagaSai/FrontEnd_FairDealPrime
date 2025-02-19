@@ -5,6 +5,7 @@ import { mData } from "../../Common/data/mData";
 import Cookies from "universal-cookie";
 import UserBetHistory from "../../Common/BoardHistory";
 
+const API_URL = import.meta.env.VITE_HOST_URL;
 const cookies = new Cookies();
 
 const IAdminGameHistory = () => {
@@ -196,7 +197,7 @@ const IAdminGameHistory = () => {
       const fetchBackendData = async () => {
         setIsLoading(true);
         try {
-          let url = `http://65.0.54.193:9999/admin/userhistory/RouletteGameHistory/?page=${currentPage}&limit=10`;
+          let url = `${API_URL}/admin/userhistory/RouletteGameHistory/?page=${currentPage}&limit=10`;
 
           if (filters.userId) {
             url += `&username=${encodeURIComponent(filters.userId)}`;

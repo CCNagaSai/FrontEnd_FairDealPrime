@@ -4,6 +4,7 @@ import Cookies from "universal-cookie";
 import { FaRedo, FaUsers } from "react-icons/fa"; // Import icons
 
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const TestUsersList = ({ onUserClick }) => {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ const TestUsersList = ({ onUserClick }) => {
         }
 
         const response = await fetch(
-          `http://65.0.54.193:9999/admin/user/UserList?Id=${idRef.current}&type=Admin`,
+          `${API_URL}/admin/user/UserList?Id=${idRef.current}&type=Admin`,
           {
             method: "GET",
             headers: {

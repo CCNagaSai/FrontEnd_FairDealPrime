@@ -6,7 +6,9 @@ import PasswordResetModal from "../modal/PasswordResetModal";
 import { useState } from "react";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
-const host = "http://65.0.54.193:9999"; //"http://192.168.0.203:9999" //
+const API_URL = import.meta.env.VITE_HOST_URL;
+// const host = "${API_URL}";
+// ("http://93.127.194.87:9999"); //"http://192.168.0.203:9999" //
 
 function SigninAdmin() {
   const navigate = useNavigate();
@@ -49,8 +51,8 @@ function SigninAdmin() {
 
   const LoginData = async (data) => {
     try {
-      console.log("PlayerList :::::::", host);
-      const response = await fetch(`${host}/admin/login`, {
+      console.log("PlayerList :::::::", API_URL);
+      const response = await fetch(`${API_URL}/admin/login`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -100,9 +102,9 @@ function SigninAdmin() {
   const sendforgotemail = async (event) => {
     try {
       event.preventDefault();
-      console.log("PlayerList :::::::", host);
+      console.log("PlayerList :::::::", API_URL);
 
-      const response = await fetch(`${host}/admin/sendforgotemail`, {
+      const response = await fetch(`${API_URL}/admin/sendforgotemail`, {
         method: "POST",
         headers: {
           Accept: "application/json",

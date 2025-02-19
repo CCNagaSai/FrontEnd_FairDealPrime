@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import UserTurnOverInSubAgent from "../../Agent/AgentTurnOver/UserTurnOverInSubAgent";
 
+const API_URL = import.meta.env.VITE_HOST_URL;
 const cookies = new Cookies();
 
 const AdminAgentTurnover = ({ AgentId }) => {
@@ -50,7 +51,7 @@ const AdminAgentTurnover = ({ AgentId }) => {
         }
 
         const response = await fetch(
-          `http://65.0.54.193:9999/admin/shop/ShopList?agentId=${AgentId}`,
+          `${API_URL}/admin/shop/ShopList?agentId=${AgentId}`,
           {
             method: "GET",
             headers: {
@@ -75,7 +76,7 @@ const AdminAgentTurnover = ({ AgentId }) => {
           for (const shop of shopList) {
             const AgentId = shop._id;
             const responseBackend = await fetch(
-              `http://65.0.54.193:9999/admin/agent/RouletteGameHistory?subAgentId=${AgentId}`,
+              `${API_URL}/admin/agent/RouletteGameHistory?subAgentId=${AgentId}`,
               {
                 method: "GET",
                 headers: {

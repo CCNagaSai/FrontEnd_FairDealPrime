@@ -3,6 +3,7 @@ import "../../Agent/AgentChangePassword/AgentChangePassword.css";
 
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const IshankChangeUserPassword = () => {
   const [oldPassword, setOldPassword] = useState("");
@@ -82,19 +83,16 @@ const IshankChangeUserPassword = () => {
     console.log("Old Password:", oldPassword);
     console.log("New Password:", newPassword);
     console.log("Confirm Password:", confirmPassword);
-    // http://65.0.54.193:9999/admin/agent/agentChangePassword
+    // http://93.127.194.87:9999/admin/agent/agentChangePassword
     try {
-      const response = await fetch(
-        "http://65.0.54.193:9999/admin/user/UpdatePassword",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-          body: JSON.stringify({ oldPassword, newPassword, agentId }),
-        }
-      );
+      const response = await fetch(`${API_URL}/admin/user/UpdatePassword`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify({ oldPassword, newPassword, agentId }),
+      });
 
       const data = await response.json();
 

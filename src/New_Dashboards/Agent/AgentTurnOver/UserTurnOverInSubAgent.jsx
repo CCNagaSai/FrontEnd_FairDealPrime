@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -86,7 +87,7 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
         setIsLoading(true);
 
         try {
-                let url = `http://65.0.54.193:9999/admin/agent/turnover?subAgentId=${subAgentId}`;
+          let url = `${API_URL}/admin/agent/turnover?subAgentId=${subAgentId}`;
 
           // Add filters dynamically
           if (filters.userId) {
@@ -309,13 +310,13 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
   return (
     <div>
       <div className="flex flex-col md:flex-row">
-          <div className="flex-1 ml-[4px] mr-[4px] md:max-w-[1100px] mx-auto border border-green-500 p-[5px]">
-            <h2 className="text-green-600 text-[18px] ml-1 md:text-xl font-bold  border-b border-green-500 pb-1 ">
-              Sub Agent Turn Over Report{" "}
+        <div className="flex-1 ml-[4px] mr-[4px] md:max-w-[1100px] mx-auto border border-green-500 p-[5px]">
+          <h2 className="text-green-600 text-[18px] ml-1 md:text-xl font-bold  border-b border-green-500 pb-1 ">
+            Sub Agent Turn Over Report{" "}
           </h2>
 
           {/* Filter Form */}
-            <div className="bg-green-50 p-5 rounded-lg shadow-lg m-1 sm:m-3">
+          <div className="bg-green-50 p-5 rounded-lg shadow-lg m-1 sm:m-3">
             <form
               className="flex flex-col items-center"
               onSubmit={(e) => e.preventDefault()}
@@ -396,7 +397,7 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
                   <button
                     type="button"
                     onClick={handleFilterChange}
-                      className="bg-green-400 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-green-600 text-sm sm:text-base w-20 sm:w-auto"
+                    className="bg-green-400 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-green-600 text-sm sm:text-base w-20 sm:w-auto"
                     style={{ width: "150px" }}
                   >
                     Apply Filters
@@ -404,7 +405,7 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
                   <button
                     type="button"
                     onClick={handleClear}
-                      className="bg-green-400 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-green-600 text-sm sm:text-base w-20 sm:w-auto"
+                    className="bg-green-400 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-green-600 text-sm sm:text-base w-20 sm:w-auto"
                     style={{ width: "150px" }}
                   >
                     Clear Filters
@@ -674,6 +675,5 @@ const UserTurnOverInSubAgent = ({ subAgentId, onUserClick }) => {
     </div>
   );
 };
-  
-  export default UserTurnOverInSubAgent;
-  
+
+export default UserTurnOverInSubAgent;

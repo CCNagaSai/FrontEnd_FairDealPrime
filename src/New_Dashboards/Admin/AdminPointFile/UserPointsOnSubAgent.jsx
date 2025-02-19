@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
-
+const API_URL = import.meta.env.VITE_HOST_URL;
 const IUserPointsOnSubAgent = ({ subAgentId, onUserClick }) => {
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +23,7 @@ const IUserPointsOnSubAgent = ({ subAgentId, onUserClick }) => {
         const token = tokenRef.current;
 
         const response = await fetch(
-          `http://65.0.54.193:9999/admin/usertransction/SubAgentTranscationData?Id=${subAgentId}&type=Shop`,
+          `${API_URL}/admin/usertransction/SubAgentTranscationData?Id=${subAgentId}&type=Shop`,
           {
             method: "GET",
             headers: {

@@ -3,6 +3,7 @@ import "../../Agent/AgentSearchUsers/AgentViewUsers.css";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const IshankViewSubAgent = ({ user, onBack }) => {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
@@ -25,26 +26,23 @@ const IshankViewSubAgent = ({ user, onBack }) => {
 
   const handlePasswordUpdate = async () => {
     try {
-      const response = await fetch(
-        "http://65.0.54.193:9999/admin/shop/ShopUpdate",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-          body: JSON.stringify({
-            // userId: "67aac027813bc442da34f045",
-            // password: "87654321",
+      const response = await fetch(`${API_URL}/admin/shop/ShopUpdate`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify({
+          // userId: "67aac027813bc442da34f045",
+          // password: "87654321",
 
-            userId: user._id,
-            password: newPassword,
-            name: user.name,
-            location: "India",
-            status: "active",
-          }),
-        }
-      );
+          userId: user._id,
+          password: newPassword,
+          name: user.name,
+          location: "India",
+          status: "active",
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to update password.");
@@ -62,23 +60,20 @@ const IshankViewSubAgent = ({ user, onBack }) => {
 
   const handleLockStatusUpdate = async () => {
     try {
-      const response = await fetch(
-        `http://65.0.54.193:9999/admin/shop/ShopUpdate`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-          body: JSON.stringify({
-            userId: user._id,
-            password: newPassword,
-            name: user.name,
-            location: "India",
-            status: lockStatus === "Active", // Converts "Active"/"Inactive" to true/false
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/admin/shop/ShopUpdate`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+        body: JSON.stringify({
+          userId: user._id,
+          password: newPassword,
+          name: user.name,
+          location: "India",
+          status: lockStatus === "Active", // Converts "Active"/"Inactive" to true/false
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to update lock status.");

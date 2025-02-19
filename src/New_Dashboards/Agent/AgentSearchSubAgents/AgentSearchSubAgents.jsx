@@ -2,24 +2,25 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import AgentBalanceAdjust from "../AgentBalanceAdjustment/AgentBalanceAdjust";
-import UserListInSubAgent from "./UserListInSubAgent"
+import UserListInSubAgent from "./UserListInSubAgent";
 
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const ASubAgentsList = ({ onSubAgentClick }) => {
   const navigate = useNavigate();
 
   // State
-  const [data, setData] = useState([]); 
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedType, setSelectedType] = useState(""); 
+  const [selectedType, setSelectedType] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
   const [expandedRow, setExpandedRow] = useState(null);
   const [filters, setFilters] = useState({ username: "", status: "" });
-    const [originalData, setOriginalData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -50,9 +51,9 @@ const ASubAgentsList = ({ onSubAgentClick }) => {
         if (!id || !type) {
           throw new Error("Missing id or type from cookies");
         }
-        
+
         const response = await fetch(
-          `http://65.0.54.193:9999/admin/shop/ShopList?agentId=${id}`,
+          `${API_URL}/admin/shop/ShopList?agentId=${id}`,
           {
             method: "GET",
             headers: {
@@ -83,19 +84,20 @@ const ASubAgentsList = ({ onSubAgentClick }) => {
   const handleFilterChange = () => {
     const filteredData = originalData.filter((user) => {
       const matchesUsername =
-        !filters.username || user.name.toLowerCase().includes(filters.username.toLowerCase());
+        !filters.username ||
+        user.name.toLowerCase().includes(filters.username.toLowerCase());
       const matchesStatus =
         !filters.status ||
         (filters.status === "Active" && user.status) ||
         (filters.status === "Inactive" && !user.status);
-  
+
       return matchesUsername && matchesStatus;
     });
-  
+
     setCurrentPage(1);
     setData(filteredData);
   };
-  
+
   const handleClear = () => {
     setFilters({ username: "", status: "" });
     setCurrentPage(1);
@@ -110,8 +112,6 @@ const ASubAgentsList = ({ onSubAgentClick }) => {
     setSelectedUser(subAgent);
     setIsModalOpen(true); // Open the modal
   };
-  
-  
 
   const handleModalClose = () => {
     setIsModalOpen(false); // Close the modal
@@ -120,7 +120,6 @@ const ASubAgentsList = ({ onSubAgentClick }) => {
   const handleUserClick = (subAgent) => {
     console.log("User clicked:", subAgent);
     onSubAgentClick(subAgent);
-    
   };
 
   const handleSort = (key) => {
@@ -205,14 +204,19 @@ const ASubAgentsList = ({ onSubAgentClick }) => {
       </h1>
       {/* Filter Form */}
       <div className="bg-[#e6ebff] p-5 rounded-lg shadow-lg m-1 sm:m-3">
-        <form className="flex flex-col items-center" onSubmit={(e) => e.preventDefault()}>
+        <form
+          className="flex flex-col items-center"
+          onSubmit={(e) => e.preventDefault()}
+        >
           <div className="flex flex-col sm:flex-row justify-between sm:space-x-4 mb-0 sm:mb-5 w-full">
             <div className="flex-1 mb-4 sm:mb-0">
               <label className="block mb-2">Username:</label>
               <input
                 type="text"
                 value={filters.username}
-                onChange={(e) => setFilters({ ...filters, username: e.target.value })}
+                onChange={(e) =>
+                  setFilters({ ...filters, username: e.target.value })
+                }
                 className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
                 placeholder="Enter username"
               />
@@ -221,7 +225,9 @@ const ASubAgentsList = ({ onSubAgentClick }) => {
               <label className="block mb-2">Status:</label>
               <select
                 value={filters.status}
-                onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+                onChange={(e) =>
+                  setFilters({ ...filters, status: e.target.value })
+                }
                 className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
               >
                 <option value="">All</option>
@@ -275,70 +281,70 @@ const ASubAgentsList = ({ onSubAgentClick }) => {
                 >
                   Points
                 </th>
-                <th 
+                <th
                   onClick={() => handleSort("chips")}
                   className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
                 >
                   Status
                 </th>
-                <th 
+                <th
                   onClick={() => handleSort("location")}
                   className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
                 >
                   Location
                 </th>
-                <th 
-                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
-                >
+                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
                   Action
                 </th>
-                <th 
-                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
-                >
+                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
                   view users
                 </th>
               </tr>
             </thead>
             <tbody>
-            {displayedData.map((row, index) => (
-              <React.Fragment key={row._id}>
-                <tr key={index} className="hover:bg-gray-100">
-                  <td
-                    onClick={() => handleUserClick(row)}
-                    className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline"
-                  >
-                    {row.name || "N/A"}
-                  </td>
-                  <td className="px-2 sm:px-4 py-2">{row.chips || 0}</td>
-                  <td
-                    className="px-2 sm:px-4 py-2 text-blue-500 hover:underline"
-                  >
-                    {row.status}
-                  </td>
-                  <td className="px-2 sm:px-4 py-2">{row.location || "N/A"}</td>
-                  <td className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline"
-                     onClick={() =>
-                      handleTransferPointsClick("Sub Agent", row._id)
-                    }
+              {displayedData.map((row, index) => (
+                <React.Fragment key={row._id}>
+                  <tr key={index} className="hover:bg-gray-100">
+                    <td
+                      onClick={() => handleUserClick(row)}
+                      className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline"
+                    >
+                      {row.name || "N/A"}
+                    </td>
+                    <td className="px-2 sm:px-4 py-2">{row.chips || 0}</td>
+                    <td className="px-2 sm:px-4 py-2 text-blue-500 hover:underline">
+                      {row.status}
+                    </td>
+                    <td className="px-2 sm:px-4 py-2">
+                      {row.location || "N/A"}
+                    </td>
+                    <td
+                      className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline"
+                      onClick={() =>
+                        handleTransferPointsClick("Sub Agent", row._id)
+                      }
                     >
                       TRANSFER POINTS
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <button
-                      onClick={() => toggleRow(row._id)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    >
-                      {expandedRow === row._id ? 'Close' : 'Show'}
-                    </button>
-                  </td>
-                </tr>
-                {expandedRow === row._id && (
-                  <tr className="bg-gray-100">
-                    <td colSpan="10" className="border border-gray-300 px-4 py-2">
-                    <UserListInSubAgent subAgentId={row._id} />
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2">
+                      <button
+                        onClick={() => toggleRow(row._id)}
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                      >
+                        {expandedRow === row._id ? "Close" : "Show"}
+                      </button>
                     </td>
                   </tr>
-                )}
+                  {expandedRow === row._id && (
+                    <tr className="bg-gray-100">
+                      <td
+                        colSpan="10"
+                        className="border border-gray-300 px-4 py-2"
+                      >
+                        <UserListInSubAgent subAgentId={row._id} />
+                      </td>
+                    </tr>
+                  )}
                 </React.Fragment>
               ))}
             </tbody>
@@ -368,10 +374,7 @@ const ASubAgentsList = ({ onSubAgentClick }) => {
       {isModalOpen && (
         <div style={modalOverlayStyle}>
           <div style={modalContentStyle}>
-            <button
-              style={modalCloseStyle}
-              onClick={handleModalClose}
-            >
+            <button style={modalCloseStyle} onClick={handleModalClose}>
               &times;
             </button>
             <AgentBalanceAdjust

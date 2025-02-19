@@ -4,6 +4,7 @@ import Cookies from "universal-cookie";
 import AgentBalanceAdjust from "../../Agent/AgentBalanceAdjustment/AgentBalanceAdjust";
 
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const IshankSubAgentList = ({ onUserClick }) => {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ const IshankSubAgentList = ({ onUserClick }) => {
           throw new Error("Missing id or type from cookies");
         }
         const response = await fetch(
-          `http://65.0.54.193:9999/admin/shop/ShopList?agentId=Admin`,
+          `${API_URL}/admin/shop/ShopList?agentId=Admin`,
           {
             method: "GET",
             headers: {

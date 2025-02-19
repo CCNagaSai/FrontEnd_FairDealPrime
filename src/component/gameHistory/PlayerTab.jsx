@@ -8,6 +8,7 @@ import jsPDF from "jspdf";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 function PlayerTab({ gameName }) {
   //-------------------------------------------------------------------------------------------------------
@@ -48,7 +49,7 @@ function PlayerTab({ gameName }) {
       }
 
       const response = await fetch(
-        `http://65.0.54.193:9999/admin/userhistory/RouletteGameHistory/?page=${page}&limit=${pageSize}`,
+        `${API_URL}/admin/userhistory/RouletteGameHistory/?page=${page}&limit=${pageSize}`,
         {
           method: "GET",
           headers: {

@@ -4,6 +4,7 @@ import Cookies from "universal-cookie";
 import UserTurnOverInSubAgent from "./UserTurnOverInSubAgent";
 
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const ATurnover = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -89,7 +90,7 @@ const ATurnover = () => {
         setIsLoading(true);
 
         try {
-          let url = `http://65.0.54.193:9999/admin/agent/turnover?agentId=${id}`;
+          let url = `${API_URL}/admin/agent/turnover?agentId=${id}`;
 
           // Add filters dynamically
           if (filters.userId) {
@@ -122,7 +123,9 @@ const ATurnover = () => {
             console.log("Data:", data);
 
             if (data && Array.isArray(data.turnOverData)) {
-              const flattenedHistory = data.turnOverData.flatMap((entry) => entry.subAgentData || []);
+              const flattenedHistory = data.turnOverData.flatMap(
+                (entry) => entry.subAgentData || []
+              );
 
               setBackendData(flattenedHistory);
               setFilteredData(flattenedHistory);
@@ -142,7 +145,6 @@ const ATurnover = () => {
     }
   }, [token, id, filters]);
 
-
   const handleDateRangeChange = (range) => {
     const today = new Date();
     let startDate = new Date();
@@ -160,7 +162,9 @@ const ATurnover = () => {
       case "This Week": {
         const dayOfWeek = today.getDay(); // Sunday - 0, Monday - 1, ..., Saturday - 6
         startDate = new Date(today);
-        startDate.setDate(today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)); // Move to Monday
+        startDate.setDate(
+          today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)
+        ); // Move to Monday
         endDate = new Date(startDate);
         endDate.setDate(startDate.getDate() + 6); // Move to Sunday
         break;
@@ -231,7 +235,9 @@ const ATurnover = () => {
     }
 
     // Sort by date (most recent first)
-    filtered.sort((a, b) => new Date(b.lastPlayedDate) - new Date(a.lastPlayedDate));
+    filtered.sort(
+      (a, b) => new Date(b.lastPlayedDate) - new Date(a.lastPlayedDate)
+    );
 
     // Update state
     setCurrentPage(1);
@@ -274,7 +280,7 @@ const ATurnover = () => {
         0
       )
     : 0;
-    
+
   console.log("backendsdata", backendData);
 
   console.log("Expanded Row:", expandedRow);
@@ -322,7 +328,6 @@ const ATurnover = () => {
   }, [backendData, filters, isSubmitted]);
 
   console.log("Backend Data:", backendData);
-  
 
   return (
     <div>

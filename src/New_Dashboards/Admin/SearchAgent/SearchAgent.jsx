@@ -4,6 +4,7 @@ import Cookies from "universal-cookie";
 import AgentBalanceAdjust from "../../Agent/AgentBalanceAdjustment/AgentBalanceAdjust";
 
 const cookies = new Cookies();
+const API_URL = import.meta.env.VITE_HOST_URL;
 
 const IshankAgentList = ({ onUserClick }) => {
   const navigate = useNavigate();
@@ -48,16 +49,13 @@ const IshankAgentList = ({ onUserClick }) => {
         if (!id || !type) {
           throw new Error("Missing id or type from cookies");
         }
-        const response = await fetch(
-          `http://65.0.54.193:9999/admin/agent/AgentList`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              token: token, // Send token from cookies
-            },
-          }
-        );
+        const response = await fetch(`${API_URL}/admin/agent/AgentList`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            token: token, // Send token from cookies
+          },
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);

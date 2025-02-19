@@ -3,13 +3,14 @@ import offerContext from "../../context/offerContext";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_HOST_URL;
 const Topbar = () => {
   const Navigate = useNavigate();
   const cookies = new Cookies();
   const context = useContext(offerContext);
   const { LogoutClick } = context;
 
-  const [showLogoutPopup, setShowLogoutPopup] = useState(false); // State to control the logout confirmation popup
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [balance, setBalance] = useState(0);
@@ -29,53 +30,51 @@ const Topbar = () => {
       cookies.remove("LoginUserId", { path: "/" });
       cookies.remove("token", { path: "/" });
 
-      // Optional: Redirect to the login page or another route
       window.location.href = "/signin";
-      // Log cookie values to verify they're cleared
-
-      // Logout click logic (if any)
-      // await LogoutClick();
-
-      // Navigate to the signin page
-      // setTimeout(() => Navigate("/signin"), 1000);
     } catch (error) {
       console.error("Error during logout:", error);
     }
   };
 
-  useEffect(() => {
-    const fetchBalance = async () => {
-      let apiUrl = "";
+  // Function to Fetch Balance Periodically
+  const fetchBalance = async () => {
+    let apiUrl = "";
+    if (position === "Shop" && agentId) {
+      apiUrl = `${API_URL}/admin/shop/agentBalance?subAgentId=${agentId}`;
+    } else if (position === "Agent" && agentId) {
+      apiUrl = `${API_URL}/admin/agent/agentBalance?agentId=${agentId}`;
+    }
 
-      if (position === "Shop" && agentId) {
-        apiUrl = `http://65.0.54.193:9999/admin/shop/agentBalance?subAgentId=${agentId}`;
-      } else if (position === "Agent" && agentId) {
-        apiUrl = `http://65.0.54.193:9999/admin/agent/agentBalance?agentId=${agentId}`;
-      }
+    if (apiUrl && token) {
+      try {
+        const response = await fetch(apiUrl, {
+          method: "GET",
+          headers: {
+            token: token,
+            "Content-Type": "application/json",
+          },
+        });
 
-      if (apiUrl && token) {
-        try {
-          const response = await fetch(apiUrl, {
-            method: "GET",
-            headers: {
-              token: token,
-              "Content-Type": "application/json",
-            },
-          });
-
-          if (response.ok) {
-            const data = await response.json();
+        if (response.ok) {
+          const data = await response.json();
+          if (data.agent.chips !== balance) {
             setBalance(data.agent.chips || 0);
-          } else {
-            console.error("Failed to fetch balance");
           }
-        } catch (error) {
-          console.error("Error fetching balance:", error);
+        } else {
+          console.error("Failed to fetch balance");
         }
+      } catch (error) {
+        console.error("Error fetching balance:", error);
       }
-    };
+    }
+  };
 
-    fetchBalance();
+  // Polling: Fetch balance every 2 seconds
+  useEffect(() => {
+    fetchBalance(); // Initial fetch when component mounts
+    const intervalId = setInterval(fetchBalance, 2000);
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
   }, [position, agentId, token]);
 
   useEffect(() => {
@@ -185,47 +184,6 @@ const Topbar = () => {
           />
         </svg>
       </button>
-
-      <div
-        ref={menuRef}
-        className={`md:hidden ${
-          isMenuOpen ? "block" : "hidden"
-        } w-half z-40 flex flex-col items-center space-y-4 absolute top-4 right-4 mt-10 bg-gray-50 border rounded-lg p-4`}
-      >
-        <ul className="flex flex-col font-medium">
-          <li>
-            <p className="font-bold text-[16px] py-2">
-              Welcome: <span className="text-red-500">{userName}</span>
-            </p>
-          </li>
-          <li>
-            <p className="font-bold text-[16px] py-2">
-              Balance: <span className="text-red-500">{balance}</span>
-            </p>
-          </li>
-          <li>
-            <p className="font-bold text-[16px] py-2">
-              Position: <span className="text-red-500">{position}</span>
-            </p>
-          </li>
-          <li>
-            <p className="text-gray-500 text-sm">{currentTime}</p>
-          </li>
-          <li>
-            <div className="flex gap-2 items-center">
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs"
-                onClick={() => setShowLogoutPopup(true)}
-              >
-                LOGOUT
-              </button>
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs">
-                SWITCH TO CLASSIC
-              </button>
-            </div>
-          </li>
-        </ul>
-      </div>
     </div>
   );
 };

@@ -5,6 +5,7 @@ import SubAReportpointfile from "../../SubAgent/subAgentPointFile/subAgentPointF
 import SubAReportInpoint from "../../SubAgent/subAgentInPoints/subAgentInPoints";
 import SubAReportOutpoint from "../../SubAgent/subAgentOutPoints/subAgentOutPoints";
 
+const API_URL = import.meta.env.VITE_HOST_URL;
 const SubAgentPointsInAgent = () => {
   const [shopList, setShopList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +30,7 @@ const SubAgentPointsInAgent = () => {
         }
 
         const response = await fetch(
-          `http://65.0.54.193:9999/admin/shop/ShopList?agentId=${id}`,
+          `${API_URL}/admin/shop/ShopList?agentId=${id}`,
           {
             method: "GET",
             headers: {
@@ -45,7 +46,9 @@ const SubAgentPointsInAgent = () => {
 
         const result = await response.json();
         console.log("Fetched result:", result);
-        const sortedShopList = (result.shopList || []).sort((a, b) => a.name.localeCompare(b.name));
+        const sortedShopList = (result.shopList || []).sort((a, b) =>
+          a.name.localeCompare(b.name)
+        );
         setOriginalData(sortedShopList);
         setShopList(sortedShopList);
       } catch (err) {
@@ -103,12 +106,17 @@ const SubAgentPointsInAgent = () => {
         </div>
       </div>
 
-
       <div className="flex justify-center space-x-4 mt-4 mb-4">
-        <button onClick={handleSubmit} className="bg-blue-500 text-white p-2 rounded w-32">
+        <button
+          onClick={handleSubmit}
+          className="bg-blue-500 text-white p-2 rounded w-32"
+        >
           Submit
         </button>
-        <button onClick={handleClear} className="bg-gray-400 text-white p-2 rounded w-32">
+        <button
+          onClick={handleClear}
+          className="bg-gray-400 text-white p-2 rounded w-32"
+        >
           Clear
         </button>
       </div>
