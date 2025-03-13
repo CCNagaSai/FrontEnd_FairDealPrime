@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 const API_URL = import.meta.env.VITE_HOST_URL;
 
-const IshankViewAgent = ({ user, onBack }) => {
+const ViewAgents = ({ user, onBack }) => {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [isEditingLock, setIsEditingLock] = useState(false);
@@ -195,4 +195,4 @@ const IshankViewAgent = ({ user, onBack }) => {
   );
 };
 
-export default IshankViewAgent;
+export default ViewAgents;

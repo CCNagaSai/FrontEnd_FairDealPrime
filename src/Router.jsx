@@ -66,6 +66,7 @@ import {
   AgentGameHistory,
   AgentTurnOver,
   SubAPointsInAgent,
+  TestSearchUsers,
 } from "./New_Dashboards/Agent/AgentTabs";
 
 import {
@@ -80,6 +81,7 @@ import {
   SubAgentOutPoint,
   SubAgentGameHistory,
   SubAgentTurnOver,
+  TestSearchUsersSA,
 } from "./New_Dashboards/SubAgent/SubAgentTabs";
 
 // import AdminDashboard from "./New_Dashboards/Admin/AdminTabs";
@@ -116,6 +118,7 @@ import {
   AgentSubAgentPointFile,
   CreateUser,
   ChangeUserPassword,
+  TestAdminSearchUsers,
 } from "./New_Dashboards/Admin/AdminTabs";
 
 import ShopDashboard from "./pages/shopdashboard";
@@ -417,6 +420,10 @@ const router = createBrowserRouter([
         path: "/agent/subAgents-points-history",
         element: <SubAPointsInAgent />,
       },
+      {
+        path: "/agent/test-user",
+        element: <TestSearchUsers />,
+      },
 
       // SubAgents routes
 
@@ -468,6 +475,10 @@ const router = createBrowserRouter([
         path: "/shopdashboard",
         element: <SubAgentdash />,
       },
+      {
+        path: "/sub-agent/test-users",
+        element: <TestSearchUsersSA />,
+      },
 
       //Admin Routes
       {
@@ -487,7 +498,7 @@ const router = createBrowserRouter([
         element: <AdminTableManagement />,
       },
       {
-        path: "/admin/GameLogic",
+        path: "/Admin/Gamelogic",
         element: <AdminGameLogic />,
       },
       {
@@ -603,6 +614,10 @@ const router = createBrowserRouter([
       {
         path: "/admin/TestingTable",
         element: <TestingTable />,
+      },
+      {
+        path: "/admin/TestSearchUsers",
+        element: <TestAdminSearchUsers />,
       },
     ],
   },

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import SubAgentBalanceAdjust from "../subAgentBalanceAdjustment/subAgentBalanceAdjust";
+import { fetchSubAgentUserList } from "../../Common/OfferState/DashboardOfferState";
 
 const cookies = new Cookies();
 const API_URL = import.meta.env.VITE_HOST_URL;
@@ -35,47 +36,74 @@ const SubAUsersList = ({ onUserClick }) => {
     tokenRef.current = cookies.get("token");
   }, []);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     try {
+  //       setLoading(true);
+  //       setError(null);
 
+  //       const id = idRef.current;
+  //       const type = typeRef.current;
+  //       const token = tokenRef.current;
+
+  //       if (!id || !type) {
+  //         throw new Error("Missing id or type from cookies");
+  //       }
+
+  //       const response = await fetch(
+  //         `${API_URL}/admin/user/UserList?Id=${id}&type=${type}`,
+  //         {
+  //           method: "GET",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             token: token, // Send token from cookies
+  //           },
+  //         }
+  //       );
+
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! Status: ${response.status}`);
+  //       }
+
+  //       const result = await response.json(); // Parse the JSON
+  //       console.log("API Response:", result); // Debugging output
+  //       setOriginalData(result.users || []); // Save the original data
+  //       setData(result.users || []); // Set the data
+  //     } catch (err) {
+  //       console.error("Error fetching user data:", err.message);
+  //       setError("Failed to load user data. Please try again.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchUserData();
+  // }, []);
+
+  useEffect(() => {
+    const loadUsers = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const token = tokenRef.current;
         const id = idRef.current;
         const type = typeRef.current;
-        const token = tokenRef.current;
 
-        if (!id || !type) {
-          throw new Error("Missing id or type from cookies");
-        }
-
-        const response = await fetch(
-          `${API_URL}/admin/user/UserList?Id=${id}&type=${type}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              token: token, // Send token from cookies
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const result = await response.json(); // Parse the JSON
-        setOriginalData(result.userList || []); // Save the original data
-        setData(result.userList || []); // Set the data
+        const userList = await fetchSubAgentUserList(token, id, type);
+        setOriginalData(userList);
+        setData(userList);
       } catch (err) {
-        console.error("Error fetching user data:", err.message);
-        setError("Failed to load user data. Please try again.");
+        console.error("Error fetching user list:", err);
+        setError("Failed to load user list. Please try again.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUserData();
+    if (tokenRef.current && idRef.current && typeRef.current) {
+      loadUsers();
+    }
   }, []);
 
   const handleFilterChange = () => {

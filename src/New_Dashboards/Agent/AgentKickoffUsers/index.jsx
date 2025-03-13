@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import '../Agentdash.css';
-import ReactDOM from 'react-dom/client';
-import Sidebar from '../AgentSidebar'; // Adjust path to Sidebar component
-import AKickoffUsers from './AgentKickoffUsers';
+import "../Agentdash.css";
+import ReactDOM from "react-dom/client";
+import Sidebar from "../AgentSidebar"; // Adjust path to Sidebar component
+import AKickoffUsers from "./AgentKickoffUsers";
 import Topbar from "../../Common/Topbar";
 import AViewUser from "../AgentSearchUsers/AgentViewUsers";
+import ViewUser from "../../Create_Components/ViewUser/ViewUsers";
+import KickoffUsers from "../../Create_Components/KickoffUsers/KickoffUsers";
 
 const AgentKickoffUsers = () => {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -30,10 +32,18 @@ const AgentKickoffUsers = () => {
         <div className="Right">
           {selectedUser ? (
             // Render AViewUser when a user is selected
-            <AViewUser user={selectedUser} onBack={handleBackToList} />
+            <ViewUser
+              user={selectedUser}
+              onBack={handleBackToList}
+              userRole="Agent"
+              apiEndpoints={{
+                updatePassword: "/admin/user/UpdatePassword",
+                changeStatus: "/admin/agent/changeUserStatus",
+              }}
+            />
           ) : (
             // Render AUsersList when no user is selected
-            <AKickoffUsers onUserClick={handleUserClick} />
+            <KickoffUsers onUserClick={handleUserClick} userRole="Agent" />
           )}
         </div>
       </div>

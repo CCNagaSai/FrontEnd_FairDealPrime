@@ -1,9 +1,10 @@
-import React from 'react';
-import '../Agentdash.css';
-import ReactDOM from 'react-dom/client';
-import Sidebar from '../AgentSidebar';
-import AChangePassword from './AgentChangePassword';
+import React from "react";
+import "../Agentdash.css";
+import ReactDOM from "react-dom/client";
+import Sidebar from "../AgentSidebar";
+import AChangePassword from "./AgentChangePassword";
 import Topbar from "../../Common/Topbar";
+import ChangePassword from "../../Create_Components/ChangePassword/ChangePassword";
 
 const AgentChangePassword = () => {
   return (
@@ -16,7 +17,7 @@ const AgentChangePassword = () => {
           <Sidebar />
         </div>
         <div className="Right">
-          <AChangePassword />
+          <ChangePassword userRole="Agent" />
         </div>
       </div>
     </div>

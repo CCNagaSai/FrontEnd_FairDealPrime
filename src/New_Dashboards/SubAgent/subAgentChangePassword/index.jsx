@@ -1,9 +1,10 @@
-import React from 'react';
-import '../SubAgentdash.css';
-import ReactDOM from 'react-dom/client';
-import Sidebar from '../subAgentSidebar';
-import SubAChangePassword from './subAgentChangePassword';
+import React from "react";
+import "../SubAgentdash.css";
+import ReactDOM from "react-dom/client";
+import Sidebar from "../subAgentSidebar";
+import SubAChangePassword from "./subAgentChangePassword";
 import Topbar from "../../Common/Topbar";
+import ChangePassword from "../../Create_Components/ChangePassword/ChangePassword";
 
 const SubAgentChangePassword = () => {
   return (
@@ -16,7 +17,7 @@ const SubAgentChangePassword = () => {
           <Sidebar />
         </div>
         <div className="Right">
-          <SubAChangePassword />
+          <ChangePassword userRole="Sub-Agent" />
         </div>
       </div>
     </div>

@@ -29,7 +29,9 @@ function SubAgentSidebar() {
             </ul>
           </li>
           <li className="mb-1">
-            <strong className="text-lg text-blue-800 ml-2 cursor-default">User Management</strong>
+            <strong className="text-lg text-blue-800 ml-2 cursor-default">
+              User Management
+            </strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1">
                 <Link
@@ -39,6 +41,14 @@ function SubAgentSidebar() {
                   Search Users
                 </Link>
               </li>
+              {/* <li className="mb-1">
+                <Link
+                  to="/sub-agent/test-users"
+                  className="block cursor-pointer text-sm text-black border-b-2 border-gray-200 py-1 pl-6 hover:text-yellow-500"
+                >
+                  Test Users
+                </Link>
+              </li> */}
               <li className="mb-1">
                 <Link
                   to="/sub-agent/balance-adjustment"
@@ -58,7 +68,9 @@ function SubAgentSidebar() {
             </ul>
           </li>
           <li className="mb-1">
-            <strong className="text-lg text-blue-800 ml-2 cursor-default">Sub Agent Management</strong>
+            <strong className="text-lg text-blue-800 ml-2 cursor-default">
+              Sub Agent Management
+            </strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1">
                 <Link
@@ -79,7 +91,9 @@ function SubAgentSidebar() {
             </ul>
           </li>
           <li className="mb-1">
-            <strong className="text-lg text-blue-800 ml-2 cursor-default">Reports</strong>
+            <strong className="text-lg text-blue-800 ml-2 cursor-default">
+              Reports
+            </strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1">
                 <Link
@@ -179,7 +193,9 @@ function SubAgentSidebar() {
             </ul>
           </li>
           <li className="mb-1">
-            <strong className="text-lg text-blue-800 ml-2 cursor-default">User Management</strong>
+            <strong className="text-lg text-blue-800 ml-2 cursor-default">
+              User Management
+            </strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1">
                 <Link
@@ -208,7 +224,9 @@ function SubAgentSidebar() {
             </ul>
           </li>
           <li className="mb-1">
-            <strong className="text-lg text-blue-800 ml-2 cursor-default">Sub Agent Management</strong>
+            <strong className="text-lg text-blue-800 ml-2 cursor-default">
+              Sub Agent Management
+            </strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1">
                 <Link
@@ -229,7 +247,9 @@ function SubAgentSidebar() {
             </ul>
           </li>
           <li className="mb-1">
-            <strong className="text-lg text-blue-800 ml-2 cursor-default">Reports</strong>
+            <strong className="text-lg text-blue-800 ml-2 cursor-default">
+              Reports
+            </strong>
             <ul className="list-none p-0 m-0 mt-1">
               <li className="mb-1">
                 <Link

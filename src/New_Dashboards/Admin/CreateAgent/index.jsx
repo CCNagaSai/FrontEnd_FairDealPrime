@@ -3,7 +3,7 @@ import "../AdminDash.css";
 import ReactDOM from "react-dom/client";
 import AdminSidebar from "../AdminSidebar";
 import Topbar from "../../Common/Topbar";
-import IshankCreateAgent from "./CreateAgent";
+import CreateUserForm from "../../Create_Components/CreateUsers/CreateUsers";
 const CreateAgent = () => {
   return (
     <div className="app">
@@ -15,7 +15,7 @@ const CreateAgent = () => {
           <AdminSidebar />
         </div>
         <div className="Right">
-          <IshankCreateAgent />
+          <CreateUserForm userRole="Agent" />
         </div>
       </div>
     </div>

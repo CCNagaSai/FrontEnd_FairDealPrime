@@ -1,0 +1,127 @@
+/* Container Styles */
+.create-user-container {
+  width: 60%;
+  margin: auto;
+  border: 1px solid blue;
+  padding: 20px;
+  background-color: #f0f8ff;
+  border-radius: 8px;
+}
+
+.user-general-information {
+  font-size: 28px;
+  color: #007BFF; /* Blue color */
+  text-align: left;
+  border-bottom: 3px solid #007BFF; /* Blue underline */
+  padding-bottom: 5px;
+  margin-bottom: 20px;
+}
+
+/* Form Styles */
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.required {
+  color: red;
+}
+
+/* Dropdown */
+.dropdown-container {
+  position: relative;
+}
+
+.dropdown-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: white;
+}
+
+.arrow {
+  font-size: 12px;
+}
+
+.dropdown-content {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  width: 100%;
+  max-height: 150px;
+  overflow-y: auto;
+  margin-top: 5px;
+  border-radius: 4px;
+  z-index: 999;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+}
+
+.dropdown-item label {
+  margin-left: 8px;
+}
+
+/* Button Styles */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn.create {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn.reset {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 768px) {
+  .create-user-container {
+    width: 90%;
+  }
+
+  .form-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
+
+  .form-actions .btn {
+    justify-self: center;
+  }
+
+  .dropdown-content {
+    max-height: 200px;
+  }
+}

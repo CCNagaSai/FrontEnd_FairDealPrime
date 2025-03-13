@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./AdminBalanceAdjust.css";
 import Cookies from "universal-cookie";
-
+import {
+  AdminfetchPartners,
+  fetchhandleAdminBalanceAdjustment,
+} from "../../Common/OfferState/DashboardOfferState";
 const API_URL = import.meta.env.VITE_HOST_URL;
 const cookies = new Cookies();
 
@@ -18,10 +21,13 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [transactionResult, setTransactionResult] = useState(null);
+
   const id = cookies.get("LoginUserId");
   const token = cookies.get("token");
   const logintype = cookies.get("logintype");
   const email = cookies.get("email");
+
+  console.log("User ID:", id);
 
   // Fetch users, Agents or subagents based on selected type
   useEffect(() => {
@@ -84,11 +90,11 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
     const previousPoints = selectedUserDetails?.chips || 0;
 
     const payload = {
-      money: "100",
-      type: "Deposit",
-      userId: "67a354e6813bc442da304c4e",
-      adminname: "Super Admin",
-      adminid: "67821d92cfa2484794079d87",
+      money: amount,
+      type: adjustType === "add" ? "Deposit" : "Deduct",
+      userId: selectedUser,
+      adminname: email,
+      adminid: id,
     };
 
     const apiUrl =
@@ -162,15 +168,6 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
       const updatedUserData = await updatedUserResponse.json();
       setUsers(updatedUserData.userList || []);
 
-      // Update user's points locally
-      // setUsers((prevUsers) =>
-      //   prevUsers.map((user) =>
-      //     user._id === selectedUser
-      //       ? { ...user, chips: newPoints }
-      //       : user
-      //   )
-      // );
-
       // Clear the form
       setType("");
       setSelectedUser("");
@@ -183,6 +180,34 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
       setError("Transaction failed. Please try again.");
     }
   };
+
+  // Fetch users, Agents or subagents based on selected type
+  // useEffect(() => {
+  //   console.log("Fetching partners for type:", type);
+  //   AdminfetchPartners(type, token, setUsers, setLoading, setError);
+  // }, [type, token]);
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   fetchhandleAdminBalanceAdjustment(
+  //     type,
+  //     selectedUser,
+  //     amount,
+  //     adjustType,
+  //     email,
+  //     id,
+  //     token,
+  //     users,
+  //     setTransactionResult,
+  //     setUsers,
+  //     setType,
+  //     setSelectedUser,
+  //     setAmount,
+  //     setTransactionPassword,
+  //     setComments,
+  //     setError
+  //   );
+  // };
 
   return (
     <div className="partner-adjustment-container">

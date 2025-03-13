@@ -8,59 +8,86 @@ function Testing({ data }) {
   console.log("Playing Table Data", data);
   const [betinfo, setBetinfo] = useState({});
 
-  //   useEffect(() => {
-  //     if (data && data.referid?.length > 0) {
-  //       const datajson = {};
-  //       data.referid.forEach((ref) => {
-  //         if (ref.type) {
-  //           datajson[ref.betIndex] =
-  //             (datajson[ref.betIndex] || 0) + ref.bet;
-  //         }
-  //       });
+  // useEffect(() => {
+  //   console.log("Data received:", data); // Log the incoming data to check its structure
 
+  //   const submitdata = async () => {
+  //     if (data && Array.isArray(data) && data.length > 0) {
+  //       let datajson = {};
+
+  //       // Iterate through data array
+  //       for (let i = 0; i < data.length; i++) {
+  //         const bet = data[i];
+  //         console.log("Processing bet:", bet); // Log individual bet
+
+  //         if (bet.number !== undefined) {
+  //           // If 'number' exists, accumulate the bet value
+  //           datajson[bet.number] = datajson[bet.number]
+  //             ? datajson[bet.number] + bet.bet
+  //             : bet.bet;
+  //         }
+  //       }
+
+  //       console.log("Accumulated Data:", datajson); // Log the final accumulated data
+
+  //       // Format the accumulated data into rupees (if needed)
   //       for (let j = 0; j <= 155; j++) {
   //         datajson[j.toString()] = convertRupees(datajson[j.toString()]);
   //       }
 
   //       setBetinfo(datajson);
+  //     } else {
+  //       console.error("Data format is incorrect or empty.");
   //     }
-  //   }, [data]);
+  //   };
+
+  //   submitdata();
+  // }, [data]); // Dependency on data to trigger this effect whenever data changes
 
   useEffect(() => {
-    console.log("Data received:", data); // Log the incoming data to check its structure
-
     const submitdata = async () => {
-      if (data && Array.isArray(data) && data.length > 0) {
-        let datajson = {};
+      console.log("Received data:", data);
 
-        // Iterate through data array
-        for (let i = 0; i < data.length; i++) {
-          const bet = data[i];
-          console.log("Processing bet:", bet); // Log individual bet
-
-          if (bet.number !== undefined) {
-            // If 'number' exists, accumulate the bet value
-            datajson[bet.number] = datajson[bet.number]
-              ? datajson[bet.number] + bet.bet
-              : bet.bet;
-          }
-        }
-
-        console.log("Accumulated Data:", datajson); // Log the final accumulated data
-
-        // Format the accumulated data into rupees (if needed)
-        for (let j in datajson) {
-          datajson[j] = convertRupees(datajson[j]);
-        }
-
-        setBetinfo(datajson); // Update the state with the accumulated data
-      } else {
-        console.error("Data format is incorrect or empty.");
+      // Check if data is an array
+      if (!Array.isArray(data) || data.length === 0) {
+        console.warn(
+          "Error: data is not in the expected format (array of objects)."
+        );
+        return;
       }
+
+      let datajson = {};
+
+      for (let i = 0; i < data.length; i++) {
+        let betData = data[i]; // Each object in the array
+
+        if (betData.type) {
+          let numberKey = betData.number;
+          let betAmount = betData.bet;
+
+          datajson[numberKey] = datajson[numberKey]
+            ? datajson[numberKey] + betAmount
+            : betAmount;
+        }
+      }
+
+      console.log("Accumulated Raw Data:", datajson);
+
+      // Convert values using convertRupees
+      for (let j = 0; j <= 155; j++) {
+        if (datajson[j.toString()] !== undefined) {
+          datajson[j.toString()] = convertRupees(datajson[j.toString()]);
+        }
+      }
+
+      console.log("Formatted Data:", datajson);
+      setBetinfo(datajson);
     };
 
     submitdata();
-  }, [data]); // Dependency on data to trigger this effect whenever data changes
+  }, [data]);
+
+  console.log("Actual Data:", data);
 
   function convertRupees(number) {
     if (number >= 10000000) return (number / 10000000).toFixed(1) + " crore";
@@ -75,14 +102,6 @@ function Testing({ data }) {
         <h3 className="text-2xl font-bold pb-5 text-bgray-900 dark:text-white dark:border-darkblack-400 border-b border-bgray-200">
           Player Bet Information
         </h3>
-        {/* 
-        <div className="testing-component">
-          <p>ID: {id}</p>
-          <p>Type: {type}</p>
-          <p>Bet: {bet}</p>
-          <p>Number: {number}</p>
-          <p>Which Table: {whichTable}</p>
-        </div> */}
 
         <div className="table-section">
           <table className="roulette-table">
@@ -118,19 +137,19 @@ function Testing({ data }) {
                 <button className="number87">{betinfo["87"]}</button>{" "}
                 <button className="number111">{betinfo["111"]}</button>{" "}
               </td>
-              <td className="black" data-bet="number" data-number="12">
+              <td className="red" data-bet="number" data-number="12">
                 <p className="Chipsbet">{betinfo["12"]}</p>12{" "}
                 <button className="number55">{betinfo["55"]}</button>{" "}
                 <button className="number88">{betinfo["88"]}</button>{" "}
                 <button className="number112">{betinfo["112"]}</button>{" "}
               </td>
-              <td className="red" data-bet="number" data-number="15">
+              <td className="black" data-bet="number" data-number="15">
                 <p className="Chipsbet">{betinfo["15"]}</p>15{" "}
                 <button className="number56">{betinfo["56"]}</button>{" "}
                 <button className="number89">{betinfo["89"]}</button>{" "}
                 <button className="number113">{betinfo["113"]}</button>{" "}
               </td>
-              <td className="black" data-bet="number" data-number="18">
+              <td className="red" data-bet="number" data-number="18">
                 <p className="Chipsbet">{betinfo["18"]}</p>18{" "}
                 <button className="number57">{betinfo["57"]}</button>{" "}
                 <button className="number90">{betinfo["90"]}</button>{" "}
@@ -154,19 +173,19 @@ function Testing({ data }) {
                 <button className="number93">{betinfo["93"]}</button>{" "}
                 <button className="number117">{betinfo["117"]}</button>
               </td>
-              <td className="black" data-bet="number" data-number="30">
+              <td className="red" data-bet="number" data-number="30">
                 <p className="Chipsbet">{betinfo["30"]}</p>30{" "}
                 <button className="number61">{betinfo["61"]}</button>{" "}
                 <button className="number94">{betinfo["94"]}</button>{" "}
                 <button className="number118">{betinfo["118"]}</button>
               </td>
-              <td className="red" data-bet="number" data-number="33">
+              <td className="black" data-bet="number" data-number="33">
                 <p className="Chipsbet">{betinfo["33"]}</p>33{" "}
                 <button className="number62">{betinfo["62"]}</button>{" "}
                 <button className="number95">{betinfo["95"]}</button>{" "}
                 <button className="number119">{betinfo["119"]}</button>
               </td>
-              <td className="black" data-bet="number" data-number="36">
+              <td className="red" data-bet="number" data-number="36">
                 <p className="Chipsbet">{betinfo["36"]}</p>36{" "}
                 <button className="number96">{betinfo["96"]}</button>{" "}
               </td>
@@ -194,19 +213,19 @@ function Testing({ data }) {
                 <button className="number99">{betinfo["99"]}</button>{" "}
                 <button className="number122">{betinfo["122"]}</button>
               </td>
-              <td className="red" data-bet="number" data-number="11">
+              <td className="black" data-bet="number" data-number="11">
                 <p className="Chipsbet">{betinfo["11"]}</p>11{" "}
                 <button className="number66">{betinfo["66"]}</button>{" "}
                 <button className="number100">{betinfo["100"]}</button>
                 <button className="number123">{betinfo["123"]}</button>
               </td>
-              <td className="black" data-bet="number" data-number="14">
+              <td className="red" data-bet="number" data-number="14">
                 <p className="Chipsbet">{betinfo["14"]}</p>14{" "}
                 <button className="number67">{betinfo["67"]}</button>{" "}
                 <button className="number101">{betinfo["101"]}</button>{" "}
                 <button className="number124">{betinfo["124"]}</button>
               </td>
-              <td className="red" data-bet="number" data-number="17">
+              <td className="black" data-bet="number" data-number="17">
                 <p className="Chipsbet">{betinfo["17"]}</p>17{" "}
                 <button className="number68">{betinfo["68"]}</button>{" "}
                 <button className="number102">{betinfo["102"]}</button>
@@ -230,19 +249,19 @@ function Testing({ data }) {
                 <button className="number105">{betinfo["105"]}</button>{" "}
                 <button className="number128">{betinfo["128"]}</button>
               </td>
-              <td className="red" data-bet="number" data-number="29">
+              <td className="black" data-bet="number" data-number="29">
                 <p className="Chipsbet">{betinfo["29"]}</p>29{" "}
                 <button className="number72">{betinfo["72"]}</button>{" "}
                 <button className="number106">{betinfo["106"]}</button>
                 <button className="number129">{betinfo["129"]}</button>
               </td>
-              <td className="black" data-bet="number" data-number="32">
+              <td className="red" data-bet="number" data-number="32">
                 <p className="Chipsbet">{betinfo["32"]}</p>32{" "}
                 <button className="number73">{betinfo["73"]}</button>{" "}
                 <button className="number107">{betinfo["107"]}</button>{" "}
                 <button className="number130">{betinfo["130"]}</button>
               </td>
-              <td className="red" data-bet="number" data-number="35">
+              <td className="black" data-bet="number" data-number="35">
                 <p className="Chipsbet">{betinfo["35"]}</p>35{" "}
                 <button className="number108">{betinfo["108"]}</button>
               </td>
@@ -275,13 +294,13 @@ function Testing({ data }) {
                 <button className="number136">{betinfo["136"]}</button>{" "}
                 <button className="number148">{betinfo["148"]}</button>{" "}
               </td>
-              <td className="red" data-bet="number" data-number="13">
+              <td className="black" data-bet="number" data-number="13">
                 <p className="Chipsbet">{betinfo["13"]}</p>13{" "}
                 <button className="number78">{betinfo["78"]}</button>{" "}
                 <button className="number137">{betinfo["137"]}</button>{" "}
                 <button className="number149">{betinfo["149"]}</button>{" "}
               </td>
-              <td className="black" data-bet="number" data-number="16">
+              <td className="red" data-bet="number" data-number="16">
                 <p className="Chipsbet">{betinfo["16"]}</p>16{" "}
                 <button className="number79">{betinfo["79"]}</button>{" "}
                 <button className="number138">{betinfo["138"]}</button>{" "}
@@ -311,13 +330,13 @@ function Testing({ data }) {
                 <button className="number142">{betinfo["142"]}</button>{" "}
                 <button className="number154">{betinfo["154"]}</button>{" "}
               </td>
-              <td className="red" data-bet="number" data-number="31">
+              <td className="black" data-bet="number" data-number="31">
                 <p className="Chipsbet">{betinfo["31"]}</p>31{" "}
                 <button className="number84">{betinfo["84"]}</button>{" "}
                 <button className="number143">{betinfo["143"]}</button>{" "}
                 <button className="number155">{betinfo["155"]}</button>{" "}
               </td>
-              <td className="black" data-bet="number" data-number="34">
+              <td className="red" data-bet="number" data-number="34">
                 <p className="Chipsbet">{betinfo["34"]}</p>34{" "}
                 <button className="number144">{betinfo["144"]}</button>{" "}
               </td>

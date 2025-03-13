@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 import Sidebar from "../AdminSidebar";
 
 import Topbar from "../../Common/Topbar";
-import IshankCreateUser from "./CreateUser";
+import CreateUserForm from "../../Create_Components/CreateUsers/CreateUsers";
 const CreateUser = () => {
   return (
     <div className="app">
@@ -16,7 +16,7 @@ const CreateUser = () => {
           <Sidebar />
         </div>
         <div className="Right">
-          <IshankCreateUser />
+          <CreateUserForm userRole="User" />
         </div>
       </div>
     </div>

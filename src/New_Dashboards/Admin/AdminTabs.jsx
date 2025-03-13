@@ -30,6 +30,7 @@ import ActivePlayerDetails from "./ActivePlayersDetails";
 import AgentSubAgentPointFile from "./AgentSubAgentReportPointFile";
 import CreateUser from "./CreateUser";
 import ChangeUserPassword from "./ChangeUserPassword";
+import TestAdminSearchUsers from "./AdminSearchUsers/Test";
 
 export {
   AdminDashboard,
@@ -64,4 +65,5 @@ export {
   AgentSubAgentPointFile,
   CreateUser,
   ChangeUserPassword,
+  TestAdminSearchUsers,
 };

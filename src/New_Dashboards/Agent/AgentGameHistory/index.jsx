@@ -1,9 +1,10 @@
-import React from 'react';
-import '../Agentdash.css';
-import ReactDOM from 'react-dom/client';
-import Sidebar from '../AgentSidebar'; // Adjust path to Sidebar component
-import AGameHistory from './AgentGameHistory';
+import React from "react";
+import "../Agentdash.css";
+import ReactDOM from "react-dom/client";
+import Sidebar from "../AgentSidebar"; // Adjust path to Sidebar component
+import AGameHistory from "./AgentGameHistory";
 import Topbar from "../../Common/Topbar";
+import GameHistory from "../../Create_Components/GameHistory/GameHistory";
 
 const AgentGameHistory = () => {
   return (
@@ -16,7 +17,7 @@ const AgentGameHistory = () => {
           <Sidebar />
         </div>
         <div className="Right">
-          <AGameHistory />
+          <GameHistory userRole="Agent" />
         </div>
       </div>
     </div>

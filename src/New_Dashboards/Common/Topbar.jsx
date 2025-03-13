@@ -36,6 +36,12 @@ const Topbar = () => {
     }
   };
 
+  const [weekStartDate, setWeekStartDate] = useState("");
+  const [weekEndDate, setWeekEndDate] = useState("");
+  const [net, setNet] = useState(0);
+  const [margin, setMargin] = useState(0);
+  const [endpoint, setEndpoint] = useState(0);
+
   // Function to Fetch Balance Periodically
   const fetchBalance = async () => {
     let apiUrl = "";
@@ -43,6 +49,8 @@ const Topbar = () => {
       apiUrl = `${API_URL}/admin/shop/agentBalance?subAgentId=${agentId}`;
     } else if (position === "Agent" && agentId) {
       apiUrl = `${API_URL}/admin/agent/agentBalance?agentId=${agentId}`;
+    } else if (position === "Super Admin") {
+      apiUrl = `${API_URL}/admin/agent/netmargin`;
     }
 
     if (apiUrl && token) {
@@ -57,8 +65,30 @@ const Topbar = () => {
 
         if (response.ok) {
           const data = await response.json();
-          if (data.agent.chips !== balance) {
-            setBalance(data.agent.chips || 0);
+
+          if (position === "Super Admin") {
+            let totalEndPoints = 0;
+            let totalMargin = 0;
+
+            data.turnOverData?.forEach((item) => {
+              totalEndPoints += item.totalEndPoints || 0;
+              totalMargin += item.totalMargin || 0;
+            });
+
+            const calculatedNet = totalEndPoints - totalMargin;
+
+            setNet(calculatedNet);
+            setEndpoint(totalEndPoints); // Set endpoint value
+            setMargin(totalMargin);
+            setWeekStartDate(new Date(data.weekStartDate).toLocaleDateString());
+            setWeekEndDate(new Date(data.weekEndDate).toLocaleDateString());
+            // console.log("Raw Week Start Date:", data.weekStartDate);
+            // console.log("Raw Week End Date:", data.weekEndDate);
+          } else {
+            let newBalance = data.agent?.chips || data.shop?.chips || 0;
+            if (newBalance !== balance) {
+              setBalance(newBalance);
+            }
           }
         } else {
           console.error("Failed to fetch balance");
@@ -103,21 +133,45 @@ const Topbar = () => {
   }, []);
 
   return (
-    <div className="flex items-center h-10">
+    <div className="flex items-center h-15 w-full relative">
       <img
         src="https://i.imgur.com/6493z1j.png"
         alt="Fairdeal Agent"
         className="w-6 h-6 mx-auto lg:ml-5 lg:mr-11 md:mx-4"
       />
 
+      {/* DESKTOP TOPBAR */}
       <div className="hidden md:flex z-50 flex-row justify-center items-center ml-6 md:ml-4 lg:ml-9">
         <div className="text-sm flex flex-col md:flex-row justify-center gap-4 items-center lg:gap-6">
           <p className="font-bold">
             Welcome: <span className="text-red-500 font-bold">{userName}</span>
           </p>
-          <p>
-            Balance: <span className="text-red-500 font-bold">{balance}</span>
-          </p>
+          {position === "Super Admin" ? (
+            <>
+              <p>
+                This Week:{" "}
+                <span className="text-red-500 font-bold">
+                  {weekStartDate} - {weekEndDate}
+                </span>
+              </p>
+
+              <p>
+                Net: <span className="text-red-500 font-bold">{net}</span>
+              </p>
+              <p>
+                Endpoint:{" "}
+                <span className="text-red-500 font-bold">{endpoint}</span>
+              </p>
+              <p>
+                Margin: <span className="text-red-500 font-bold">{margin}</span>
+              </p>
+            </>
+          ) : (
+            <p>
+              Balance: <span className="text-red-500 font-bold">{balance}</span>
+            </p>
+          )}
+
           <p>
             Position: <span className="text-red-500 font-bold">{position}</span>
           </p>
@@ -161,11 +215,12 @@ const Topbar = () => {
         </div>
       )}
 
+      {/* MOBILE MENU BUTTON */}
       <button
         ref={buttonRef}
         onClick={() => setIsMenuOpen(!isMenuOpen)}
         type="button"
-        className="inline-flex items-center mt-4 p-2 w-10 h-10 justify-center z-50 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none"
+        className="inline-flex items-center z-50 absolute right-4 p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none"
       >
         <svg
           className={`w-5 h-5 ${
@@ -184,6 +239,60 @@ const Topbar = () => {
           />
         </svg>
       </button>
+
+      {/* MOBILE DROPDOWN MENU */}
+      {isMenuOpen && (
+        <div
+          ref={menuRef}
+          className="absolute top-full right-4 mt-2 w-60 bg-white shadow-lg rounded-lg p-4 z-50 border border-gray-200 md:hidden"
+        >
+          <p className="font-bold">
+            Welcome: <span className="text-red-500 font-bold">{userName}</span>
+          </p>
+          {position === "Super Admin" ? (
+            <>
+              <p>
+                This Week:{" "}
+                <span className="text-red-500 font-bold">
+                  {weekStartDate} - {weekEndDate}
+                </span>
+              </p>
+
+              <p>
+                Net: <span className="text-red-500 font-bold">{net}</span>
+              </p>
+              <p>
+                Endpoint:{" "}
+                <span className="text-red-500 font-bold">{endpoint}</span>
+              </p>
+              <p>
+                Margin: <span className="text-red-500 font-bold">{margin}</span>
+              </p>
+            </>
+          ) : (
+            <p>
+              Balance: <span className="text-red-500 font-bold">{balance}</span>
+            </p>
+          )}
+
+          <p>
+            Position: <span className="text-red-500 font-bold">{position}</span>
+          </p>
+          <p className="text-gray-500 font-bold">{currentTime}</p>
+
+          <div className="flex flex-col gap-2 mt-3">
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs"
+              onClick={() => setShowLogoutPopup(true)}
+            >
+              LOGOUT
+            </button>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs">
+              SWITCH TO CLASSIC
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

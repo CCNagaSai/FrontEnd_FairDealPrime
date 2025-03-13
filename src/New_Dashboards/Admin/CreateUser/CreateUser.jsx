@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 const API_URL = import.meta.env.VITE_HOST_URL;
 
-const IshankCreateUser = () => {
+const CreateUsers = () => {
   const [selectedGames, setSelectedGames] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [agentId, setAgentId] = useState("");
@@ -336,4 +336,4 @@ const IshankCreateUser = () => {
   );
 };
 
-export default IshankCreateUser;
+export default CreateUsers;

@@ -1,0 +1,146 @@
+.Right-heading{
+  color: blue;
+  font-size: 26px;
+  font-weight: 700;
+  border-bottom: 1px solid blue;
+  margin-bottom: 20px;
+
+}
+  
+/* Updated form.css */
+
+/* Set background color for the whole form */
+.form-container {
+  background-color: #e6ebff; /* Light background */
+  padding: 15px;
+  border-radius: 8px;
+  max-width: 800px;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for better visibility */
+}
+
+.form-container form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Set background color for the whole form */
+
+/* Style for rows in the form */
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+
+/* Ensure all filter groups (fields) have consistent spacing and increased width */
+.filter-group {
+  flex: 1;
+  margin-right: 30px; /* Increase space between fields */
+  max-width: 600px; /* Increase the width of each input field */
+}
+
+.filter-group:last-child {
+  margin-right: 0; /* Remove margin for the last element */
+}
+
+.filter-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.filter-group input,
+.filter-group select {
+  width: 100%;
+  padding: 10px; /* Slightly increase padding for better aesthetics */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Ensures padding is included in width */
+}
+.thirdrow {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px; /* Space between buttons */
+  width: auto;
+}
+
+.submit-btn, .clear-btn {
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover, .clear-btn:hover {
+  background-color: darkblue;
+}
+
+
+/* Button Styling */
+button {
+  background-color: #056cdb;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 800;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+
+/* Mobile (Responsive) styles */
+@media (max-width: 768px) {
+
+  /* Make the form container take full width */
+  .filter-form {
+    flex-direction: column; /* Stack the fields vertically */
+    width: 90%; /* Ensure the form takes up the full width */
+    margin: 0 auto; /* Center the form */
+  }
+
+  /* Ensure filter groups are stacked and take up the full width */
+  .filter-group {
+    width: 100%; /* Filter groups should take up the full width */
+    margin: 10px auto; /* Center the filter groups */
+  }
+
+  /* Input fields should take full width within filter groups */
+  .filter-group input,
+  .filter-group select {
+    width: 100%; /* Make input fields and select elements take full width */
+    padding: 10px; /* Add padding to make inputs more spacious */
+    margin: 5px 0; /* Space out the inputs */
+    box-sizing: border-box; /* Ensure padding is included in width */
+  }
+
+  /* Make the row stack vertically and ensure there’s enough space between rows */
+  .row {
+    flex-direction: column; /* Stack fields vertically */
+    gap: 10px;
+  }
+
+  /* Center buttons in the third row */
+  .button-container {
+    display: flex;
+    justify-content: center; /* Center the buttons */
+    align-items: center;
+    gap: 15px; /* Add some space between the buttons */
+    width: 100%;
+  }
+
+  /* Button styling for mobile view */
+  button {
+    width: auto; /* Allow buttons to resize based on content */
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+}

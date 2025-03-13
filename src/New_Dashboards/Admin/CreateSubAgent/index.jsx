@@ -3,7 +3,7 @@ import "../AdminDash.css";
 import ReactDOM from "react-dom/client";
 import AdminSidebar from "../AdminSidebar";
 import Topbar from "../../Common/Topbar";
-import IshankCreateSubagent from "./CreateSubAgent";
+import CreateUserForm from "../../Create_Components/CreateUsers/CreateUsers";
 const CreateSubAgent = () => {
   return (
     <div className="app">
@@ -15,7 +15,7 @@ const CreateSubAgent = () => {
           <AdminSidebar />
         </div>
         <div className="Right">
-          <IshankCreateSubagent />
+          <CreateUserForm userRole="Sub-Agent" />
         </div>
       </div>
     </div>

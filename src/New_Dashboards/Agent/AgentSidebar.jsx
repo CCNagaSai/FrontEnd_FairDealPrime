@@ -41,6 +41,14 @@ function Sidebar() {
                   Search Users
                 </Link>
               </li>
+              {/* <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
+                <Link
+                  to="/agent/test-user"
+                  className="block text-sm text-black py-1 pl-6 hover:text-yellow-500"
+                >
+                  Test Search Users
+                </Link>
+              </li> */}
               <li className="mb-1 border-b-2 border-gray-200 hover:bg-gray-100">
                 <Link
                   to="/agent/search-sub-agents"
@@ -160,7 +168,7 @@ function Sidebar() {
       <button
         onClick={() => setIsMenuOpen(!isMenuOpen)}
         type="button"
-        className="inline-flex items-center mt-4 p-2 w-10 h-10 justify-center text-sm text-black-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 absolute left-2 -top-16"
+        className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-black-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 absolute left-2 -top-20"
         aria-expanded={isMenuOpen ? "true" : "false"}
       >
         <span className="sr-only">Open main menu</span>

@@ -3,6 +3,7 @@ import FormTable from "../../Common/Report/Table";
 import "./subAgentInPoints.css";
 import { data } from "../../Common/data/data";
 import SubAgentInPointTable from "./subAgentInPointsTable";
+import { SubAgentPointsFileApi } from "../../Common/OfferState/DashboardOfferState";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
 const API_URL = import.meta.env.VITE_HOST_URL;
@@ -56,47 +57,18 @@ const SubAReportInpoint = ({ subAgentId, type }) => {
   }, []);
 
   const fetchBackendData = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const id = idRef.current;
-      const type = typeRef.current;
-      const token = tokenRef.current;
-
-      if (!id || !type) {
-        console.error("ID or type not found in cookies.");
-        return;
-      }
-
-      console.log("Fetching with:", { id, type, token });
-
-      console.log("Fetching with:", { id, type, token });
-
-      const response = await fetch(
-        `${API_URL}/admin/usertransction/SubAgentTranscationData?Id=${id}&type=${type}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-        }
+      await SubAgentPointsFileApi(
+        setBackendData,
+        setFilteredData,
+        setLoading,
+        idRef.current,
+        typeRef.current,
+        tokenRef.current
       );
-
-      if (!response.ok) {
-        console.error("API Error:", response.statusText);
-        return;
-      }
-
-      const result = await response.json();
-
-      if (result.DepositeList) {
-        setBackendData(result.DepositeList);
-        setFilteredData(result.DepositeList); // Initialize filtered data
-      } else {
-        console.error("No data found in the response.");
-      }
     } catch (error) {
-      console.error("Error fetching backend data:", error);
+      console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }

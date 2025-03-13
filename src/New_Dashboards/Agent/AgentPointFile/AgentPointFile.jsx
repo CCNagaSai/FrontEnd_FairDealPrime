@@ -3,6 +3,7 @@ import FormTable from "../../Common/Report/Table";
 import "./AgentPointFile.css";
 import { data } from "../../Common/data/data";
 import AgentPointFileTable from "./AgentPointfileTable";
+import { AgentPointsFileApi } from "../../Common/OfferState/DashboardOfferState";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
 const API_URL = import.meta.env.VITE_HOST_URL;
@@ -49,48 +50,18 @@ const AReportpointfile = ({ agentId, type }) => {
   }, []);
 
   const fetchBackendData = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      console.log("Attempting to fetch backend data...");
-      const id = idRef.current;
-      const type = typeRef.current;
-      const token = tokenRef.current;
-
-      if (!id || !type) {
-        console.error("ID or type not found in cookies.");
-        return;
-      }
-
-      console.log("Fetching with:", { id, type, token });
-      // ${API_URL}/admin/usertransction/AgentTranscationData?Id=6767e33077c3a26d681a3e25&type=Agent
-
-      const response = await fetch(
-        `${API_URL}/admin/usertransction/AgentTranscationData?Id=${id}&type=${type}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-        }
+      await AgentPointsFileApi(
+        setBackendData,
+        setFilteredData,
+        setLoading,
+        idRef.current,
+        typeRef.current,
+        tokenRef.current
       );
-
-      if (!response.ok) {
-        console.error("API Error:", response.statusText);
-        return;
-      }
-
-      const result = await response.json();
-      console.log("Backend Data:", result);
-
-      if (result.DepositeList) {
-        setBackendData(result.DepositeList);
-        setFilteredData(result.DepositeList);
-      } else {
-        console.error("No data found in the response.");
-      }
     } catch (error) {
-      console.error("Error fetching backend data:", error);
+      console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }

@@ -1,9 +1,10 @@
-import React from 'react';
-import '../SubAgentdash.css';
-import ReactDOM from 'react-dom/client';
-import Sidebar from '../subAgentSidebar';
-import SubACreateUser from './subagentCreateUser';
+import React from "react";
+import "../SubAgentdash.css";
+import ReactDOM from "react-dom/client";
+import Sidebar from "../subAgentSidebar";
+import SubACreateUser from "./subagentCreateUser";
 import Topbar from "../../Common/Topbar";
+import CreateUserForm from "../../Create_Components/CreateUsers/CreateUsers";
 const SubAgentCreateUser = () => {
   return (
     <div className="app">
@@ -15,7 +16,7 @@ const SubAgentCreateUser = () => {
           <Sidebar />
         </div>
         <div className="Right">
-          <SubACreateUser />
+          <CreateUserForm userRole="User" />
         </div>
       </div>
     </div>

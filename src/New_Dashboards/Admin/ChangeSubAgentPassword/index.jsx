@@ -3,7 +3,7 @@ import "../AdminDash.css";
 import ReactDOM from "react-dom/client";
 import AdminSidebar from "../AdminSidebar";
 import Topbar from "../../Common/Topbar";
-import IshankChangeSubAgentPassword from "./ChangeSubAgentPwd";
+import SubAgentChangePassword from "./ChangeSubAgentPwd";
 
 const ChangeSubAgentPassword = () => {
   return (
@@ -16,7 +16,7 @@ const ChangeSubAgentPassword = () => {
           <AdminSidebar />
         </div>
         <div className="Right">
-          <IshankChangeSubAgentPassword />
+          <SubAgentChangePassword />
         </div>
       </div>
     </div>

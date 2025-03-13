@@ -5,6 +5,8 @@ import Sidebar from "../AdminSidebar"; // Adjust path to Sidebar component
 import AKickoffUsers from "../../Agent/AgentKickoffUsers/AgentKickoffUsers";
 import Topbar from "../../Common/Topbar";
 import AViewUser from "../../Agent/AgentSearchUsers/AgentViewUsers";
+import ViewUser from "../../Create_Components/ViewUser/ViewUsers";
+import KickoffUsers from "../../Create_Components/KickoffUsers/KickoffUsers";
 
 const AdminKickoffUsers = () => {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -30,10 +32,18 @@ const AdminKickoffUsers = () => {
         <div className="Right">
           {selectedUser ? (
             // Render AViewUser when a user is selected
-            <AViewUser user={selectedUser} onBack={handleBackToList} />
+            <ViewUser
+              user={selectedUser}
+              onBack={handleBackToList}
+              userRole="Admin"
+              apiEndpoints={{
+                updatePassword: "/admin/user/UpdatePassword",
+                changeStatus: "/admin/agent/changeUserStatus",
+              }}
+            />
           ) : (
             // Render AUsersList when no user is selected
-            <AKickoffUsers onUserClick={handleUserClick} />
+            <KickoffUsers onUserClick={handleUserClick} userRole="Admin" />
           )}
         </div>
       </div>

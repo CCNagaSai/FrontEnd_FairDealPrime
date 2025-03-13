@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import AdminSidebar from "../AdminSidebar"; // Adjust path to Sidebar component
 import Topbar from "../../Common/Topbar";
 import IAdminGameHistory from "./AdminGameHistory";
+import GameHistory from "../../Create_Components/GameHistory/GameHistory";
 
 const AdminGameHistory = () => {
   return (
@@ -16,7 +17,7 @@ const AdminGameHistory = () => {
           <AdminSidebar />
         </div>
         <div className="Right">
-          <IAdminGameHistory />
+          <GameHistory userRole="Admin" />
         </div>
       </div>
     </div>

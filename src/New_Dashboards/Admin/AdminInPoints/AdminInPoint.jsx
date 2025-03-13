@@ -4,10 +4,11 @@ import "./AdminInPoints.css";
 import { data } from "../../Common/data/data";
 import Cookies from "universal-cookie";
 import AdminInPointTable from "./AdminInPointTable";
+import { AdminPointsFileApi } from "../../Common/OfferState/DashboardOfferState";
 const cookies = new Cookies();
 const API_URL = import.meta.env.VITE_HOST_URL;
 
-const IAdminInpoint = () => {
+const AdminInpoints = () => {
   const [filters, setFilters] = useState({
     receiveBy: "",
     sentBy: "",
@@ -46,55 +47,8 @@ const IAdminInpoint = () => {
   }, []);
 
   useEffect(() => {
-    fetchBackendData();
+    AdminPointsFileApi(setBackendData, setLoading, idRef, typeRef, tokenRef);
   }, []);
-
-  const fetchBackendData = async () => {
-    try {
-      setLoading(true);
-      console.log("Attempting to fetch backend data...");
-      const id = idRef.current;
-      const type = typeRef.current;
-      const token = tokenRef.current;
-
-      if (!id || !type) {
-        console.error("ID or type not found in cookies.");
-        return;
-      }
-
-      console.log("Fetching with:", { id, type, token });
-
-      const response = await fetch(
-        `${API_URL}/admin/usertransction/AdminTranscationData`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        console.error("API Error:", response.statusText);
-        return;
-      }
-
-      const result = await response.json();
-      console.log("Backend Data:", result);
-
-      if (result.DepositeList) {
-        setBackendData(result.DepositeList);
-        setFilteredData(result.DepositeList);
-      } else {
-        console.error("No data found in the response.");
-      }
-    } catch (error) {
-      console.error("Error fetching backend data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Handle filter change and date range calculations
   const handleDateRangeChange = (range) => {
@@ -407,4 +361,4 @@ const IAdminInpoint = () => {
   );
 };
 
-export default IAdminInpoint;
+export default AdminInpoints;

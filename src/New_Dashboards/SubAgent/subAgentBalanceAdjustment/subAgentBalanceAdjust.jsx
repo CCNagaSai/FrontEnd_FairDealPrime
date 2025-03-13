@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./subAgentBalanceAdjust.css";
 import Cookies from "universal-cookie";
+import {
+  LoadUserData,
+  handleBalanceAdjustment,
+} from "../../Common/OfferState/DashboardOfferState";
 
 const cookies = new Cookies();
-const API_URL = import.meta.env.VITE_HOST_URL;
+// const API_URL = import.meta.env.VITE_HOST_URL;
 
 const SubAgentBalanceAdjust = ({ prefilledUser }) => {
   const [selectedUser, setSelectedUser] = useState(prefilledUser || "");
@@ -22,146 +26,40 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
   const email = cookies.get("email");
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const loadUsers = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        setLoading(true);
-        setError(null);
-
-        if (!id) {
-          throw new Error("Missing id or type from cookies");
-        }
-
-        console.log("dataaa", id);
-
-        // Fetch users on component mount
-        const response = await fetch(
-          `${API_URL}/admin/user/UserList?Id=${id}&type=Shop`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              token: token,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const result = await response.json(); // Parse the JSON
-        setUsers(result.userList || []); // Set the users data
+        const usersData = await LoadUserData(id, token);
+        setUsers(usersData);
       } catch (err) {
-        console.error("Error fetching user data:", err.message);
-        setError("Failed to load user data. Please try again.");
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchUserData();
+    loadUsers();
   }, [id, token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedUser || !amount || parseFloat(amount) <= 0) {
-      setError(
-        "Partner and Amount fields are mandatory. Amount must be positive."
-      );
-      return;
-    }
+    const result = await handleBalanceAdjustment(
+      adjustType,
+      selectedUser,
+      amount,
+      email,
+      id,
+      token,
+      users
+    );
 
-    const selectedUserDetails = users.find((user) => user._id === selectedUser);
-    const previousPoints = selectedUserDetails?.chips || 0;
-
-    const payload = {
-      money: amount,
-      type: adjustType === "add" ? "Deposit" : "Deduct",
-      userId: selectedUser,
-      adminname: email,
-      adminid: id,
-    };
-
-    const apiUrl =
-      adjustType === "add"
-        ? `${API_URL}/admin/user/addMoney`
-        : `${API_URL}/admin/user/deductMoney`;
-
-    try {
-      const response = await fetch(apiUrl, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          token: token,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await response.json();
-      console.log("API Response:", result);
-
-      if (result.status === "ok") {
-        // const newPoints = result.newPoints;
-        const newPoints =
-          result.newPoints ||
-          (adjustType === "add"
-            ? previousPoints + parseFloat(amount)
-            : previousPoints - parseFloat(amount));
-
-        setTransactionResult({
-          success: true,
-          message: `${
-            adjustType === "add" ? "Added" : "Deducted"
-          } ${amount} points to ${selectedUserDetails?.name}`,
-          previousPoints: previousPoints,
-          pointsChanged: amount,
-          newPoints: newPoints,
-        });
-      } else {
-        // If status is not "ok", set the error message from the API
-        setTransactionResult({
-          success: false,
-          message:
-            result.msg || "Transaction failed. Please check your balance.",
-        });
-      }
-
-      const updatedUserResponse = await fetch(
-        `${API_URL}/admin/user/UserList?Id=${id}&type=Shop`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-        }
-      );
-
-      if (!updatedUserResponse.ok) {
-        throw new Error(`Failed to fetch updated user data`);
-      }
-
-      const updatedUserData = await updatedUserResponse.json();
-      setUsers(updatedUserData.userList || []);
-
-      // Update user's points locally
-      // setUsers((prevUsers) =>
-      //   prevUsers.map((user) =>
-      //     user._id === selectedUser
-      //       ? { ...user, chips: newPoints }
-      //       : user
-      //   )
-      // );
-
-      // Clear the form
+    if (result.success) {
+      setTransactionResult(result);
+      setUsers(result.updatedUsers);
       setSelectedUser("");
       setAmount("");
-      setTransactionPassword("");
-      setComments("");
-      setError("");
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      setError("Transaction failed. Please try again.");
+    } else {
+      setError(result.message);
     }
   };
 

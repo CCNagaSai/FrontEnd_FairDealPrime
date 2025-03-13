@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 const API_URL = import.meta.env.VITE_HOST_URL;
 const cookies = new Cookies();
 
-const IshankViewUser = ({ user, onBack }) => {
+const AdminViewUser = ({ user, onBack }) => {
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [isEditingLock, setIsEditingLock] = useState(false);
@@ -117,6 +117,14 @@ const IshankViewUser = ({ user, onBack }) => {
                 <strong>Last Login:</strong> {user.lastLoginDate || "N/A"}
               </p>
             </div>
+            <div className="column">
+              <p>
+                <strong>Created By:</strong> {user.chips || "N/A"}
+              </p>
+              <p>
+                <strong>Role:</strong> {user.lastLoginDate || "N/A"}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -186,4 +194,4 @@ const IshankViewUser = ({ user, onBack }) => {
   );
 };
 
-export default IshankViewUser;
+export default AdminViewUser;

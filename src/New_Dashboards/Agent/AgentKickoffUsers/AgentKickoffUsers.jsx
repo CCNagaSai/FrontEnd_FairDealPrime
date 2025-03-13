@@ -75,6 +75,7 @@ const AKickoffUsers = ({ onUserClick }) => {
 
         if (!response.ok) throw new Error(`Error: ${response.status}`);
         const result = await response.json();
+        console.log("API Response:", result); // Debugging output
         setData(result.userList || []);
         setOriginalData(result.userList || []);
       } catch (err) {

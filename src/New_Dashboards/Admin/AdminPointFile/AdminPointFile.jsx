@@ -4,8 +4,10 @@ import "./AdminPointFile.css";
 import { data } from "../../Common/data/data";
 import Cookies from "universal-cookie";
 import AdminPointFileTable from "./AdminPointFileTable";
+import { AdminPointsFileApi } from "../../Common/OfferState/DashboardOfferState";
+
 const cookies = new Cookies();
-const API_URL = import.meta.env.VITE_HOST_URL;
+// const API_URL = import.meta.env.VITE_HOST_URL;
 const Adminpointfile = () => {
   const [filters, setFilters] = useState({
     receiveBy: "",
@@ -72,52 +74,9 @@ const Adminpointfile = () => {
     tokenRef.current = token;
   }, []);
 
-  const fetchBackendData = async () => {
-    try {
-      setLoading(true);
-      console.log("Attempting to fetch backend data...");
-      const id = idRef.current;
-      const type = typeRef.current;
-      const token = tokenRef.current;
-
-      if (!id || !type) {
-        console.error("ID or type not found in cookies.");
-        return;
-      }
-
-      console.log("Fetching with:", { id, type, token });
-      // http://93.127.194.87:9999/admin/usertransction/AgentTranscationData?Id=6767e33077c3a26d681a3e25&type=Agent
-
-      const response = await fetch(
-        `${API_URL}/admin/usertransction/AdminTranscationData`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        console.error("API Error:", response.statusText);
-        return;
-      }
-
-      const result = await response.json();
-      console.log("Backend Data:", result);
-
-      if (result.DepositeList) {
-        setBackendData(result.DepositeList);
-      } else {
-        console.error("No data found in the response.");
-      }
-    } catch (error) {
-      console.error("Error fetching backend data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    AdminPointsFileApi(setBackendData, setLoading, idRef, typeRef, tokenRef);
+  }, []);
 
   // Handle filter change and date range calculations
   const handleDateRangeChange = (range) => {

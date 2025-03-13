@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 const API_URL = import.meta.env.VITE_HOST_URL;
 
-const IshankChangeUserPassword = () => {
+const UserChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -224,4 +224,4 @@ const IshankChangeUserPassword = () => {
     </div>
   );
 };
-export default IshankChangeUserPassword;
+export default UserChangePassword;

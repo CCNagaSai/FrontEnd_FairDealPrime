@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import "../AdminDash.css";
 import AdminSidebar from "../AdminSidebar"; // Adjust path to Sidebar component
 import Topbar from "../../Common/Topbar";
-import IshankViewSubAgent from "./ViewSubAgent";
-import IshankSubAgentList from "./SearchSubAgent";
+import ViewSubAgent from "./ViewSubAgent";
+import SubAgentLists from "./SearchSubAgent";
 
 const AdminSearchUsers = () => {
   const [selectedUser, setSelectedUser] = useState(null); // State to store the selected user
@@ -30,10 +30,10 @@ const AdminSearchUsers = () => {
         <div className="Right">
           {selectedUser ? (
             // Render AViewUser when a user is selected
-            <IshankViewSubAgent user={selectedUser} onBack={handleBackToList} />
+            <ViewSubAgent user={selectedUser} onBack={handleBackToList} />
           ) : (
             // Render AUsersList when no user is selected
-            <IshankSubAgentList onUserClick={handleUserClick} />
+            <SubAgentLists onUserClick={handleUserClick} />
           )}
         </div>
       </div>

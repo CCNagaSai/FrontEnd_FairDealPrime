@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./AgentTurnOver.css";
 import Cookies from "universal-cookie";
 import UserTurnOverInSubAgent from "./UserTurnOverInSubAgent";
-
+import { fetchAgentTurnover } from "../../Common/OfferState/DashboardOfferState";
 const cookies = new Cookies();
 const API_URL = import.meta.env.VITE_HOST_URL;
 
@@ -85,63 +85,14 @@ const ATurnover = () => {
 
   useEffect(() => {
     if (id && token) {
-      const fetchBackendData = async () => {
-        if (!id || !token) return;
-        setIsLoading(true);
-
-        try {
-          let url = `${API_URL}/admin/agent/turnover?agentId=${id}`;
-
-          // Add filters dynamically
-          if (filters.userId) {
-            url += `&username=${encodeURIComponent(filters.userId)}`;
-          }
-          if (filters.startDate && filters.endDate) {
-            let startDate = new Date(filters.startDate);
-            const endDate = new Date(filters.endDate);
-
-            startDate.setDate(startDate.getDate() - 1);
-
-            startDate.setUTCHours(18, 30, 0, 0);
-            endDate.setUTCHours(18, 29, 59, 999);
-
-            url += `&startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`;
-          }
-
-          console.log("Fetching Data from:", url);
-
-          const response = await fetch(url, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              token: token,
-            },
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            console.log("Data:", data);
-
-            if (data && Array.isArray(data.turnOverData)) {
-              const flattenedHistory = data.turnOverData.flatMap(
-                (entry) => entry.subAgentData || []
-              );
-
-              setBackendData(flattenedHistory);
-              setFilteredData(flattenedHistory);
-            } else {
-              console.error("Expected an array from the backend API:", data);
-            }
-          } else {
-            console.error("Failed to fetch backend data");
-          }
-        } catch (error) {
-          console.error("Error:", error);
-        } finally {
-          setIsLoading(false); // Stop loading
-        }
-      };
-      fetchBackendData();
+      fetchAgentTurnover(
+        id,
+        token,
+        filters,
+        setBackendData,
+        setFilteredData,
+        setIsLoading
+      );
     }
   }, [token, id, filters]);
 
