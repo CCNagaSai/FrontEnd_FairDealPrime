@@ -32,10 +32,14 @@ const SearchAgent = () => {
         <div className="Right">
           {selectedUser ? (
             // Render AViewUser when a user is selected
-            <ViewAgents user={selectedUser} onBack={handleBackToList} />
+            <ViewUser
+              user={selectedUser}
+              onBack={handleBackToList}
+              userRole="Agent"
+            />
           ) : (
             // Render AUsersList when no user is selected
-            <AgentLists onUserClick={handleUserClick} />
+            <UserList userRole="Agent" onUserClick={handleUserClick} />
           )}
         </div>
       </div>

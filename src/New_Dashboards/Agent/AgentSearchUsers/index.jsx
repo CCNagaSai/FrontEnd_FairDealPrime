@@ -4,6 +4,7 @@ import Sidebar from "../AgentSidebar"; // Adjust path to Sidebar component
 import AUsersList from "./AgentSearchUsers";
 import AViewUser from "./AgentViewUsers"; // Import the AViewUser component
 import Topbar from "../../Common/Topbar";
+import UserList from "../../Create_Components/SearchUsers/SearchUsers";
 
 const AgentSearchUsers = () => {
   const [selectedUser, setSelectedUser] = useState(null); // State to store the selected user
@@ -33,7 +34,7 @@ const AgentSearchUsers = () => {
             <AViewUser user={selectedUser} onBack={handleBackToList} />
           ) : (
             // Render AUsersList when no user is selected
-            <AUsersList onUserClick={handleUserClick} />
+            <UserList userRole="AgentUsers" onUserClick={handleUserClick} />
           )}
         </div>
       </div>

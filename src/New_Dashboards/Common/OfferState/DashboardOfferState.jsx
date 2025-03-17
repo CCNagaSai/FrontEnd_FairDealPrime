@@ -588,7 +588,7 @@ const fetchAgentSubAgentList = async (token, id) => {
     }
 
     const response = await fetch(
-      `${import.meta.env.VITE_HOST_URL}/admin/shop/ShopList?agentId=${id}`,
+      `${API_URL}/admin/shop/ShopList?agentId=${id}`,
       {
         method: "GET",
         headers: {
@@ -885,8 +885,8 @@ const fetchAdminUsers = async (
     const data = await response.json();
     console.log("User Data:", data);
 
-    if (data && Array.isArray(data.users)) {
-      const sortedUsers = data.users.sort(
+    if (data && Array.isArray(data.userList)) {
+      const sortedUsers = data.userList.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
       return { users: sortedUsers, totalPages: data.totalPages || 1 };
@@ -983,6 +983,110 @@ const fetchAdminSubAgents = async (
   } catch (error) {
     console.error("Error fetching users:", error);
     return { users: [], totalPages: 1 };
+  }
+};
+
+// ************ Change Search users for Admin , Agent and Sub-Agent ****************
+const fetchUserData = async ({
+  userRole,
+  id,
+  type,
+  token,
+  filters = {},
+  currentPage = 1,
+  itemsPerPage = 10,
+}) => {
+  if (!id || !token || !userRole) {
+    throw new Error("Missing required parameters: id, token, or userRole.");
+  }
+
+  // API Base URL
+  const API_URL = import.meta.env.VITE_HOST_URL; // Ensure your environment variable is set
+
+  // API URL Selector
+  const getApiUrl = () => {
+    switch (userRole) {
+      case "Admin":
+        return `${API_URL}/admin/user/UserList?Id=${id}&type=Admin&page=${currentPage}&limit=${itemsPerPage}`;
+      case "Agent":
+        return `${API_URL}/admin/agent/AgentList`;
+      case "SubAgent":
+        return `${API_URL}/admin/shop/ShopList?agentId=Admin&page=${currentPage}&limit=${itemsPerPage}`;
+      case "AgentUsers":
+        return `${API_URL}/admin/user/agent/UserList?Id=${id}&type=Agent&page=${currentPage}&limit=${itemsPerPage}`;
+      case "AgentSearchSubAgent":
+        return `${API_URL}/admin/shop/ShopList?agentId=${id}`;
+      case "SubAgentUsers":
+        return `${API_URL}/admin/user/UserList?Id=${id}&type=${type}`;
+      default:
+        return `${API_URL}/users`;
+    }
+  };
+
+  try {
+    let url = getApiUrl();
+
+    // Apply filters
+    if (filters._id) {
+      url += `&username=${encodeURIComponent(filters._id)}`;
+    }
+    if (filters.startDate && filters.endDate) {
+      let startDate = new Date(filters.startDate);
+      const endDate = new Date(filters.endDate);
+
+      startDate.setDate(startDate.getDate() - 1);
+      startDate.setUTCHours(18, 30, 0, 0);
+      endDate.setUTCHours(18, 29, 59, 999);
+
+      url += `&startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`;
+    }
+
+    console.log("Fetching Data from:", url);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch backend data. Status: ${response.status}`
+      );
+    }
+
+    const data = await response.json();
+    console.log("API Response:", data);
+
+    // Response Key Mapping
+    const responseKey =
+      {
+        Admin: "userList",
+        Agent: "agentList",
+        SubAgent: "shopList",
+        AgentUsers: "userList",
+        AgentSearchSubAgent: "shopList",
+        SubAgentUsers: "userList",
+      }[userRole] || "users"; // Default to "users"
+
+    if (data && Array.isArray(data[responseKey])) {
+      const flattenedData = data[responseKey].flatMap((entry) => entry || []);
+      flattenedData.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+
+      return {
+        data: flattenedData,
+        totalPages: data.totalPages || 1,
+      };
+    } else {
+      throw new Error("Expected an array from the backend API.");
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error;
   }
 };
 
@@ -1284,7 +1388,7 @@ const handlePasswordUpdate = async (userId, newPassword, token, userRole) => {
     let endpoint = "";
     if (userRole === "Agent") {
       endpoint = `/admin/user/agent/UserList?Id=${id}&type=${type}`;
-    } else if (userRole === "Sub-Agent") {
+    } else if (userRole === "SubAgent") {
       endpoint = `/admin/user/UpdatePassword`;
     } else if (userRole === "Admin") {
       endpoint = `/admin/user/agent/UserList?Id=${id}&type=${type}`;
@@ -1320,7 +1424,7 @@ const handleLockStatusUpdate = async (userId, lockStatus, token, userRole) => {
     let endpoint = "";
     if (userRole === "Agent") {
       endpoint = `/admin/user/agent/UserList?Id=${id}&type=${type}`;
-    } else if (userRole === "Sub-Agent") {
+    } else if (userRole === "SubAgent") {
       endpoint = `/admin/agent/changeUserStatus?userId=${userId}`;
     } else if (userRole === "Admin") {
       endpoint = `/admin/user/agent/UserList?Id=${id}&type=${type}`;
@@ -1494,4 +1598,5 @@ export {
   fetchAgentUsers,
   fetchAgentSubAgentList,
   fetchSubAgentUserList,
+  fetchUserData,
 };

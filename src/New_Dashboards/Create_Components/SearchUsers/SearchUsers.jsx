@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import AgentBalanceAdjust from "../../Agent/AgentBalanceAdjustment/AgentBalanceAdjust";
+import { fetchUserData } from "../../Common/OfferState/DashboardOfferState";
 
 const API_URL = import.meta.env.VITE_HOST_URL;
 const cookies = new Cookies();
 
-const UserList = ({ userRole, apiEndpoint, onUserClick }) => {
+const UserList = ({ userRole, onUserClick }) => {
   const navigate = useNavigate();
 
   // State
@@ -55,68 +56,34 @@ const UserList = ({ userRole, apiEndpoint, onUserClick }) => {
   const token = tokenRef.current;
 
   useEffect(() => {
-    if (id && token) {
-      const fetchBackendData = async () => {
-        setLoading(true);
-        try {
-          let url = `${API_URL}${apiEndpoint}&page=${currentPage}&limit=${itemsPerPage}`;
+    const loadUserData = async () => {
+      setLoading(true);
+      try {
+        const result = await fetchUserData({
+          userRole,
+          id: idRef.current,
+          type: typeRef.current,
+          token: tokenRef.current,
+          filters,
+          currentPage,
+          itemsPerPage,
+        });
 
-          if (filters._id) {
-            url += `&username=${encodeURIComponent(filters._id)}`;
-          }
-          if (filters.startDate && filters.endDate) {
-            let startDate = new Date(filters.startDate);
-            const endDate = new Date(filters.endDate);
+        setData(result.data);
+        setFilteredData(result.data);
+        setTotalPages(result.totalPages);
+      } catch (error) {
+        console.error("Error loading user data:", error);
+        setError("Failed to load data.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-            startDate.setDate(startDate.getDate() - 1);
-
-            startDate.setUTCHours(18, 30, 0, 0);
-            endDate.setUTCHours(18, 29, 59, 999);
-
-            url += `&startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`;
-          }
-
-          console.log("Fetching Data from:", url);
-
-          const response = await fetch(url, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              token: token,
-            },
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            console.log("Data:", data);
-            console.log("userList", data.users);
-
-            if (data && Array.isArray(data.users)) {
-              const flattenedHistory = data.users.flatMap(
-                (entry) => entry || []
-              );
-              flattenedHistory.sort(
-                (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-              );
-
-              setBackendData(flattenedHistory);
-              setFilteredData(flattenedHistory);
-              setTotalPages(data.totalPages);
-            } else {
-              console.error("Expected an array from the backend API:", data);
-            }
-          } else {
-            console.error("Failed to fetch backend data");
-          }
-        } catch (error) {
-          console.error("Error:", error);
-        } finally {
-          setLoading(false); // Stop loading
-        }
-      };
-      fetchBackendData();
+    if (idRef.current && tokenRef.current) {
+      loadUserData();
     }
-  }, [token, id, filters, currentPage]);
+  }, [userRole, currentPage, filters]);
 
   const handleFilterChange = () => {
     let filtered = backendData;
@@ -143,9 +110,9 @@ const UserList = ({ userRole, apiEndpoint, onUserClick }) => {
     filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     setCurrentPage(1);
-    setFilteredData(filtered);
-    setShowTable(filtered.length > 0);
-    setNoResults(filtered.length === 0);
+    setFilteredData(data); // Use actual data from API response
+    setShowTable(data.length > 0);
+    setNoResults(data.length === 0);
     setIsSubmitted(true);
   };
 
@@ -164,7 +131,7 @@ const UserList = ({ userRole, apiEndpoint, onUserClick }) => {
     setIsSubmitted(false);
   };
 
-  // const totalPages = Math.ceil(data.length / itemsPerPage);
+  const totalPage = Math.ceil(data.length / itemsPerPage);
 
   const handleTransferPointsClick = (type, user) => {
     console.log("Transfer Points Clicked", { type, user });
@@ -198,12 +165,13 @@ const UserList = ({ userRole, apiEndpoint, onUserClick }) => {
   };
 
   const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage((prevPage) => prevPage + 1);
+    if (currentPage < totalPage) setCurrentPage((prevPage) => prevPage + 1);
   };
 
+  // Define pagination logic
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const displayedData = data.slice(startIndex, startIndex + itemsPerPage);
-  console.log(data, "cccccccc");
+  const endIndex = startIndex + itemsPerPage;
+  const displayedData = data.slice(startIndex, endIndex);
 
   if (error) {
     return <div className="text-red-500">{error}</div>;
@@ -282,10 +250,10 @@ const UserList = ({ userRole, apiEndpoint, onUserClick }) => {
 
   const handleGoToPage = () => {
     const page = parseInt(inputPage, 10);
-    if (page >= 1 && page <= totalPages) {
+    if (page >= 1 && page <= totalPage) {
       setCurrentPage(page);
     } else {
-      alert(`Please enter a page number between 1 and ${totalPages}`);
+      alert(`Please enter a page number between 1 and ${totalPage}`);
     }
   };
 
@@ -334,7 +302,7 @@ const UserList = ({ userRole, apiEndpoint, onUserClick }) => {
     padding: "5px 10px 5px 10px", // Added padding to create space around the button
   };
 
-  console.log("cccccccc", filteredData);
+  console.log("cccccccc", data);
   return (
     <div className="user-list-container font-sans p-4 sm:p-6 bg-gray-100">
       <h1 className="view-users-heading text-xl sm:text-2xl text-blue-500 text-left border-b-4 border-blue-500 pb-1">
@@ -468,8 +436,8 @@ const UserList = ({ userRole, apiEndpoint, onUserClick }) => {
             <div className="user-details bg-white p-4 sm:p-6 rounded-md shadow-md">
               <div className="user-summary text-sm sm:text-lg font-bold mb-4">
                 <span>
-                  TOTAL USERS: ({filteredData.length}) TOTAL POINTS: (
-                  {filteredData.reduce((sum, item) => sum + item.chips, 0)})
+                  TOTAL USERS: ({data.length}) TOTAL POINTS: (
+                  {data.reduce((sum, item) => sum + item.chips, 0)})
                 </span>
               </div>
 
@@ -504,7 +472,7 @@ const UserList = ({ userRole, apiEndpoint, onUserClick }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredData.map((row, index) => (
+                    {displayedData.map((row, index) => (
                       <tr key={index} className="hover:bg-gray-100">
                         <td
                           onClick={() => handleUserClick(row)}
@@ -538,17 +506,22 @@ const UserList = ({ userRole, apiEndpoint, onUserClick }) => {
               <button
                 className="prev px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
                 disabled={currentPage === 1}
-                onClick={handlePrevious}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               >
                 Previous
               </button>
+
               <span className="page-info text-blue-700 font-semibold">
-                Page {currentPage} of {totalPages}
+                Page {currentPage} of{" "}
+                {Math.ceil(filteredData.length / itemsPerPage)}
               </span>
+
               <button
                 className="next px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                disabled={currentPage === totalPages}
-                onClick={handleNext}
+                disabled={
+                  currentPage === Math.ceil(filteredData.length / itemsPerPage)
+                }
+                onClick={() => setCurrentPage((prev) => prev + 1)}
               >
                 Next
               </button>

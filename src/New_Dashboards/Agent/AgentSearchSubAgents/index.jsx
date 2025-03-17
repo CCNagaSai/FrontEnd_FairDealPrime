@@ -6,6 +6,7 @@ import ASubAgentsList from "./AgentSearchSubAgents";
 import AViewSubAgents from "./AgentViewSubAgents";
 import Topbar from "../../Common/Topbar";
 import UserListInSubAgent from "./UserListInSubAgent";
+import UserList from "../../Create_Components/SearchUsers/SearchUsers";
 
 const AgentSearchSubAgents = () => {
   const [selectedUser, setSelectedUser] = useState(null); // State to store the selected user
@@ -33,7 +34,10 @@ const AgentSearchSubAgents = () => {
           {selectedUser ? (
             <AViewSubAgents subAgent={selectedUser} onBack={handleBackToList} />
           ) : (
-            <ASubAgentsList onSubAgentClick={handleUserClick} />
+            <UserList
+              userRole="AgentSearchSubAgent"
+              onUserClick={handleUserClick}
+            />
           )}
         </div>
       </div>

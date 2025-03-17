@@ -4,6 +4,8 @@ import Sidebar from "../AdminSidebar"; // Adjust path to Sidebar component
 import Topbar from "../../Common/Topbar";
 import AdminViewUser from "./AdminViewUsers";
 import AdminUsersLists from "./AdminSearchUsers";
+import UserList from "../../Create_Components/SearchUsers/SearchUsers";
+import ViewUser from "../../Create_Components/ViewUser/ViewUsers";
 
 const AdminSearchUsers = () => {
   const [selectedUser, setSelectedUser] = useState(null); // State to store the selected user
@@ -30,10 +32,14 @@ const AdminSearchUsers = () => {
         <div className="Right">
           {selectedUser ? (
             // Render AViewUser when a user is selected
-            <AdminViewUser user={selectedUser} onBack={handleBackToList} />
+            <ViewUser
+              user={selectedUser}
+              onBack={handleBackToList}
+              userRole="Admin"
+            />
           ) : (
             // Render AUsersList when no user is selected
-            <AdminUsersLists onUserClick={handleUserClick} />
+            <UserList userRole="Admin" onUserClick={handleUserClick} />
           )}
         </div>
       </div>

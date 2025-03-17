@@ -144,20 +144,39 @@ import AdminTranscation from "./pages/AdminTranscation";
 import TableTranscation from "./pages/tableManagment";
 import Cookies from "universal-cookie";
 
-const checkAuth = () => {
-  const cookies = new Cookies();
-  const tokendata = cookies.get("token");
-  if (!tokendata) {
-    throw redirect("/signin"); // Redirect to the login page if the token is missing
-  }
-  return null;
+// const checkAuth = () => {
+//   const cookies = new Cookies();
+//   const tokendata = cookies.get("token");
+//   if (!tokendata) {
+//     throw redirect("/signin"); // Redirect to the login page if the token is missing
+//   }
+//   return null;
+// };
+
+const checkAuth = (allowedRole) => {
+  return () => {
+    const cookies = new Cookies();
+    const tokendata = cookies.get("token");
+    const userRole = cookies.get("logintype");
+
+    if (!tokendata) {
+      throw redirect("/signin"); // Redirect to login if no token
+    }
+
+    if (allowedRole && userRole !== allowedRole) {
+      alert("Access Denied: You are not authorized for this page.");
+      throw redirect(`/${userRole.toLowerCase()}dashboard`); // Redirect to correct dashboard
+    }
+
+    return null;
+  };
 };
 
 const router = createBrowserRouter([
   {
     path: "/",
     Component: Layout,
-    loader: checkAuth,
+    loader: checkAuth(),
     children: [
       {
         path: "/TableTranscation",
@@ -359,70 +378,85 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    loader: checkAuth,
+    loader: checkAuth(),
     children: [
       // Agents routes
       {
         path: "/agentdashboard",
         element: <Agentdash />,
+        loader: checkAuth("Agent"),
       },
       {
         path: "/agent/Turn-over",
         element: <AgentTurnOver />,
+        loader: checkAuth("Agent"),
       },
       {
         path: "/agent/search-users",
         element: <AgentSearchUsers />,
+        loader: checkAuth("Agent"),
       },
       {
         path: "/agent/search-sub-agents",
         element: <AgentSearchSubAgents />,
+        loader: checkAuth("Agent"),
       },
       {
         path: "/agent/balance-adjustment",
         element: <AgentBalanceAdjustment />,
+        loader: checkAuth("Agent"),
       },
       {
         path: "/agent/gamehistory",
         element: <AgentGameHistory />,
+        loader: checkAuth("Agent"),
       },
       {
         path: "/agent/outpoint",
         element: <AgentOutPoint />,
+        loader: checkAuth("Agent"),
       },
       {
         path: "/agent/inpoint",
         element: <AgentInPoint />,
+        loader: checkAuth("Agent"),
       },
 
       {
         path: "/agent/pointfile",
         element: <AgentPointFile />,
+        loader: checkAuth("Agent"),
       },
 
       {
         path: "/agent/change-password",
         element: <AgentChangePassword />,
+        loader: checkAuth("Agent"),
       },
       {
         path: "/agent/create-user",
         element: <AgentCreateUser />,
+        loader: checkAuth("Agent"),
       },
       {
         path: "/agent/create-sub-agent",
         element: <AgentCreateSubagent />,
+        loader: checkAuth("Agent"),
       },
       {
         path: "/agent/kickoff-users",
         element: <AgentKickoffUsers />,
+        loader: checkAuth("Agent"),
       },
       {
         path: "/agent/subAgents-points-history",
         element: <SubAPointsInAgent />,
+        loader: checkAuth("Agent"),
       },
       {
         path: "/agent/test-user",
         element: <TestSearchUsers />,
+        loader: checkAuth("Agent"),
       },
 
       // SubAgents routes
@@ -430,144 +464,175 @@ const router = createBrowserRouter([
       {
         path: "/shopdashboard",
         element: <SubAgentdash />,
+        loader: checkAuth("Shop"),
       },
       {
         path: "/sub-agent/kickoff-users",
         element: <SubAgentKickoffUsers />,
+        loader: checkAuth("Shop"),
       },
       {
         path: "/sub-agent/create-user",
         element: <SubAgentCreateUser />,
+        loader: checkAuth("Shop"),
       },
       {
         path: "/sub-agent/change-password",
         element: <SubAgentChangePassword />,
+        loader: checkAuth("Shop"),
       },
       {
         path: "/sub-agent/pointfile",
         element: <SubAgentPointFile />,
+        loader: checkAuth("Shop"),
       },
       {
         path: "/sub-agent/inpoint",
         element: <SubAgentInPoint />,
+        loader: checkAuth("Shop"),
       },
       {
         path: "/sub-agent/outpoint",
         element: <SubAgentOutPoint />,
+        loader: checkAuth("Shop"),
       },
       {
         path: "/sub-agent/gamehistory",
         element: <SubAgentGameHistory />,
+        loader: checkAuth("Shop"),
       },
       {
         path: "/sub-agent/balance-adjustment",
         element: <SubAgentBalanceAdjustment />,
+        loader: checkAuth("Shop"),
       },
       {
         path: "/sub-agent/search-users",
         element: <SubAgentSearchUsers />,
+        loader: checkAuth("Shop"),
       },
       {
         path: "/sub-agent/Turn-over",
         element: <SubAgentTurnOver />,
+        loader: checkAuth("Shop"),
       },
-      {
-        path: "/shopdashboard",
-        element: <SubAgentdash />,
-      },
+
       {
         path: "/sub-agent/test-users",
         element: <TestSearchUsersSA />,
+        loader: checkAuth("Shop"),
       },
 
       //Admin Routes
       {
         path: "/admindashboard",
         element: <AdminDashboard />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/PlayingTableBet",
         element: <GamebetInformation />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/TableManagement",
         element: <AdminTableManagement />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/TableManagement",
         element: <AdminTableManagement />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/Admin/Gamelogic",
         element: <AdminGameLogic />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/searchUsers",
         element: <AdminSearchUsers />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/BalanceAdjustment",
         element: <AdminBalanceAdjustment />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/KickoffUsers",
         element: <AdminKickoffUsers />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/CreateAgent",
         element: <CreateAgent />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/SearchAgent",
         element: <SearchAgent />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/AgentBalanceAdjustments",
         element: <AgentBalanceAdjustments />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/ChangeAgentPassword",
         element: <ChangeAgentPassword />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/CreateSubAgent",
         element: <CreateSubAgent />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/SearchSubAgent",
         element: <SearchSubAgent />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/SubAgentBalanceAdjustments",
         element: <SubAgentBalanceAdjustments />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/ChangeSubAgentPassword",
         element: <ChangeSubAgentPassword />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/PointFile",
         element: <AdminPointFile />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/InPoint",
         element: <AdminInPoint />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/OutPoint",
         element: <AdminOutPoint />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/GameHistory",
         element: <AdminGameHistory />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/AdminTurnOverReport",
         element: <AdminTurnOver />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/Transcations",
         element: <AdminTranscations />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/AgentTranscations",
@@ -576,48 +641,59 @@ const router = createBrowserRouter([
       {
         path: "/admin/SubAgentTranscations",
         element: <SubAgentTranscations />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/SocialURL",
         element: <AdminSocialURL />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/NoticeText",
         element: <AdminNoticeText />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/Settings",
         element: <AdminSettings />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/ChangePassword",
         element: <ChangeAdminPwd />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/ActivePlayerDetails",
         element: <ActivePlayerDetails />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/AgentSubAgentPointFile",
         element: <AgentSubAgentPointFile />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/CreateUser",
         element: <CreateUser />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/ChangeUserPassword",
         element: <ChangeUserPassword />,
+        loader: checkAuth("Admin"),
       },
 
       //Testing
       {
         path: "/admin/TestingTable",
         element: <TestingTable />,
+        loader: checkAuth("Admin"),
       },
       {
         path: "/admin/TestSearchUsers",
         element: <TestAdminSearchUsers />,
+        loader: checkAuth("Admin"),
       },
     ],
   },

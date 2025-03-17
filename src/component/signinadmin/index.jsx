@@ -29,10 +29,8 @@ function SigninAdmin() {
   });
 
   const navigateToContacts = () => {
-    if (formData.logintype == "Shop") {
-      navigate("/shopdashboard");
-    } else if (formData.logintype == "Agent") {
-      navigate("/agentdashboard");
+    if (formData.logintype == "Admin") {
+      navigate("/admindashboard");
     } else {
       navigate("/dashboard");
     }
@@ -63,7 +61,7 @@ function SigninAdmin() {
       console.log("data api from :latatestUser :::...", response);
       return response;
     } catch (e) {
-      console.log("e :", e);
+      console.log("Login API Error: ", e);
     }
   };
 

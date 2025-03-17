@@ -57,15 +57,25 @@ function LeftSide() {
       console.log("data api from :latatestUser :::...", response);
       return response;
     } catch (e) {
-      console.log("e :", e);
+      console.log("Login API Error:", e);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!formData.email || !formData.password || !formData.logintype) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
     let resData = await LoginData(formData);
     console.log(resData);
+
+    if (!resData || !resData.status) {
+      alert("Invalid credentials! Please try again.");
+      return;
+    }
 
     if (resData.status) {
       console.log("formData.logintype ", formData.logintype);
@@ -77,9 +87,10 @@ function LeftSide() {
       cookies.set("LoginUserId", resData.data._id, { path: "/" });
 
       navigateToContacts();
-    } else {
-      alert("Please Enter valid Email Or Passward..!!");
     }
+    // else {
+    //   alert("Please Enter valid Email Or Passward..!!");
+    // }
   };
 
   const OnChange = async (event) => {

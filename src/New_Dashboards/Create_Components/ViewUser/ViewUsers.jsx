@@ -28,7 +28,7 @@ const ViewUser = ({ user, userRole, onBack }) => {
   const token = tokenRef.current;
   const loggedInUserId = userIdRef.current;
 
-  const handlePasswordUpdate = async () => {
+  const handlePasswordUpdates = async () => {
     const success = await handlePasswordUpdate(
       user._id,
       newPassword,
@@ -40,7 +40,7 @@ const ViewUser = ({ user, userRole, onBack }) => {
     }
   };
 
-  const handleLockStatusUpdate = async () => {
+  const handleLockStatusUpdates = async () => {
     const success = await handleLockStatusUpdate(
       user._id,
       lockStatus,
@@ -110,7 +110,7 @@ const ViewUser = ({ user, userRole, onBack }) => {
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Enter new password"
                   />
-                  <button onClick={handlePasswordUpdate}>
+                  <button onClick={handlePasswordUpdates}>
                     Update Password
                   </button>
                 </div>
@@ -136,7 +136,7 @@ const ViewUser = ({ user, userRole, onBack }) => {
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
                   </select>
-                  <button onClick={handleLockStatusUpdate}>
+                  <button onClick={handleLockStatusUpdates}>
                     Update Status
                   </button>
                 </div>

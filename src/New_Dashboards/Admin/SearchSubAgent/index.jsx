@@ -4,6 +4,7 @@ import AdminSidebar from "../AdminSidebar"; // Adjust path to Sidebar component
 import Topbar from "../../Common/Topbar";
 import ViewSubAgent from "./ViewSubAgent";
 import SubAgentLists from "./SearchSubAgent";
+import UserList from "../../Create_Components/SearchUsers/SearchUsers";
 
 const AdminSearchUsers = () => {
   const [selectedUser, setSelectedUser] = useState(null); // State to store the selected user
@@ -30,10 +31,14 @@ const AdminSearchUsers = () => {
         <div className="Right">
           {selectedUser ? (
             // Render AViewUser when a user is selected
-            <ViewSubAgent user={selectedUser} onBack={handleBackToList} />
+            <ViewUser
+              user={selectedUser}
+              onBack={handleBackToList}
+              userRole="SubAgent"
+            />
           ) : (
             // Render AUsersList when no user is selected
-            <SubAgentLists onUserClick={handleUserClick} />
+            <UserList userRole="SubAgent" onUserClick={handleUserClick} />
           )}
         </div>
       </div>
