@@ -141,7 +141,8 @@ const LoadUserData = async (id, token) => {
     }
 
     const result = await response.json();
-    return result.users || [];
+    console.log("Raw API Response:", result); // Debugging log
+    return result.userList || [];
   } catch (error) {
     console.error("Error fetching user data:", error.message);
     throw new Error("Failed to load user data. Please try again.");

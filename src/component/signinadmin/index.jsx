@@ -31,9 +31,10 @@ function SigninAdmin() {
   const navigateToContacts = () => {
     if (formData.logintype == "Admin") {
       navigate("/admindashboard");
-    } else {
-      navigate("/dashboard");
     }
+    // else {
+    //   navigate("/dashboard");
+    // }
   };
 
   const handleChange = (e) => {
@@ -75,8 +76,12 @@ function SigninAdmin() {
       cookies.set("token", resData.data.token);
       cookies.set("name", resData.data.type_name);
       cookies.set("email", resData.data.name);
-      cookies.set("logintype", "Admin");
+      // cookies.set("logintype", "Admin");
+      cookies.set("logintype", formData.logintype, { path: "/" }); // Store login type
       cookies.set("LoginUserId", resData.data._id);
+
+      // Store last visited dashboard path
+      cookies.set("dashboardPath", "/admindashboard");
 
       navigateToContacts();
     } else {

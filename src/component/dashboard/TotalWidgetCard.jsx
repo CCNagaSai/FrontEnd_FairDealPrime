@@ -114,7 +114,8 @@ function TotalWidgetCard({
   };
   //className="bg-success-300 dark:bg-success-300 dark:text-bgray-900 border-2 border-transparent text-white rounded-lg px-4 py-3 font-semibold text-sm"
   return (
-    <a onClick={() => navigateToUserRegister(link)}>
+    // <a onClick={() => navigateToUserRegister(link)}>
+    <a>
       <div className="rounded-lg bg-white p-5 dark:bg-darkblack-600">
         <div className="mb-5 flex items-center justify-between">
           <div className="flex items-center space-x-[7px]">

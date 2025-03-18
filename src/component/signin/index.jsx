@@ -84,6 +84,7 @@ function LeftSide() {
       cookies.set("name", resData.data.type_name, { path: "/" });
       cookies.set("email", resData.data.name, { path: "/" });
       cookies.set("logintype", formData.logintype, { path: "/" });
+
       cookies.set("LoginUserId", resData.data._id, { path: "/" });
 
       navigateToContacts();

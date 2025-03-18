@@ -31,8 +31,10 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
       setError(null);
       try {
         const usersData = await LoadUserData(id, token);
+        console.log("Fetched Users:", usersData); // Debugging log
         setUsers(usersData);
       } catch (err) {
+        console.error("Error fetching users:", err); // Debugging log
         setError(err.message);
       } finally {
         setLoading(false);
@@ -110,18 +112,22 @@ const SubAgentBalanceAdjust = ({ prefilledUser }) => {
             <option value="" disabled>
               Select
             </option>
-            {users
-              ?.slice()
-              ?.sort((a, b) =>
-                (a.name || a.username || "").localeCompare(
-                  b.name || b.username || ""
+            {Array.isArray(users) && users.length > 0 ? (
+              users
+                .slice()
+                .sort((a, b) =>
+                  (a.name || a.username || "").localeCompare(
+                    b.name || b.username || ""
+                  )
                 )
-              )
-              ?.map((user) => (
-                <option key={user._id} value={user._id}>
-                  {user.name || user.username} --{user.chips || 0}
-                </option>
-              ))}
+                .map((user) => (
+                  <option key={user._id} value={user._id}>
+                    {user.name || user.username} -- {user.chips || 0}
+                  </option>
+                ))
+            ) : (
+              <option disabled>No users available</option>
+            )}
           </select>
         </div>
 

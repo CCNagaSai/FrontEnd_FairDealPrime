@@ -1,14 +1,11 @@
 import AOS from "aos";
 import "aos/dist/aos.css";
-import {useState, useEffect } from "react";
+import { useEffect } from "react";
 import Router from "./Router";
-import OfferState from './context/OfferState';
-import Login from './component/signin/index';
-import Dashboard from "./component/dashboard/Dashboard";
-import {useNavigate} from 'react-router-dom';
-import Cookies from 'universal-cookie';
-const cookies = new Cookies();
+import OfferState from "./context/OfferState";
+import Cookies from "universal-cookie";
 
+const cookies = new Cookies();
 
 function App() {
   useEffect(() => {
@@ -16,37 +13,40 @@ function App() {
     AOS.refresh();
   }, []);
 
-  const tokendata = cookies.get('token')
-  const name = cookies.get('name')
-  const email = cookies.get('email')
+  const tokendata = cookies.get("token");
+  const name = cookies.get("name");
+  const email = cookies.get("email");
+  const logintype = cookies.get("logintype");
 
-  console.log("tokendata LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",!tokendata)
-  
-  
   if (!tokendata) {
+    var url = window.location.href.split("5175");
 
-    //let gameName = location.search
-    console.log("Location ",window.location)
-    console.log("window.location.href ",window.location.href)
-
-    var url = window.location.href.split("5175")
-    console.log("URL ",url)
-
-    
-    // console.log("url[1] :::::::::::", url[1])
-    
-    if(url[1]?.toLowerCase() != "/signInadmin".toLowerCase() && url[1] != "/signin"){
-      window.location.href = 'http://fairdealprime.com:5175/signin'; //"http://192.168.0.203:5175/signin"//
-      return false 
+    if (
+      url[1]?.toLowerCase() !== "/signInadmin".toLowerCase() &&
+      url[1] !== "/signin"
+    ) {
+      window.location.replace("http://fairdealprime.com:5175/signin"); // 🔥 `replace()` ensures no history entry
+      return null; // Stop rendering further
     }
-    //return (<Router><Login/></Router>)
-  }
+  } else {
+    if (window.location.pathname === "/") {
+      let redirectURL = "/admindashboard"; // Default
 
+      if (logintype === "Agent") {
+        redirectURL = "/agentdashboard";
+      } else if (logintype === "Shop") {
+        redirectURL = "/shopdashboard";
+      }
+
+      window.location.replace(redirectURL); // 🔥 Directly replaces the URL, no `/dashboard` flicker
+      return null; // Stop rendering further
+    }
+  }
 
   return (
     <>
       <OfferState adminname={name} adminEmail={email} tokendata={tokendata}>
-        <Router/>
+        <Router />
       </OfferState>
     </>
   );
