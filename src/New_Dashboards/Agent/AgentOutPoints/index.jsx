@@ -1,9 +1,10 @@
-import React from 'react';
-import '../Agentdash.css';
-import ReactDOM from 'react-dom/client';
-import Sidebar from '../AgentSidebar'; // Adjust path to Sidebar component
-import AReportOutpoint from './AgentOutPoints';
+import React from "react";
+import "../Agentdash.css";
+import ReactDOM from "react-dom/client";
+import Sidebar from "../AgentSidebar"; // Adjust path to Sidebar component
+import AReportOutpoint from "./AgentOutPoints";
 import Topbar from "../../Common/Topbar";
+import OutPointReport from "../../Create_Components/OutPoints/OutPoints";
 
 const AgentOutPoint = () => {
   return (
@@ -16,7 +17,7 @@ const AgentOutPoint = () => {
           <Sidebar />
         </div>
         <div className="Right">
-          <AReportOutpoint />
+          <OutPointReport userRole="Agent" />
         </div>
       </div>
     </div>

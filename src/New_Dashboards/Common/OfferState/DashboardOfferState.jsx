@@ -685,7 +685,7 @@ const AdminfetchPartners = async (
     const url =
       type === "User"
         ? `${API_URL}/admin/user/UserList?Id=id&type=Admin&page=1&limit=500`
-        : type === "Shop"
+        : type === "SubAgent"
         ? `${API_URL}/admin/shop/ShopList?agentId=Admin`
         : type === "Agent"
         ? `${API_URL}/admin/agent/AgentList`
@@ -718,7 +718,7 @@ const fetchhandleAdminBalanceAdjustment = async (
   selectedUser,
   amount,
   adjustType,
-  email,
+  logintype,
   id,
   token,
   users,
@@ -745,7 +745,7 @@ const fetchhandleAdminBalanceAdjustment = async (
     money: amount,
     type: adjustType === "add" ? "Deposit" : "Deduct",
     userId: selectedUser,
-    adminname: email,
+    adminname: logintype,
     adminid: id,
   };
   // http://93.127.194.87:9999/admin/shop/shopAddMoney
@@ -881,16 +881,24 @@ const fetchAdminUsers = async (
       },
     });
 
-    if (!response.ok) throw new Error("Failed to fetch user data");
+    if (!response.ok) {
+      console.error("API request failed with status:", response.status);
+      throw new Error("Failed to fetch user data");
+    }
 
     const data = await response.json();
-    console.log("User Data:", data);
+    console.log("API Response:", JSON.stringify(data, null, 2));
 
-    if (data && Array.isArray(data.userList)) {
-      const sortedUsers = data.userList.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      );
-      return { users: sortedUsers, totalPages: data.totalPages || 1 };
+    // ✅ Handle different response formats
+    const userList = data.userList || data.users || [];
+
+    if (Array.isArray(userList)) {
+      return {
+        users: userList.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        ),
+        totalPages: data.totalPages || 1,
+      };
     } else {
       console.error("Unexpected API response format:", data);
       return { users: [], totalPages: 1 };
@@ -1064,7 +1072,7 @@ const fetchUserData = async ({
     // Response Key Mapping
     const responseKey =
       {
-        Admin: "userList",
+        Admin: "users",
         Agent: "agentList",
         SubAgent: "shopList",
         AgentUsers: "userList",
@@ -1383,6 +1391,67 @@ const kickofffetchUserData = async (
   }
 };
 
+// ************ Change Point File API for Admin, Agent and Sub-Agent ****************
+const PointsFileApi = async (
+  setBackendData,
+  setLoading,
+  idRef,
+  typeRef,
+  tokenRef,
+  userRole // Add userRole as a parameter
+) => {
+  try {
+    setLoading(true);
+    console.log("Attempting to fetch backend data...");
+
+    const id = idRef.current;
+    const type = typeRef.current;
+    const token = tokenRef.current;
+
+    if (!id || !type) {
+      console.error("ID or type not found in references.");
+      return;
+    }
+
+    console.log("Fetching with:", { id, type, token, userRole });
+
+    // Define the dynamic API endpoint based on userRole
+    let endpoint = `${API_URL}/admin/usertransction/AdminTranscationData`;
+
+    if (userRole === "Agent") {
+      endpoint = `${API_URL}/admin/usertransction/AgentTranscationData?Id=${id}&type=${type}`;
+    } else if (userRole === "Sub-Agent") {
+      endpoint = `${API_URL}/admin/usertransction/SubAgentTranscationData?Id=${id}&type=${type}`;
+    }
+
+    const response = await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+    });
+
+    if (!response.ok) {
+      console.error("API Error:", response.statusText);
+      return;
+    }
+
+    const result = await response.json();
+    console.log("Backend Data:", result);
+
+    if (result.DepositeList) {
+      setBackendData(result.DepositeList);
+    } else {
+      console.error("No data found in the response.");
+    }
+  } catch (error) {
+    console.error("Error fetching backend data:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 // ************ Change View users API for Admin, Agent and Sub-Agent ****************
 const handlePasswordUpdate = async (userId, newPassword, token, userRole) => {
   try {
@@ -1600,4 +1669,5 @@ export {
   fetchAgentSubAgentList,
   fetchSubAgentUserList,
   fetchUserData,
+  PointsFileApi,
 };

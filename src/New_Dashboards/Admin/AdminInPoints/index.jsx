@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import AdminSidebar from "../AdminSidebar"; // Adjust path to Sidebar component
 import Topbar from "../../Common/Topbar";
 import AdminInpoints from "./AdminInPoint";
+import InPointReport from "../../Create_Components/InPoints/InPoints";
 
 const AdminInPoint = () => {
   return (
@@ -16,7 +17,7 @@ const AdminInPoint = () => {
           <AdminSidebar />
         </div>
         <div className="Right">
-          <AdminInpoints />
+          <InPointReport userRole="Admin" />
         </div>
       </div>
     </div>

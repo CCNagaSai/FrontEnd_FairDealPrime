@@ -1,9 +1,10 @@
-import React from 'react';
-import '../Agentdash.css';
-import ReactDOM from 'react-dom/client';
-import Sidebar from '../AgentSidebar'; // Adjust path to Sidebar component
-import AReportInpoint from './AgentInPoints';
+import React from "react";
+import "../Agentdash.css";
+import ReactDOM from "react-dom/client";
+import Sidebar from "../AgentSidebar"; // Adjust path to Sidebar component
+import AReportInpoint from "./AgentInPoints";
 import Topbar from "../../Common/Topbar";
+import InPointReport from "../../Create_Components/InPoints/InPoints";
 
 const AgentInPoint = () => {
   return (
@@ -16,7 +17,7 @@ const AgentInPoint = () => {
           <Sidebar />
         </div>
         <div className="Right">
-          <AReportInpoint />
+          <InPointReport userRole="Agent" />
         </div>
       </div>
     </div>

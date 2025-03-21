@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import AdminSidebar from "../AdminSidebar"; // Adjust path to Sidebar component
 import Topbar from "../../Common/Topbar";
 import Adminpointfile from "./AdminPointFile";
+import PointfileReport from "../../Create_Components/PointFile/PointFile";
 
 const AdminPointFile = () => {
   return (
@@ -16,7 +17,7 @@ const AdminPointFile = () => {
           <AdminSidebar />
         </div>
         <div className="Right">
-          <Adminpointfile />
+          <PointfileReport userRole="Admin" />
         </div>
       </div>
     </div>

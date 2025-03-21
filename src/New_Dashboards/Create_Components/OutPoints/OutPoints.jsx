@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import FormTable from "../../Common/Report/Table";
-import "./PointFile.css";
+import "../PointFile/PointFile.css";
 import { data } from "../../Common/data/data";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
 import { PointsFileApi } from "../../Common/OfferState/DashboardOfferState";
-import AdminPointFileTable from "../../Admin/AdminPointFile/AdminPointFileTable";
-import SubAgentPointFileTable from "../../SubAgent/subAgentPointFile/subAgentPointfileTable";
-import AgentPointFileTable from "../../Agent/AgentPointFile/AgentPointfileTable";
+import AdminOutPointTable from "../../Admin/AdminOutPoint/AdminOutPointTable";
+import AgentOutPointTable from "../../Agent/AgentOutPoints/AgentOutPointsTable";
+import SubAgentOutPointTable from "../../SubAgent/subAgentOutPoints/subAgentOutPointsTable";
+
 const API_URL = import.meta.env.VITE_HOST_URL;
 
-const PointfileReport = ({ agentId, type, userRole }) => {
+const OutPointReport = ({ agentId, type, userRole }) => {
   const [filters, setFilters] = useState({
     receiveBy: "",
     sentBy: "",
@@ -250,7 +251,7 @@ const PointfileReport = ({ agentId, type, userRole }) => {
       <div className="flex flex-col md:flex-row">
         <div className="flex-1 ml-[4px] mr-[4px] md:max-w-[1100px] mx-auto border border-blue-500 p-[5px]">
           <h2 className="text-blue-600 text-[18px] ml-1 md:text-xl font-bold  border-b border-blue-500 pb-1 ">
-            {userRole} Ledger
+            {userRole} Out Points
           </h2>
 
           {/* Filter Form */}
@@ -370,11 +371,11 @@ const PointfileReport = ({ agentId, type, userRole }) => {
             <p>Loading backend data...</p>
           ) : showTable ? (
             userRole === "Admin" ? (
-              <AdminPointFileTable backendData={filteredData} />
+              <AdminOutPointTable backendData={filteredData} />
             ) : userRole === "Agent" ? (
-              <AgentPointFileTable backendData={filteredData} />
+              <AgentOutPointTable backendData={filteredData} />
             ) : userRole === "Sub-Agent" ? (
-              <SubAgentPointFileTable backendData={filteredData} />
+              <SubAgentOutPointTable backendData={filteredData} />
             ) : (
               <p>No table available for this role.</p>
             )
@@ -387,4 +388,4 @@ const PointfileReport = ({ agentId, type, userRole }) => {
   );
 };
 
-export default PointfileReport;
+export default OutPointReport;

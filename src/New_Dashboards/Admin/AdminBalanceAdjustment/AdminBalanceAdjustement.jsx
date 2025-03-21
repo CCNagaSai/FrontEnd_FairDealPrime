@@ -24,190 +24,194 @@ const AdminBalanceAdjust = ({ prefilledType, prefilledUser }) => {
 
   const id = cookies.get("LoginUserId");
   const token = cookies.get("token");
-  const logintype = cookies.get("logintype");
+  // const logintype = cookies.get("logintype");
+  const logintype = cookies.get("name");
   const email = cookies.get("email");
 
-  console.log("User ID:", id);
+  console.log("id: ", id);
+  console.log("token: ", token);
+  console.log("logintype: ", logintype);
+  console.log("email: ", email);
 
-  // Fetch users, Agents or subagents based on selected type
-  useEffect(() => {
-    const fetchPartners = async () => {
-      if (!type) {
-        setUsers([]);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        setError(null);
-
-        const url =
-          type === "User"
-            ? `${API_URL}/admin/user/UserList?Id=id&type=Admin`
-            : type === "Shop"
-            ? `${API_URL}/admin/shop/ShopList?agentId=Admin`
-            : type === "Agent"
-            ? `${API_URL}/admin/agent/AgentList`
-            : null;
-
-        const response = await fetch(url, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        setUsers(result.userList || result.shopList || result.agentList || []);
-      } catch (err) {
-        console.error("Error fetching partners:", err.message);
-        setError("Failed to load partners. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPartners();
-  }, [type, id, token, logintype]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Basic validation
-    if (!type || !selectedUser || !amount || parseFloat(amount) <= 0) {
-      setError(
-        "Type, Partner, and Amount fields are mandatory. Amount must be positive."
-      );
-      return;
-    }
-
-    const selectedUserDetails = users.find((user) => user._id === selectedUser);
-    const previousPoints = selectedUserDetails?.chips || 0;
-
-    const payload = {
-      money: amount,
-      type: adjustType === "add" ? "Deposit" : "Deduct",
-      userId: selectedUser,
-      adminname: email,
-      adminid: id,
-    };
-
-    const apiUrl =
-      type === "Agent"
-        ? adjustType === "add"
-          ? `${API_URL}/admin/agent/agentAddMoney`
-          : `${API_URL}/admin/agent/agentDeductMoney`
-        : type === "Shop"
-        ? adjustType === "add"
-          ? `${API_URL}/admin/shop/shopAddMoney`
-          : `${API_URL}/admin/shop/shopDeductMoney`
-        : type === "User"
-        ? adjustType === "add"
-          ? `${API_URL}/admin/user/addMoney`
-          : `${API_URL}/admin/user/deductMoney`
-        : null;
-
-    try {
-      const response = await fetch(apiUrl, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          token: token,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await response.json();
-
-      // Check API response for success or failure
-      if (result.status === "ok") {
-        const newPoints =
-          result.newPoints ||
-          (adjustType === "add"
-            ? previousPoints + parseFloat(amount)
-            : previousPoints - parseFloat(amount));
-
-        setTransactionResult({
-          success: true,
-          message: `${
-            adjustType === "add" ? "Added" : "Deducted"
-          } ${amount} points to ${selectedUserDetails?.name}`,
-          previousPoints: previousPoints,
-          pointsChanged: amount,
-          newPoints: newPoints,
-        });
-      } else {
-        // If status is not "ok", set the error message from the API
-        setTransactionResult({
-          success: false,
-          message:
-            result.msg || "Transaction failed. Please check your balance.",
-        });
-      }
-
-      const updatedUserResponse = await fetch(
-        `${API_URL}/admin/user/UserList?Id=${id}&type=Shop`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-        }
-      );
-
-      if (!updatedUserResponse.ok) {
-        throw new Error(`Failed to fetch updated user data`);
-      }
-
-      const updatedUserData = await updatedUserResponse.json();
-      setUsers(updatedUserData.userList || []);
-
-      // Clear the form
-      setType("");
-      setSelectedUser("");
-      setAmount("");
-      setTransactionPassword("");
-      setComments("");
-      setError("");
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      setError("Transaction failed. Please try again.");
-    }
-  };
-
-  // Fetch users, Agents or subagents based on selected type
+  // // Fetch users, Agents or subagents based on selected type
   // useEffect(() => {
-  //   console.log("Fetching partners for type:", type);
-  //   AdminfetchPartners(type, token, setUsers, setLoading, setError);
-  // }, [type, token]);
+  //   const fetchPartners = async () => {
+  //     if (!type) {
+  //       setUsers([]);
+  //       return;
+  //     }
+
+  //     try {
+  //       setLoading(true);
+  //       setError(null);
+
+  //       const url =
+  //         type === "User"
+  //           ? `${API_URL}/admin/user/UserList?Id=id&type=Admin`
+  //           : type === "Shop"
+  //           ? `${API_URL}/admin/shop/ShopList?agentId=Admin`
+  //           : type === "Agent"
+  //           ? `${API_URL}/admin/agent/AgentList`
+  //           : null;
+
+  //       const response = await fetch(url, {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           token: token,
+  //         },
+  //       });
+
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! Status: ${response.status}`);
+  //       }
+
+  //       const result = await response.json();
+  //       setUsers(result.userList || result.shopList || result.agentList || []);
+  //     } catch (err) {
+  //       console.error("Error fetching partners:", err.message);
+  //       setError("Failed to load partners. Please try again.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchPartners();
+  // }, [type, id, token, logintype]);
 
   // const handleSubmit = async (e) => {
   //   e.preventDefault();
-  //   fetchhandleAdminBalanceAdjustment(
-  //     type,
-  //     selectedUser,
-  //     amount,
-  //     adjustType,
-  //     email,
-  //     id,
-  //     token,
-  //     users,
-  //     setTransactionResult,
-  //     setUsers,
-  //     setType,
-  //     setSelectedUser,
-  //     setAmount,
-  //     setTransactionPassword,
-  //     setComments,
-  //     setError
-  //   );
+
+  //   // Basic validation
+  //   if (!type || !selectedUser || !amount || parseFloat(amount) <= 0) {
+  //     setError(
+  //       "Type, Partner, and Amount fields are mandatory. Amount must be positive."
+  //     );
+  //     return;
+  //   }
+
+  //   const selectedUserDetails = users.find((user) => user._id === selectedUser);
+  //   const previousPoints = selectedUserDetails?.chips || 0;
+
+  //   const payload = {
+  //     money: amount,
+  //     type: adjustType === "add" ? "Deposit" : "Deduct",
+  //     userId: selectedUser,
+  //     adminname: logintype,
+  //     adminid: id,
+  //   };
+
+  //   const apiUrl =
+  //     type === "Agent"
+  //       ? adjustType === "add"
+  //         ? `${API_URL}/admin/agent/agentAddMoney`
+  //         : `${API_URL}/admin/agent/agentDeductMoney`
+  //       : type === "Shop"
+  //       ? adjustType === "add"
+  //         ? `${API_URL}/admin/shop/shopAddMoney`
+  //         : `${API_URL}/admin/shop/shopDeductMoney`
+  //       : type === "User"
+  //       ? adjustType === "add"
+  //         ? `${API_URL}/admin/user/addMoney`
+  //         : `${API_URL}/admin/user/deductMoney`
+  //       : null;
+
+  //   try {
+  //     const response = await fetch(apiUrl, {
+  //       method: "PUT",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         token: token,
+  //       },
+  //       body: JSON.stringify(payload),
+  //     });
+
+  //     const result = await response.json();
+
+  //     // Check API response for success or failure
+  //     if (result.status === "ok") {
+  //       const newPoints =
+  //         result.newPoints ||
+  //         (adjustType === "add"
+  //           ? previousPoints + parseFloat(amount)
+  //           : previousPoints - parseFloat(amount));
+
+  //       setTransactionResult({
+  //         success: true,
+  //         message: `${
+  //           adjustType === "add" ? "Added" : "Deducted"
+  //         } ${amount} points to ${selectedUserDetails?.name}`,
+  //         previousPoints: previousPoints,
+  //         pointsChanged: amount,
+  //         newPoints: newPoints,
+  //       });
+  //     } else {
+  //       // If status is not "ok", set the error message from the API
+  //       setTransactionResult({
+  //         success: false,
+  //         message:
+  //           result.msg || "Transaction failed. Please check your balance.",
+  //       });
+  //     }
+
+  //     const updatedUserResponse = await fetch(
+  //       `${API_URL}/admin/user/UserList?Id=${id}&type=Shop`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           token: token,
+  //         },
+  //       }
+  //     );
+
+  //     if (!updatedUserResponse.ok) {
+  //       throw new Error(`Failed to fetch updated user data`);
+  //     }
+
+  //     const updatedUserData = await updatedUserResponse.json();
+  //     setUsers(updatedUserData.userList || []);
+
+  //     // Clear the form
+  //     setType("");
+  //     setSelectedUser("");
+  //     setAmount("");
+  //     setTransactionPassword("");
+  //     setComments("");
+  //     setError("");
+  //   } catch (error) {
+  //     console.error("Error submitting form:", error);
+  //     setError("Transaction failed. Please try again.");
+  //   }
   // };
+
+  // Fetch users, Agents or subagents based on selected type
+  useEffect(() => {
+    console.log("Fetching partners for type:", type);
+    AdminfetchPartners(type, token, setUsers, setLoading, setError);
+  }, [type, token]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    fetchhandleAdminBalanceAdjustment(
+      type,
+      selectedUser,
+      amount,
+      adjustType,
+      logintype,
+      id,
+      token,
+      users,
+      setTransactionResult,
+      setUsers,
+      setType,
+      setSelectedUser,
+      setAmount,
+      setTransactionPassword,
+      setComments,
+      setError
+    );
+  };
 
   return (
     <div className="partner-adjustment-container">
