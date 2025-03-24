@@ -97,12 +97,12 @@ const AdminInPointTable = ({ backendData }) => {
                   sender = entry.name || "N/A";
                   break;
                 case "Admin Addeed Chips":
-                  receiver = entry.name || "N/A";
+                  receiver = entry.agentname || "N/A";
                   sender = entry.adminname || "N/A";
                   break;
                 case "Admin duduct Chips":
                   receiver = entry.adminname || "N/A";
-                  sender = entry.name || "N/A";
+                  sender = entry.agentname || "N/A";
                   break;
                 default:
                   receiver = "N/A";

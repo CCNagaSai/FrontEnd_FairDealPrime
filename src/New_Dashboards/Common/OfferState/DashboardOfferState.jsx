@@ -142,7 +142,7 @@ const LoadUserData = async (id, token) => {
 
     const result = await response.json();
     console.log("Raw API Response:", result); // Debugging log
-    return result.userList || [];
+    return result.userList || result.users || [];
   } catch (error) {
     console.error("Error fetching user data:", error.message);
     throw new Error("Failed to load user data. Please try again.");
@@ -231,9 +231,7 @@ const fetchSubAgentUserList = async (token, id, type) => {
     }
 
     const response = await fetch(
-      `${
-        import.meta.env.VITE_HOST_URL
-      }/admin/user/UserList?Id=${id}&type=${type}`,
+      `${API_URL}/admin/user/UserList?Id=${id}&type=${type}`,
       {
         method: "GET",
         headers: {
@@ -529,6 +527,7 @@ const fetchhandleBalanceAdjustment = async (
 const fetchAgentUsers = async (
   id,
   token,
+  logintype,
   filters,
   currentPage = 1,
   itemsPerPage = 10
@@ -536,7 +535,7 @@ const fetchAgentUsers = async (
   if (!id || !token) return { users: [], totalPages: 1 };
 
   try {
-    let url = `${API_URL}/admin/user/agent/UserList?Id=678be92857b1eec4acd2c686&type=Agent&page=${currentPage}&limit=${itemsPerPage}`;
+    let url = `${API_URL}/admin/user/agent/UserList?Id=${id}&type=${logintype}&page=${currentPage}&limit=${itemsPerPage}`;
 
     if (filters?._id) {
       url += `&username=${encodeURIComponent(filters._id)}`;
@@ -685,7 +684,7 @@ const AdminfetchPartners = async (
     const url =
       type === "User"
         ? `${API_URL}/admin/user/UserList?Id=id&type=Admin&page=1&limit=500`
-        : type === "SubAgent"
+        : type === "Shop"
         ? `${API_URL}/admin/shop/ShopList?agentId=Admin`
         : type === "Agent"
         ? `${API_URL}/admin/agent/AgentList`
@@ -1006,40 +1005,39 @@ const fetchUserData = async ({
   itemsPerPage = 10,
 }) => {
   if (!id || !token || !userRole) {
-    throw new Error("Missing required parameters: id, token, or userRole.");
+    console.error("Missing required parameters: id, token, or userRole.");
+    return { users: [], totalPages: 1 };
   }
 
-  // API Base URL
-  const API_URL = import.meta.env.VITE_HOST_URL; // Ensure your environment variable is set
+  const API_URL = import.meta.env.VITE_HOST_URL;
 
-  // API URL Selector
   const getApiUrl = () => {
     switch (userRole) {
       case "Admin":
         return `${API_URL}/admin/user/UserList?Id=${id}&type=Admin&page=${currentPage}&limit=${itemsPerPage}`;
       case "Agent":
-        return `${API_URL}/admin/agent/AgentList`;
+        return `${API_URL}/admin/agent/AgentList?page=${currentPage}&limit=${itemsPerPage}`;
       case "SubAgent":
         return `${API_URL}/admin/shop/ShopList?agentId=Admin&page=${currentPage}&limit=${itemsPerPage}`;
       case "AgentUsers":
         return `${API_URL}/admin/user/agent/UserList?Id=${id}&type=Agent&page=${currentPage}&limit=${itemsPerPage}`;
       case "AgentSearchSubAgent":
-        return `${API_URL}/admin/shop/ShopList?agentId=${id}`;
+        return `${API_URL}/admin/shop/ShopList?agentId=${id}&page=${currentPage}&limit=${itemsPerPage}`;
       case "SubAgentUsers":
-        return `${API_URL}/admin/user/UserList?Id=${id}&type=${type}`;
+        return `${API_URL}/admin/user/UserList?Id=${id}&type=${type}&page=${currentPage}&limit=${itemsPerPage}`;
       default:
-        return `${API_URL}/users`;
+        return `${API_URL}/users?page=${currentPage}&limit=${itemsPerPage}`;
     }
   };
 
   try {
     let url = getApiUrl();
 
-    // Apply filters
-    if (filters._id) {
+    // ✅ Apply Filters
+    if (filters?._id) {
       url += `&username=${encodeURIComponent(filters._id)}`;
     }
-    if (filters.startDate && filters.endDate) {
+    if (filters?.startDate && filters?.endDate) {
       let startDate = new Date(filters.startDate);
       const endDate = new Date(filters.endDate);
 
@@ -1050,7 +1048,7 @@ const fetchUserData = async ({
       url += `&startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`;
     }
 
-    console.log("Fetching Data from:", url);
+    console.log(`Fetching page ${currentPage} from URL:`, url);
 
     const response = await fetch(url, {
       method: "GET",
@@ -1061,15 +1059,14 @@ const fetchUserData = async ({
     });
 
     if (!response.ok) {
-      throw new Error(
-        `Failed to fetch backend data. Status: ${response.status}`
-      );
+      console.error("API request failed with status:", response.status);
+      throw new Error("Failed to fetch user data");
     }
 
     const data = await response.json();
-    console.log("API Response:", data);
+    console.log("API Response:", JSON.stringify(data, null, 2));
 
-    // Response Key Mapping
+    // ✅ Map correct response key based on user role
     const responseKey =
       {
         Admin: "users",
@@ -1078,24 +1075,23 @@ const fetchUserData = async ({
         AgentUsers: "userList",
         AgentSearchSubAgent: "shopList",
         SubAgentUsers: "userList",
-      }[userRole] || "users"; // Default to "users"
+      }[userRole] || "users";
 
-    if (data && Array.isArray(data[responseKey])) {
-      const flattenedData = data[responseKey].flatMap((entry) => entry || []);
-      flattenedData.sort(
-        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-      );
+    const userList = data[responseKey] || data.users || [];
+    const totalPages =
+      data.totalPages ||
+      Math.ceil((data.totalCount || userList.length) / itemsPerPage) ||
+      1;
 
-      return {
-        data: flattenedData,
-        totalPages: data.totalPages || 1,
-      };
-    } else {
-      throw new Error("Expected an array from the backend API.");
-    }
+    return {
+      users: Array.isArray(userList)
+        ? userList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        : [],
+      totalPages,
+    };
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error;
+    return { users: [], totalPages: 1 };
   }
 };
 
@@ -1168,7 +1164,7 @@ const fetchDashboardData = async (userRole, token, id) => {
   //     apiEndpoint = "/admin/agent/dashboradData";
   //     break;
   //   case "Agent":
-  //     apiEndpoint = "/admin/agent/dashboradData";
+  //     apiEndpoint = "/admin/agent/dashboradData?agentId=${id}";
   //     break;
   //   case "Sub-Agent":
   //     apiEndpoint = "/admin/agent/dashboradData";
@@ -1200,7 +1196,15 @@ const fetchDashboardData = async (userRole, token, id) => {
     }
 
     const data = await response.json();
-    console.log("Fetched Dashboard Data:", data);
+    console.log("API Full Response:", data);
+    console.log(
+      "Inactive Users Data:",
+      data.inactiveUsers?.inActivePlayersDetails
+    );
+    console.log(
+      "Inactive Users Count:",
+      data.inactiveUsers?.totalInactiveCount
+    );
 
     return { success: true, data };
   } catch (error) {

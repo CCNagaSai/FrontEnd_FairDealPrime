@@ -77,9 +77,11 @@ const Topbar = () => {
 
             const calculatedNet = totalEndPoints - totalMargin;
 
-            setNet(calculatedNet);
-            setEndpoint(totalEndPoints); // Set endpoint value
-            setMargin(totalMargin);
+            // **Convert values to 2 decimal places**
+            setNet(parseFloat(calculatedNet.toFixed(2)));
+            setEndpoint(parseFloat(totalEndPoints.toFixed(2)));
+            setMargin(parseFloat(totalMargin.toFixed(2)));
+
             setWeekStartDate(new Date(data.weekStartDate).toLocaleDateString());
             setWeekEndDate(new Date(data.weekEndDate).toLocaleDateString());
             // console.log("Raw Week Start Date:", data.weekStartDate);

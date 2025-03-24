@@ -99,12 +99,12 @@ const AdminOutPointTable = ({ backendData }) => {
                   sender = entry.name || "N/A"; // Agent is sender
                   break;
                 case "Admin Addeed Chips":
-                  receiver = entry.name || "N/A"; // Admin is receiver
+                  receiver = entry.agentname || "N/A"; // Admin is receiver
                   sender = entry.adminname || "N/A"; // Super Admin is sender
                   break;
                 case "Admin duduct Chips":
                   receiver = entry.adminname || "N/A"; // Super Admin is receiver
-                  sender = entry.name || "N/A"; // Admin is sender
+                  sender = entry.agentname || "N/A"; // Admin is sender
                   break;
                 default:
                   receiver = "N/A";

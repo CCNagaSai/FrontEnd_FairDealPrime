@@ -2,12 +2,19 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import AgentBalanceAdjust from "../../Agent/AgentBalanceAdjustment/AgentBalanceAdjust";
-import { fetchUserData } from "../../Common/OfferState/DashboardOfferState";
+import {
+  fetchAdminAgentList,
+  fetchAdminSubAgents,
+  fetchAdminUsers,
+  fetchAgentSubAgentList,
+  fetchAgentUsers,
+  fetchSubAgentUserList,
+} from "../../Common/OfferState/DashboardOfferState";
 
 const API_URL = import.meta.env.VITE_HOST_URL;
 const cookies = new Cookies();
 
-const UserList = ({ userRole, onUserClick }) => {
+const UserList = ({ onUserClick, userRole }) => {
   const navigate = useNavigate();
 
   // State
@@ -56,34 +63,169 @@ const UserList = ({ userRole, onUserClick }) => {
   const token = tokenRef.current;
 
   useEffect(() => {
-    const loadUserData = async () => {
-      setLoading(true);
-      try {
-        const result = await fetchUserData({
-          userRole,
-          id: idRef.current,
-          type: typeRef.current,
-          token: tokenRef.current,
-          filters,
-          currentPage,
-          itemsPerPage,
-        });
+    if (userRole === "Admin" && id && token) {
+      const loadAdminUsers = async () => {
+        setLoading(true);
+        try {
+          const { users, totalPages } = await fetchAdminUsers(
+            id,
+            token,
+            filters,
+            currentPage,
+            itemsPerPage
+          );
+          setBackendData(users);
+          setFilteredData(users);
+          setTotalPages(totalPages);
+        } catch (err) {
+          console.error("Admin Fetch Error:", err);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-        setData(result.data);
-        setFilteredData(result.data);
-        setTotalPages(result.totalPages);
-      } catch (error) {
-        console.error("Error loading user data:", error);
-        setError("Failed to load data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (idRef.current && tokenRef.current) {
-      loadUserData();
+      loadAdminUsers();
     }
-  }, [userRole, currentPage, filters]);
+  }, [userRole, token, id, filters, currentPage]);
+
+  useEffect(() => {
+    if (userRole === "Agent") {
+      const loadAgents = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+          const token = tokenRef.current; // Access token correctly
+          if (!token) {
+            throw new Error("Token is missing");
+          }
+
+          const agentData = await fetchAdminAgentList(token);
+          setBackendData(agentData);
+          setFilteredData(agentData);
+          setTotalPages(totalPages);
+        } catch (err) {
+          console.error("Error fetching agents:", err);
+          setError("Failed to load agent data. Please try again.");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      if (tokenRef.current) {
+        loadAgents();
+      }
+    }
+  }, [tokenRef.current, userRole]); // Ensure the effect runs when token is available
+
+  useEffect(() => {
+    if (userRole === "SubAgent" && id && token) {
+      const loadUsers = async () => {
+        setLoading(true);
+        try {
+          const { users, totalPages } = await fetchAdminSubAgents(
+            id,
+            token,
+            filters,
+            currentPage,
+            itemsPerPage
+          );
+          setBackendData(users);
+          setFilteredData(users);
+          setTotalPages(totalPages);
+        } catch (err) {
+          console.error("Error fetching users:", err);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      loadUsers();
+    }
+  }, [token, id, filters, currentPage, userRole]);
+
+  useEffect(() => {
+    if (userRole === "AgentUsers" && id && token) {
+      const loadUsers = async () => {
+        setLoading(true);
+        try {
+          const { users, totalPages } = await fetchAgentUsers(
+            id,
+            token,
+            filters,
+            currentPage,
+            itemsPerPage
+          );
+          setBackendData(users);
+          setFilteredData(users);
+          setTotalPages(totalPages);
+        } catch (err) {
+          console.error("Error fetching users:", err);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      loadUsers();
+    }
+  }, [token, id, filters, currentPage, userRole]);
+
+  useEffect(() => {
+    if (userRole === "AgentSearchSubAgent") {
+      const loadShops = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+          const token = tokenRef.current;
+          const id = idRef.current;
+
+          const shopData = await fetchAgentSubAgentList(token, id);
+          setBackendData(shopData);
+          setFilteredData(shopData);
+          setTotalPages(totalPages);
+        } catch (err) {
+          console.error("Error fetching shop data:", err);
+          setError("Failed to load shop data. Please try again.");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      if (tokenRef.current && idRef.current) {
+        loadShops();
+      }
+    }
+  }, [userRole]);
+
+  useEffect(() => {
+    if (userRole === "SubAgentUsers") {
+      const loadUsers = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+          const token = tokenRef.current;
+          const id = idRef.current;
+          const type = typeRef.current;
+
+          const userList = await fetchSubAgentUserList(token, id, type);
+          setBackendData(userList);
+          setFilteredData(userList);
+          setTotalPages(totalPages);
+        } catch (err) {
+          console.error("Error fetching user list:", err);
+          setError("Failed to load user list. Please try again.");
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      if (tokenRef.current && idRef.current && typeRef.current) {
+        loadUsers();
+      }
+    }
+  }, [userRole]);
 
   const handleFilterChange = () => {
     let filtered = backendData;
@@ -110,9 +252,9 @@ const UserList = ({ userRole, onUserClick }) => {
     filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     setCurrentPage(1);
-    setFilteredData(data); // Use actual data from API response
-    setShowTable(data.length > 0);
-    setNoResults(data.length === 0);
+    setFilteredData(filtered);
+    setShowTable(filtered.length > 0);
+    setNoResults(filtered.length === 0);
     setIsSubmitted(true);
   };
 
@@ -131,7 +273,7 @@ const UserList = ({ userRole, onUserClick }) => {
     setIsSubmitted(false);
   };
 
-  const totalPage = Math.ceil(data.length / itemsPerPage);
+  // const totalPages = Math.ceil(data.length / itemsPerPage);
 
   const handleTransferPointsClick = (type, user) => {
     console.log("Transfer Points Clicked", { type, user });
@@ -165,13 +307,12 @@ const UserList = ({ userRole, onUserClick }) => {
   };
 
   const handleNext = () => {
-    if (currentPage < totalPage) setCurrentPage((prevPage) => prevPage + 1);
+    if (currentPage < totalPages) setCurrentPage((prevPage) => prevPage + 1);
   };
 
-  // Define pagination logic
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const displayedData = data.slice(startIndex, endIndex);
+  const displayedData = data.slice(startIndex, startIndex + itemsPerPage);
+  console.log(data, "cccccccc");
 
   if (error) {
     return <div className="text-red-500">{error}</div>;
@@ -250,10 +391,10 @@ const UserList = ({ userRole, onUserClick }) => {
 
   const handleGoToPage = () => {
     const page = parseInt(inputPage, 10);
-    if (page >= 1 && page <= totalPage) {
+    if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     } else {
-      alert(`Please enter a page number between 1 and ${totalPage}`);
+      alert(`Please enter a page number between 1 and ${totalPages}`);
     }
   };
 
@@ -302,7 +443,8 @@ const UserList = ({ userRole, onUserClick }) => {
     padding: "5px 10px 5px 10px", // Added padding to create space around the button
   };
 
-  console.log("cccccccc", data);
+  console.log("cccccccc", filteredData);
+  console.log("Total Pages", totalPages);
   return (
     <div className="user-list-container font-sans p-4 sm:p-6 bg-gray-100">
       <h1 className="view-users-heading text-xl sm:text-2xl text-blue-500 text-left border-b-4 border-blue-500 pb-1">
@@ -436,8 +578,8 @@ const UserList = ({ userRole, onUserClick }) => {
             <div className="user-details bg-white p-4 sm:p-6 rounded-md shadow-md">
               <div className="user-summary text-sm sm:text-lg font-bold mb-4">
                 <span>
-                  TOTAL USERS: ({data.length}) TOTAL POINTS: (
-                  {data.reduce((sum, item) => sum + item.chips, 0)})
+                  TOTAL USERS: ({filteredData.length}) TOTAL POINTS: (
+                  {filteredData.reduce((sum, item) => sum + item.chips, 0)})
                 </span>
               </div>
 
@@ -472,7 +614,7 @@ const UserList = ({ userRole, onUserClick }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {displayedData.map((row, index) => (
+                    {filteredData.map((row, index) => (
                       <tr key={index} className="hover:bg-gray-100">
                         <td
                           onClick={() => handleUserClick(row)}
@@ -506,22 +648,17 @@ const UserList = ({ userRole, onUserClick }) => {
               <button
                 className="prev px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
                 disabled={currentPage === 1}
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                onClick={handlePrevious}
               >
                 Previous
               </button>
-
               <span className="page-info text-blue-700 font-semibold">
-                Page {currentPage} of{" "}
-                {Math.ceil(filteredData.length / itemsPerPage)}
+                Page {currentPage} of {totalPages}
               </span>
-
               <button
                 className="next px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                disabled={
-                  currentPage === Math.ceil(filteredData.length / itemsPerPage)
-                }
-                onClick={() => setCurrentPage((prev) => prev + 1)}
+                disabled={currentPage === totalPages}
+                onClick={handleNext}
               >
                 Next
               </button>

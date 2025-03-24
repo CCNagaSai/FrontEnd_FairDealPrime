@@ -91,8 +91,10 @@ const Dashboard = ({ userRole, onUserClick }) => {
         tokenRef.current,
         idRef.current
       );
+      console.log("API Response:", result); // ✅ Debug API Response
 
       if (result.success && result.data) {
+        console.log("Active Users Data:", result.data.activeUsers); // ✅ Debug Active Users
         const data = result.data;
 
         const normalizePlayers = (players, key) =>
@@ -142,7 +144,7 @@ const Dashboard = ({ userRole, onUserClick }) => {
 
     fetchData(); // Initial fetch
 
-    const interval = setInterval(fetchData, 10000); // Refresh every 10 seconds
+    const interval = setInterval(fetchData, 5000); // Refresh every 5 seconds
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, [userRole]);

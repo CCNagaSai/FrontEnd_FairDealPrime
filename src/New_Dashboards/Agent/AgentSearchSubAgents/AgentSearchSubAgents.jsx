@@ -39,73 +39,73 @@ const ASubAgentsList = ({ onSubAgentClick }) => {
     tokenRef.current = cookies.get("token");
   }, []);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const id = idRef.current;
-        const type = typeRef.current;
-        const token = tokenRef.current;
-
-        if (!id || !type) {
-          throw new Error("Missing id or type from cookies");
-        }
-
-        const response = await fetch(
-          `${API_URL}/admin/shop/ShopList?agentId=${id}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              token: token, // Send token from cookies
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        setOriginalData(result.shopList || []);
-        setData(result.shopList || []);
-      } catch (err) {
-        console.error("Error fetching user data:", err.message);
-        setError("Failed to load user data. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, []);
-
   // useEffect(() => {
-  //   const loadShops = async () => {
-  //     setLoading(true);
-  //     setError(null);
-
+  //   const fetchUserData = async () => {
   //     try {
-  //       const token = tokenRef.current;
-  //       const id = idRef.current;
+  //       setLoading(true);
+  //       setError(null);
 
-  //       const shopData = await fetchAgentSubAgentList(token, id);
-  //       setOriginalData(shopData);
-  //       setData(shopData);
+  //       const id = idRef.current;
+  //       const type = typeRef.current;
+  //       const token = tokenRef.current;
+
+  //       if (!id || !type) {
+  //         throw new Error("Missing id or type from cookies");
+  //       }
+
+  //       const response = await fetch(
+  //         `${API_URL}/admin/shop/ShopList?agentId=${id}`,
+  //         {
+  //           method: "GET",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             token: token, // Send token from cookies
+  //           },
+  //         }
+  //       );
+
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! Status: ${response.status}`);
+  //       }
+
+  //       const result = await response.json();
+  //       setOriginalData(result.shopList || []);
+  //       setData(result.shopList || []);
   //     } catch (err) {
-  //       console.error("Error fetching shop data:", err);
-  //       setError("Failed to load shop data. Please try again.");
+  //       console.error("Error fetching user data:", err.message);
+  //       setError("Failed to load user data. Please try again.");
   //     } finally {
   //       setLoading(false);
   //     }
   //   };
 
-  //   if (tokenRef.current && idRef.current) {
-  //     loadShops();
-  //   }
+  //   fetchUserData();
   // }, []);
+
+  useEffect(() => {
+    const loadShops = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const token = tokenRef.current;
+        const id = idRef.current;
+
+        const shopData = await fetchAgentSubAgentList(token, id);
+        setOriginalData(shopData);
+        setData(shopData);
+      } catch (err) {
+        console.error("Error fetching shop data:", err);
+        setError("Failed to load shop data. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (tokenRef.current && idRef.current) {
+      loadShops();
+    }
+  }, []);
 
   const handleFilterChange = () => {
     const filteredData = originalData.filter((user) => {

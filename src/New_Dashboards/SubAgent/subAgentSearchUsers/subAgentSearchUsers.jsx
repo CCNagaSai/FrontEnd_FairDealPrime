@@ -67,8 +67,8 @@ const SubAUsersList = ({ onUserClick }) => {
 
         const result = await response.json(); // Parse the JSON
         console.log("API Response:", result); // Debugging output
-        setOriginalData(result.userList || []); // Save the original data
-        setData(result.userList || []); // Set the data
+        setOriginalData(result.userList || result.users || []); // Save the original data
+        setData(result.userList || result.users || []); // Set the data
       } catch (err) {
         console.error("Error fetching user data:", err.message);
         setError("Failed to load user data. Please try again.");

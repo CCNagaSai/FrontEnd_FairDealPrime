@@ -40,6 +40,7 @@ const AdminSearchUsers = () => {
           ) : (
             // Render AUsersList when no user is selected
             <UserList userRole="Admin" onUserClick={handleUserClick} />
+            // <AdminUsersLists />
           )}
         </div>
       </div>
