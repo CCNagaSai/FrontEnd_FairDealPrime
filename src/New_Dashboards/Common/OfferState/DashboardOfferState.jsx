@@ -1157,36 +1157,33 @@ const fetchDashboardData = async (userRole, token, id) => {
     return { success: false, message: "Invalid input", data: null };
   }
 
-  // // Define the API endpoint dynamically based on userRole
-  // let apiEndpoint = "";
-  // switch (userRole) {
-  //   case "Active Players":
-  //     apiEndpoint = "/admin/agent/dashboradData";
-  //     break;
-  //   case "Agent":
-  //     apiEndpoint = "/admin/agent/dashboradData?agentId=${id}";
-  //     break;
-  //   case "Sub-Agent":
-  //     apiEndpoint = "/admin/agent/dashboradData";
-  //     break;
-  //   default:
-  //     console.error("Invalid user role:", userRole);
-  //     return { success: false, message: "Invalid user role", data: null };
-  // }
+  // Define the API endpoint dynamically based on userRole
+  let apiEndpoint = "";
+  switch (userRole) {
+    case "Active Players":
+      apiEndpoint = `${API_URL}/admin/agent/dashboradData?adminId=${id}`;
+      break;
+    case "Agent":
+      apiEndpoint = `${API_URL}/admin/agent/dashboradData?agentId=${id}`;
+      break;
+    case "Sub-Agent":
+      apiEndpoint = `${API_URL}/admin/agent/dashboradData?agentId=${id}`;
+      break;
+    default:
+      console.error("Invalid user role:", userRole);
+      return { success: false, message: "Invalid user role", data: null };
+  }
 
   try {
     console.log("Fetching dashboard data...");
 
-    const response = await fetch(
-      `${API_URL}/admin/agent/dashboradData?agentId=${id}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          token: token,
-        },
-      }
-    );
+    const response = await fetch(apiEndpoint, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: token,
+      },
+    });
 
     console.log("API response status:", response.status);
 
