@@ -13,15 +13,27 @@ function betHistory(data) {
     const submitdata = async () => {
       if (data != undefined && data.data != undefined && data.data.referid.length > 0) {
         let datajson = {}
+        // for (let i = 0; i <= data.data.referid.length - 1; i++) {
+        //   if (data.data.referid[i].type != undefined) {
+
+
+        //     datajson[data.data.referid[i].betIndex] = datajson[data.data.referid[i].betIndex] != undefined ? datajson[data.data.referid[i].betIndex] + data.data.referid[i].bet : data.data.referid[i].bet
+
+
+        //   }
+        // }
+
         for (let i = 0; i <= data.data.referid.length - 1; i++) {
-          if (data.data.referid[i].type != undefined) {
-
-
-            datajson[data.data.referid[i].betIndex] = datajson[data.data.referid[i].betIndex] != undefined ? datajson[data.data.referid[i].betIndex] + data.data.referid[i].bet : data.data.referid[i].bet
-
-
+          if (data.data.referid[i].type !== undefined) {
+            let betValue = parseFloat(data.data.referid[i].bet).toFixed(2);
+        
+            datajson[data.data.referid[i].betIndex] = 
+              datajson[data.data.referid[i].betIndex] !== undefined 
+                ? parseFloat((datajson[data.data.referid[i].betIndex] + parseFloat(betValue)).toFixed(2)) 
+                : parseFloat(betValue);
           }
         }
+        
 
         for (let j = 0; j <= 155; j++) {
 

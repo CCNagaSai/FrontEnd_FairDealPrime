@@ -90,7 +90,7 @@ function TestPlayingTableData({ gameName }) {
 
       // Calculate total bets
       const total = userBets.reduce(
-        (sum, data) => sum + (parseFloat(data.bet) || 0),
+        (sum, data) => sum + (parseFloat(data.bet.tofixed(0)) || 0),
         0
       );
       setTotalBets(total);

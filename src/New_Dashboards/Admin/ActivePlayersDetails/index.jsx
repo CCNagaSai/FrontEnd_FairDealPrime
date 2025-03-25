@@ -16,8 +16,7 @@ const ActivePlayerDetails = () => {
           <AdminSidebar />
         </div>
         <div className="Right">
-          {/* <ADashboard /> */}
-          <Dashboard userRole="Active Players" />
+          <Dashboard userRole="Admin" />
         </div>
       </div>
     </div>

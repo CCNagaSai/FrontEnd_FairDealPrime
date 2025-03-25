@@ -168,7 +168,7 @@ function Sidebar() {
       <button
         onClick={() => setIsMenuOpen(!isMenuOpen)}
         type="button"
-        className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-black-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 absolute left-2 -top-20"
+        className="inline-flex items-center mt-4 p-2 w-10 h-10 justify-center text-sm text-black-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 absolute left-2 -top-16"
         aria-expanded={isMenuOpen ? "true" : "false"}
       >
         <span className="sr-only">Open main menu</span>

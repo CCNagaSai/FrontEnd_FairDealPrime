@@ -535,7 +535,7 @@ const fetchAgentUsers = async (
   if (!id || !token) return { users: [], totalPages: 1 };
 
   try {
-    let url = `${API_URL}/admin/user/agent/UserList?Id=${id}&type=${logintype}&page=${currentPage}&limit=${itemsPerPage}`;
+    let url = `${API_URL}/admin/user/agent/UserList?Id=${id}&type=Agent`;
 
     if (filters?._id) {
       url += `&username=${encodeURIComponent(filters._id)}`;
@@ -1157,33 +1157,47 @@ const fetchDashboardData = async (userRole, token, id) => {
     return { success: false, message: "Invalid input", data: null };
   }
 
-  // Define the API endpoint dynamically based on userRole
-  let apiEndpoint = "";
-  switch (userRole) {
-    case "Active Players":
-      apiEndpoint = `${API_URL}/admin/agent/dashboradData?adminId=${id}`;
-      break;
-    case "Agent":
-      apiEndpoint = `${API_URL}/admin/agent/dashboradData?agentId=${id}`;
-      break;
-    case "Sub-Agent":
-      apiEndpoint = `${API_URL}/admin/agent/dashboradData?agentId=${id}`;
-      break;
-    default:
-      console.error("Invalid user role:", userRole);
-      return { success: false, message: "Invalid user role", data: null };
-  }
+  // // Define the API endpoint dynamically based on userRole
+  // let apiEndpoint = "";
+  // switch (userRole) {
+  //   case "Active Players":
+  //     apiEndpoint = "/admin/agent/dashboradData";
+  //     break;
+  //   case "Agent":
+  //     apiEndpoint = "/admin/agent/dashboradData?agentId=${id}";
+  //     break;
+  //   case "Sub-Agent":
+  //     apiEndpoint = "/admin/agent/dashboradData";
+  //     break;
+  //   default:
+  //     console.error("Invalid user role:", userRole);
+  //     return { success: false, message: "Invalid user role", data: null };
+  // }
 
   try {
+    let endpoint = "";
+    if (userRole === "Agent") {
+      endpoint = `/admin/agent/dashboradData?agentId=${id}`;
+    } else if (userRole === "Sub-Agent") {
+      endpoint = `/admin/agent/dashboradData?agentId=${id}`;
+    } else if (userRole === "Admin") {
+      endpoint = `/admin/agent/dashboradData?adminId=${id}`;
+    } else {
+      console.error("Invalid user role:", userRole);
+      return;
+    }
     console.log("Fetching dashboard data...");
 
-    const response = await fetch(apiEndpoint, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        token: token,
-      },
-    });
+    const response = await fetch(
+      `${API_URL}${endpoint}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          token: token,
+        },
+      }
+    );
 
     console.log("API response status:", response.status);
 
@@ -1320,7 +1334,7 @@ const kickoffUserDashboardData = async (
     } else if (userRole === "Sub-Agent") {
       endpoint = `/admin/agent/dashboradData?agentId=${id}`;
     } else if (userRole === "Admin") {
-      endpoint = `/admin/agent/dashboradData?agentId=${id}`;
+      endpoint = `/admin/agent/dashboradData?adminId=${id}`;
     } else {
       console.error("Invalid user role:", userRole);
       return;

@@ -467,7 +467,9 @@ const SubAGameHistory = () => {
                                 {item.username}
                               </td>
                               <td className="border border-gray-300 px-4 py-2">
-                                {item.beforeplaypoint}
+                              {typeof item.beforeplaypoint === "number"
+                                ? item.beforeplaypoint.toFixed(2)
+                                : "N/A"}
                               </td>
                               <td className="border border-gray-300 px-4 py-2">
                                 {item.ballposition}
@@ -476,10 +478,14 @@ const SubAGameHistory = () => {
                                 {item.play}
                               </td>
                               <td className="border border-gray-300 px-4 py-2">
-                                {item.won}
+                              {typeof item.won === "number"
+                                ? item.won.toFixed(2)
+                                : "N/A"}
                               </td>
                               <td className="border border-gray-300 px-4 py-2">
-                                {item.afterplaypoint}
+                              {typeof item.afterplaypoint === "number"
+                                ? item.afterplaypoint.toFixed(2)
+                                : "N/A"}
                               </td>
                               <td className="border border-gray-300 px-4 py-2">
                                 {(() => {

@@ -63,7 +63,7 @@ function Testing({ data }) {
 
         if (betData.type) {
           let numberKey = betData.number;
-          let betAmount = betData.bet;
+          let betAmount = betData.bet.toFixed(2);
 
           datajson[numberKey] = datajson[numberKey]
             ? datajson[numberKey] + betAmount

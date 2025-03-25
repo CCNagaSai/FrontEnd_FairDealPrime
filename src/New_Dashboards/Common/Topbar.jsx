@@ -150,31 +150,31 @@ const Topbar = () => {
           </p>
           {position === "Super Admin" ? (
             <>
-              <p>
+              <p className="font-bold">
                 This Week:{" "}
                 <span className="text-red-500 font-bold">
                   {weekStartDate} - {weekEndDate}
                 </span>
               </p>
 
-              <p>
+              <p className="font-bold">
                 Net: <span className="text-red-500 font-bold">{net}</span>
               </p>
-              <p>
+              <p className="font-bold">
                 Endpoint:{" "}
                 <span className="text-red-500 font-bold">{endpoint}</span>
               </p>
-              <p>
+              <p className="font-bold">
                 Margin: <span className="text-red-500 font-bold">{margin}</span>
               </p>
             </>
           ) : (
-            <p>
+            <p  className="font-bold">
               Balance: <span className="text-red-500 font-bold">{balance}</span>
             </p>
           )}
 
-          <p>
+          <p  className="font-bold">
             Position: <span className="text-red-500 font-bold">{position}</span>
           </p>
           <p className="text-l text-gray-500 font-bold mr-5">{currentTime}</p>
@@ -253,31 +253,31 @@ const Topbar = () => {
           </p>
           {position === "Super Admin" ? (
             <>
-              <p>
+              <p className="font-bold">
                 This Week:{" "}
                 <span className="text-red-500 font-bold">
                   {weekStartDate} - {weekEndDate}
                 </span>
               </p>
 
-              <p>
+              <p className="font-bold">
                 Net: <span className="text-red-500 font-bold">{net}</span>
               </p>
-              <p>
+              <p className="font-bold">
                 Endpoint:{" "}
                 <span className="text-red-500 font-bold">{endpoint}</span>
               </p>
-              <p>
+              <p className="font-bold">
                 Margin: <span className="text-red-500 font-bold">{margin}</span>
               </p>
             </>
           ) : (
-            <p>
+            <p className="font-bold">
               Balance: <span className="text-red-500 font-bold">{balance}</span>
             </p>
           )}
 
-          <p>
+          <p className="font-bold">
             Position: <span className="text-red-500 font-bold">{position}</span>
           </p>
           <p className="text-gray-500 font-bold">{currentTime}</p>
