@@ -257,6 +257,12 @@ const UserList = ({ onUserClick, userRole }) => {
     setNoResults(filtered.length === 0);
     setIsSubmitted(true);
   };
+  useEffect(() => {
+    if (isSubmitted) {
+      setShowTable(filteredData.length > 0);
+      setNoResults(filteredData.length === 0);
+    }
+  }, [filteredData, isSubmitted]);
 
   const handleClear = () => {
     setFilters({
@@ -300,14 +306,6 @@ const UserList = ({ onUserClick, userRole }) => {
     });
     setData(sortedData);
     setSortConfig({ key, direction });
-  };
-
-  const handlePrevious = () => {
-    if (currentPage > 1) setCurrentPage((prevPage) => prevPage - 1);
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage((prevPage) => prevPage + 1);
   };
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -442,6 +440,32 @@ const UserList = ({ onUserClick, userRole }) => {
     fontWeight: "bold",
     padding: "5px 10px 5px 10px", // Added padding to create space around the button
   };
+
+  const pageSize = 10; // Define items per page
+
+  // Compute total pages dynamically when not provided
+  const computedTotalPages =
+    totalPages && totalPages > 0
+      ? totalPages
+      : filteredData.length > 0
+      ? Math.ceil(filteredData.length / pageSize)
+      : 1; // Default to at least 1 page
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < computedTotalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  console.log("Filtered Data:", filteredData);
+  console.log("Computed Total Pages:", computedTotalPages);
+  console.log("Current Page:", currentPage);
 
   console.log("cccccccc", filteredData);
   console.log("Total Pages", totalPages);
@@ -608,9 +632,9 @@ const UserList = ({ onUserClick, userRole }) => {
                       <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
                         Status
                       </th>
-                      <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
+                      {/* <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
                         Action
-                      </th>
+                      </th> */}
                     </tr>
                   </thead>
                   <tbody>
@@ -629,14 +653,14 @@ const UserList = ({ onUserClick, userRole }) => {
                         <td className="px-2 sm:px-4 py-2">
                           {row.status ? "Active" : "Inactive"}
                         </td>
-                        <td
+                        {/* <td
                           className="clickable cursor-pointer px-2 sm:px-4 py-2 text-blue-500 hover:underline"
                           onClick={() =>
                             handleTransferPointsClick("User", row._id)
                           }
                         >
                           TRANSFER POINTS
-                        </td>
+                        </td> */}
                       </tr>
                     ))}
                   </tbody>
@@ -653,16 +677,17 @@ const UserList = ({ onUserClick, userRole }) => {
                 Previous
               </button>
               <span className="page-info text-blue-700 font-semibold">
-                Page {currentPage} of {totalPages}
+                Page {currentPage} of {computedTotalPages}
               </span>
               <button
                 className="next px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-                disabled={currentPage === totalPages}
+                disabled={currentPage >= computedTotalPages} // Ensure it disables correctly
                 onClick={handleNext}
               >
                 Next
               </button>
             </div>
+
             {/* Go to Page + Clear */}
             <div className="go-to-page ml-10 mr-10 mt-5 flex items-center">
               <input

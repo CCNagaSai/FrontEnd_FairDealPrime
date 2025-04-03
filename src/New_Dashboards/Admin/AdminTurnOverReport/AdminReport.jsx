@@ -7,171 +7,144 @@ const API_URL = import.meta.env.VITE_HOST_URL;
 const cookies = new Cookies();
 
 const AdminTurnoverReport = () => {
-  const navigate = useNavigate();
-
-  // State
-  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedAgentId, setSelectedAgentId] = useState(null);
   const [filteredData, setFilteredData] = useState([]);
   const [backendData, setBackendData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [expandedRow, setExpandedRow] = useState(null);
   const [filters, setFilters] = useState({
-    username: "",
-    status: "",
+    gameName: "",
+    userId: "",
+    handId: "",
     startDate: "",
     endDate: "",
-    dateRange: "",
   });
   const [dateRange, setDateRange] = useState("Select");
-  const [originalData, setOriginalData] = useState([]);
-  const [agents, setAgents] = useState("");
-
+  const [columns, setColumns] = useState([]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [showTable, setShowTable] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [noResults, setNoResults] = useState(false);
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const [totalPages, setTotalPages] = useState(1);
+  const [inputPage, setInputPage] = useState("");
+  const itemsPerPage = 10;
 
-  // Store id and type using useRef
   const idRef = useRef(null);
   const typeRef = useRef(null);
   const tokenRef = useRef(null);
 
+  // Fetch and set user data from cookies
   useEffect(() => {
-    // Get id and type from cookies
     idRef.current = cookies.get("LoginUserId");
     typeRef.current = cookies.get("name");
     tokenRef.current = cookies.get("token");
   }, []);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+    setTotalPages(Math.ceil(filteredData.length / itemsPerPage));
+  }, [filteredData]);
 
-        const id = idRef.current;
-        const type = typeRef.current;
-        const token = tokenRef.current;
+  const token = tokenRef.current;
+  const id = idRef.current;
 
-        if (!id || !type) {
-          throw new Error("Missing id or type from cookies");
-        }
+  // Desktop and mobile columns
+  const desktopColumns = [
+    "S.No",
+    "User Id",
+    "Agent",
+    "Sub Distributor",
+    "Play Points",
+    "Win Points",
+    "End Points",
+  ];
 
-        const response = await fetch(`${API_URL}/admin/agent/AgentList`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            token: token,
-          },
-        });
+  const mobileColumns = [
+    "S.No",
+    "User Id",
+    "Agent",
+    "Sub Distributor",
+    "Play Points",
+    "Win Points",
+    "End Points",
+  ];
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        const shopList = result.agentList || [];
-        setOriginalData(shopList);
-        setData(shopList);
-
-        const fetchBackendDataForAgents = async () => {
-          const allBackendData = {};
-          for (const shop of shopList) {
-            const AgentId = shop._id;
-            const responseBackend = await fetch(
-              `${API_URL}/admin/agent/RouletteGameHistory?subAgentId=${AgentId}`,
-              {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                  token: token,
-                },
-              }
-            );
-
-            if (responseBackend.ok) {
-              const data = await responseBackend.json();
-              if (data && Array.isArray(data.gameHistoryData)) {
-                const flattenedHistory = data.gameHistoryData.flatMap(
-                  (entry) => entry.history || []
-                );
-
-                flattenedHistory.sort(
-                  (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-                );
-
-                allBackendData[AgentId] = flattenedHistory;
-              }
-            }
-          }
-          setBackendData(allBackendData);
-          setLoading(false);
-        };
-
-        fetchBackendDataForAgents();
-
-        // Fetch backend data (roulette game history) for each sub-agent
-        const fetchBackendDataForSubAgents = async () => {
-          const allBackendData = {};
-          for (const shop of shopList) {
-            const subAgentId = shop._id;
-            const responseBackend = await fetch(
-              `${API_URL}/admin/agent/RouletteGameHistory?subAgentId=${subAgentId}`,
-              {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                  token: token,
-                },
-              }
-            );
-
-            if (responseBackend.ok) {
-              const data = await responseBackend.json();
-              if (data && Array.isArray(data.gameHistoryData)) {
-                const flattenedHistory = data.gameHistoryData.flatMap(
-                  (entry) => entry.history || []
-                );
-
-                flattenedHistory.sort(
-                  (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-                );
-
-                allBackendData[subAgentId] = flattenedHistory;
-              }
-            }
-          }
-          setBackendData(allBackendData);
-          setLoading(false);
-        };
-
-        fetchBackendDataForSubAgents();
-      } catch (err) {
-        console.error("Error fetching user data:", err.message);
-        setError("Failed to load user data. Please try again.");
-        setLoading(false);
-      }
+  // Dynamically adjust columns based on screen size
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
     };
-
-    fetchUserData();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const totalPages = Math.ceil(data.length / itemsPerPage);
+  useEffect(() => {
+    setColumns(isMobile ? mobileColumns : desktopColumns);
+  }, [isMobile]);
 
-  const handleSort = (key) => {
-    const direction =
-      sortConfig.key === key && sortConfig.direction === "asc" ? "desc" : "asc";
-    const sortedData = [...data].sort((a, b) => {
-      if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
-      if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
-      return 0;
-    });
-    setData(sortedData);
-    setSortConfig({ key, direction });
-  };
+  useEffect(() => {
+    if (id && token) {
+      const fetchBackendData = async () => {
+        if (!id || !token) return;
+        setIsLoading(true);
 
-  // Handle filter change and date range calculations
+        try {
+          let url = `${API_URL}/admin/agent/turnover?adminId=${id}`;
+
+          // Add filters dynamically
+          if (filters.userId) {
+            url += `&username=${encodeURIComponent(filters.userId)}`;
+          }
+          if (filters.startDate && filters.endDate) {
+            let startDate = new Date(filters.startDate);
+            const endDate = new Date(filters.endDate);
+
+            startDate.setDate(startDate.getDate() - 1);
+
+            startDate.setUTCHours(18, 30, 0, 0);
+            endDate.setUTCHours(18, 29, 59, 999);
+
+            url += `&startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`;
+          }
+
+          console.log("Fetching Data from:", url);
+
+          const response = await fetch(url, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              token: token,
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            console.log("Data:", data);
+
+            if (data && Array.isArray(data.turnOverData)) {
+              const flattenedHistory = data.turnOverData.flatMap(
+                (entry) => entry.agentData || []
+              );
+
+              setBackendData(flattenedHistory);
+              setFilteredData(flattenedHistory);
+            } else {
+              console.error("Expected an array from the backend API:", data);
+            }
+          } else {
+            console.error("Failed to fetch backend data");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        } finally {
+          setIsLoading(false); // Stop loading
+        }
+      };
+      fetchBackendData();
+    }
+  }, [token, id, filters]);
+
   const handleDateRangeChange = (range) => {
     const today = new Date();
     let startDate = new Date();
@@ -179,34 +152,53 @@ const AdminTurnoverReport = () => {
 
     switch (range) {
       case "Today":
-        startDate.setDate(today.getDate());
-        endDate.setHours(23, 59, 59, 999);
+        startDate = new Date(today);
+        endDate = new Date(today);
         break;
       case "Yesterday":
         startDate.setDate(today.getDate() - 1);
         endDate.setDate(today.getDate() - 1);
-        startDate.setHours(0, 0, 0, 0);
-        endDate.setHours(23, 59, 59, 999);
         break;
-      case "Last 7 Days":
-        startDate.setDate(today.getDate() - 7);
-        startDate.setHours(0, 0, 0, 0);
+      case "This Week": {
+        const dayOfWeek = today.getDay(); // Sunday - 0, Monday - 1, ..., Saturday - 6
+        startDate = new Date(today);
+        startDate.setDate(
+          today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)
+        ); // Move to Monday
+        endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6); // Move to Sunday
         break;
-      case "Last 30 Days":
-        startDate.setDate(today.getDate() - 30);
-        startDate.setHours(0, 0, 0, 0);
+      }
+      case "Last Week": {
+        const dayOfWeek = today.getDay();
+        startDate = new Date(today);
+        startDate.setDate(today.getDate() - dayOfWeek - 6); // Move to previous week's Monday
+        endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6); // Move to Sunday of last week
+        break;
+      }
+      case "This Month":
+        startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        break;
+      case "Last Month":
+        startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        endDate = new Date(today.getFullYear(), today.getMonth(), 0);
         break;
       default:
         break;
     }
 
-    // Set start and end date in filters and update the state
+    const formatDate = (date) => {
+      return date.toLocaleDateString("en-GB").split("/").reverse().join("-");
+    };
+
     setFilters((prevFilters) => ({
       ...prevFilters,
-      startDate: startDate.toISOString().split("T")[0],
-      endDate: endDate.toISOString().split("T")[0],
+      startDate: formatDate(startDate),
+      endDate: formatDate(endDate),
     }));
-    setDateRange(range); // Update selected date range
+    setDateRange(range);
   };
 
   const handleManualDateChange = (e, field) => {
@@ -219,92 +211,79 @@ const AdminTurnoverReport = () => {
     });
   };
 
-  // const handleFilterChange = () => {
-  //   let filtered = backendData;
-
-  //   // Filter by date range
-  //   if (filters.startDate && filters.endDate) {
-  //     const startDate = new Date(filters.startDate);
-  //     startDate.setHours(0, 0, 0, 0); // Start of the day
-  //     const endDate = new Date(filters.endDate);
-  //     endDate.setHours(23, 59, 59, 999); // End of the day
-
-  //     filtered = filtered.filter((entry) => {
-  //       const entryDate = new Date(entry.createdAt);
-  //       return entryDate >= startDate && entryDate <= endDate;
-  //     });
-  //   }
-
-  //   // Aggregate data by username
-  //   const aggregatedData = filtered.reduce((acc, entry) => {
-  //     const existingUser = acc.find((user) => user.username === entry.username);
-
-  //     if (existingUser) {
-  //       existingUser.play += entry.play;
-  //       existingUser.won += entry.won;
-  //       existingUser.endPoints = existingUser.play - existingUser.won; // Update End Points
-  //       existingUser.createdAt =
-  //         new Date(existingUser.createdAt) > new Date(entry.createdAt)
-  //           ? existingUser.createdAt
-  //           : entry.createdAt; // Keep the most recent date
-  //     } else {
-  //       acc.push({
-  //         ...entry,
-  //         endPoints: entry.play - entry.won, // Calculate End Points
-  //       });
-  //     }
-
-  //     return acc;
-  //   }, []);
-
-  //   // Sort aggregated data by most recent `createdAt` date
-  //   aggregatedData.sort(
-  //     (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-  //   );
-
-  //   setFilteredData(aggregatedData);
-  //   setShowTable(aggregatedData.length > 0);
-  //   setNoResults(aggregatedData.length === 0); // Show message if no results
-  //   setIsSubmitted(true); // Indicate filters have been applied
-  // };
-
-  // const handleClear = () => {
-  //   setFilters({
-  //     gameName: "",
-  //     userId: "",
-  //     handId: "",
-  //     startDate: "",
-  //     endDate: "",
-  //   });
-  //   setCurrentPage(1);
-  //   setDateRange("Select");
-  //   setFilteredData(backendData); // Reset filters
-  //   setShowTable(false); // Hide the table when cleared
-  //   setIsSubmitted(false); // Reset the "submitted" state
-  // };
-
   const handleFilterChange = () => {
-    const filteredData = originalData.filter((user) => {
-      const matchesUsername =
-        !filters.username ||
-        user.name.toLowerCase().includes(filters.username.toLowerCase());
-      const matchesStatus =
-        !filters.status ||
-        (filters.status === "Active" && user.status) ||
-        (filters.status === "Inactive" && !user.status);
+    let filtered = backendData;
 
-      return matchesUsername && matchesStatus;
-    });
+    // Filter by username
+    if (filters.username) {
+      filtered = filtered.filter((entry) =>
+        entry.username.toLowerCase().includes(filters.username.toLowerCase())
+      );
+    }
 
+    // Filter by date range only if both startDate and endDate are provided
+    if (filters.startDate && filters.endDate) {
+      const startDate = new Date(filters.startDate);
+      startDate.setHours(0, 0, 0, 0); // Start of the day
+      const endDate = new Date(filters.endDate);
+      endDate.setHours(23, 59, 59, 999); // End of the day
+
+      // filtered = filtered.filter((entry) => {
+      //   const entryDate = new Date(entry.lastPlayedDate);
+      //   return entryDate >= startDate && entryDate <= endDate;
+      // });
+    }
+
+    // Sort by date (most recent first)
+    filtered.sort(
+      (a, b) => new Date(b.lastPlayedDate) - new Date(a.lastPlayedDate)
+    );
+
+    // Update state
     setCurrentPage(1);
-    setData(filteredData);
+    setFilteredData(filtered);
+    setShowTable(filtered.length > 0);
+    setNoResults(filtered.length === 0); // Check if no results are found
+    setIsSubmitted(true); // Indicate filters have been applied
   };
 
   const handleClear = () => {
-    setFilters({ username: "", status: "", startDate: "", endDate: "" });
+    setFilters({
+      gameName: "",
+      userId: "",
+      handId: "",
+      startDate: "",
+      endDate: "",
+    });
     setCurrentPage(1);
-    setData(originalData); // Reset to original data
+    setDateRange("Select");
+    setFilteredData(backendData); // Reset filters
+    setShowTable(false); // Hide the table when cleared
+    setIsSubmitted(false); // Reset the "submitted" state
   };
+
+  const totalPlayPoints = Array.isArray(filteredData)
+    ? filteredData.reduce(
+        (acc, entry) => acc + parseFloat(entry.playPoints || 0),
+        0
+      )
+    : 0;
+  const totalWinPoints = Array.isArray(filteredData)
+    ? filteredData.reduce(
+        (acc, entry) => acc + parseFloat(entry.winpoints || 0),
+        0
+      )
+    : 0;
+  const totalEndPoints = Array.isArray(filteredData)
+    ? filteredData.reduce(
+        (acc, entry) => acc + parseFloat(entry.endPoints || 0),
+        0
+      )
+    : 0;
+
+  console.log("backendsdata", backendData);
+
+  console.log("Expanded Row:", expandedRow);
 
   const handlePrevious = () => {
     if (currentPage > 1) setCurrentPage((prevPage) => prevPage - 1);
@@ -314,257 +293,413 @@ const AdminTurnoverReport = () => {
     if (currentPage < totalPages) setCurrentPage((prevPage) => prevPage + 1);
   };
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const displayedData = data.slice(startIndex, startIndex + itemsPerPage);
+  const handlePageInputChange = (e) => {
+    setInputPage(e.target.value);
+  };
+
+  const handleGoToPage = () => {
+    const page = parseInt(inputPage, 10);
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    } else {
+      alert(`Please enter a page number between 1 and ${totalPages}`);
+    }
+  };
+  const handleClearInput = () => {
+    setInputPage("");
+    setCurrentPage(1);
+  };
 
   const toggleRow = (rowId) => {
     setExpandedRow(expandedRow === rowId ? null : rowId);
   };
 
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const displayedData = filteredData.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+  console.log(filteredData, "cccccccc");
+
+  useEffect(() => {
+    if (isSubmitted) {
+      handleFilterChange();
+    }
+  }, [backendData, filters, isSubmitted]);
+
+  console.log("Backend Data:", backendData);
+
   return (
-    <div className="user-list-container font-sans p-4 sm:p-6 bg-gray-100">
-      <h1 className="view-users-heading text-xl sm:text-2xl text-blue-500 text-left border-b-4 border-blue-500 pb-2 mb-6">
-        Turn Over Report
-      </h1>
-      {/* Filter Form */}
-      <div className="bg-[#e6ebff] p-4 rounded-lg shadow-lg m-1 sm:m-3">
-        <form
-          className="flex flex-col items-center"
-          onSubmit={(e) => e.preventDefault()}
-        >
-          {/* Row 1: Username (Desktop: Full row, Mobile: Shared with Start Date) */}
-          <div className="w-full flex flex-wrap gap-4 mb-5">
-            <div className="flex-1 min-w-[140px] sm:w-full">
-              <label className="block mb-2">Username:</label>
-              <input
-                type="text"
-                value={filters.username}
-                onChange={(e) =>
-                  setFilters({ ...filters, username: e.target.value })
-                }
-                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
-                placeholder="Enter username"
-              />
-            </div>
+    <div>
+      <div className="flex flex-col md:flex-row">
+        <div className="flex-1 ml-[4px] mr-[4px] md:max-w-[1100px] mx-auto border border-blue-500 p-[5px]">
+          <h2 className="text-blue-600 text-[18px] ml-1 md:text-xl font-bold  border-b border-blue-500 pb-1 ">
+            Agent Turn Over Report{" "}
+          </h2>
 
-            <div className="flex-1 min-w-[140px] sm:w-full sm:hidden">
-              <label className="block mb-2">Start Date:</label>
-              <input
-                type="date"
-                value={filters.startDate}
-                onChange={(e) => handleManualDateChange(e, "startDate")}
-                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
-              />
-            </div>
+          {/* Filter Form */}
+          <div className="bg-[#e6ebff] p-5 rounded-lg shadow-lg m-1 sm:m-3">
+            <form
+              className="flex flex-col items-center"
+              onSubmit={(e) => e.preventDefault()}
+            >
+              {/* Row 1: Username (Desktop: Full row, Mobile: Shared with Start Date) */}
+              <div className="w-full flex flex-wrap gap-4 mb-5">
+                <div className="flex-1 min-w-[140px] sm:w-full">
+                  <label className="block mb-2">Agent Name:</label>
+                  <input
+                    type="text"
+                    value={filters.userId}
+                    onChange={(e) =>
+                      setFilters({ ...filters, userId: e.target.value })
+                    }
+                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+                    placeholder="Enter username"
+                  />
+                </div>
+
+                <div className="flex-1 min-w-[140px] sm:w-full sm:hidden">
+                  <label className="block mb-2">Start Date:</label>
+                  <input
+                    type="date"
+                    value={filters.startDate}
+                    onChange={(e) => handleManualDateChange(e, "startDate")}
+                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
+              </div>
+
+              {/* Row 2: Start Date, End Date, and Date Range */}
+              <div className="w-full flex flex-wrap gap-4 mb-5">
+                {/* Start Date: Shown here for Desktop */}
+                <div className="flex-1 min-w-[140px] hidden sm:block">
+                  <label className="block mb-2">Start Date:</label>
+                  <input
+                    type="date"
+                    value={filters.startDate}
+                    onChange={(e) => handleManualDateChange(e, "startDate")}
+                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
+
+                {/* End Date */}
+                <div className="flex-1 min-w-[140px]">
+                  <label className="block mb-2">End Date:</label>
+                  <input
+                    type="date"
+                    value={filters.endDate}
+                    onChange={(e) => handleManualDateChange(e, "endDate")}
+                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+                  />
+                </div>
+
+                {/* Date Range */}
+                <div className="flex-1 min-w-[140px]">
+                  <label className="block mb-2">Date Range:</label>
+                  <select
+                    value={dateRange}
+                    onChange={(e) => handleDateRangeChange(e.target.value)}
+                    className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
+                  >
+                    <option value="Select">Select</option>
+                    <option value="Today">Today</option>
+                    <option value="Yesterday">Yesterday</option>
+                    <option value="This Week">This Week</option>
+                    <option value="Last Week">Last Week</option>
+                    <option value="This Month">This Month</option>
+                    <option value="Last Month">Last Month</option>
+                    <option value="Custom">Custom</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Submit and Clear Buttons */}
+              <div className="flex justify-center w-full">
+                <div className="flex gap-4">
+                  <button
+                    type="button"
+                    onClick={handleFilterChange}
+                    className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
+                    style={{ width: "150px" }}
+                  >
+                    Apply Filters
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleClear}
+                    className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
+                    style={{ width: "150px" }}
+                  >
+                    Clear Filters
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
-
-          {/* Row 2: Start Date, End Date, and Date Range */}
-          <div className="w-full flex flex-wrap gap-4 mb-5">
-            {/* Start Date: Shown here for Desktop */}
-            <div className="flex-1 min-w-[140px] hidden sm:block">
-              <label className="block mb-2">Start Date:</label>
-              <input
-                type="date"
-                value={filters.startDate}
-                onChange={(e) => handleManualDateChange(e, "startDate")}
-                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
-              />
+          {/* Show selected filters after submit */}
+          {isSubmitted && (
+            <div className="bg-[#e6ebff] p-2 flex flex-wrap sm:flex-nowrap gap-2 sm:gap-4 mt-2 rounded-md m-2 text-sm sm:text-base">
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Start Date:</strong>{" "}
+                {filters.startDate || "Not Selected"}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>End Date:</strong> {filters.endDate || "Not Selected"}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Total Play Points:</strong>{" "}
+                {filteredData
+                  .reduce((sum, item) => sum + (item.totalPlayPoints ?? 0), 0)
+                  .toFixed(2)}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Total Won Points:</strong>{" "}
+                {filteredData
+                  .reduce((sum, item) => sum + (item.totalWonPoints ?? 0), 0)
+                  .toFixed(2)}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Total End Points:</strong>{" "}
+                {filteredData
+                  .reduce((sum, item) => sum + (item.totalEndPoints ?? 0), 0)
+                  .toFixed(2)}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Total Margin:</strong>{" "}
+                {filteredData
+                  .reduce(
+                    (sum, item) =>
+                      sum + (2.5 / 100) * (item.totalPlayPoints ?? 0),
+                    0
+                  )
+                  .toFixed(2)}
+              </span>
+              <span className="block w-full sm:w-auto flex-[0_1_45%] sm:flex-auto">
+                <strong>Total Net:</strong>{" "}
+                {filteredData
+                  .reduce(
+                    (sum, item) =>
+                      sum +
+                      ((item.totalEndPoints ?? 0) -
+                        (2.5 / 100) * (item.totalPlayPoints ?? 0)),
+                    0
+                  )
+                  .toFixed(2)}
+              </span>
             </div>
-
-            {/* End Date */}
-            <div className="flex-1 min-w-[140px]">
-              <label className="block mb-2">End Date:</label>
-              <input
-                type="date"
-                value={filters.endDate}
-                onChange={(e) => handleManualDateChange(e, "endDate")}
-                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
-              />
+          )}
+          {isLoading ? (
+            <div className="text-center py-4 font-bold text-blue-500">
+              Loading data...
             </div>
+          ) : (
+            showTable && (
+              <div>
+                <div className="overflow-x-auto mt-8">
+                  <table className="table-auto border-collapse border border-gray-300 w-full text-xs sm:text-base">
+                    <thead>
+                      <tr className="bg-blue-200">
+                        {/* <th className="border border-gray-300 px-4 py-2">User ID</th> */}
+                        <th className="border border-gray-300 px-4 py-2">
+                          Agent Name
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2">
+                          Play Points
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2">
+                          Won Points
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2">
+                          End Points
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2">
+                          Margin
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2">
+                          Net
+                        </th>
+                        <th className="border border-gray-300 px-4 py-2">
+                          Turn Over Report
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* {filteredData.map((item, index) => ( */}
+                      {filteredData
+                        .filter((item) => item.totalPlayPoints > 0)
+                        .slice(startIndex, startIndex + itemsPerPage)
+                        .map((item, index) => {
+                          // Calculate derived values
+                          const playPoints = item.totalPlayPoints || 0;
+                          const wonPoints = item.totalWonPoints || 0;
+                          const endPoints = item.totalEndPoints || 0;
+                          const margin = item.totalMargin || 0;
+                          const net = endPoints - margin || 0;
 
-            {/* Date Range */}
-            <div className="flex-1 min-w-[140px]">
-              <label className="block mb-2">Date Range:</label>
-              <select
-                value={dateRange}
-                onChange={(e) => handleDateRangeChange(e.target.value)}
-                className="w-full p-2 sm:p-3 border border-gray-300 rounded-lg"
-              >
-                <option value="Select">Select</option>
-                <option value="Today">Today</option>
-                <option value="Yesterday">Yesterday</option>
-                <option value="Last 7 Days">Last 7 Days</option>
-                <option value="Last 30 Days">Last 30 Days</option>
-                <option value="Custom">Custom</option>
-              </select>
-            </div>
-          </div>
+                          // Helper function to format numbers
+                          const formatValue = (value) =>
+                            value % 1 === 0 ? value : value?.toFixed(2);
 
-          {/* Submit and Clear Buttons */}
-          <div className="flex justify-center w-full">
-            <div className="flex gap-4">
-              <button
-                type="button"
-                onClick={handleFilterChange}
-                className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
-                style={{ width: "150px" }}
-              >
-                Apply Filters
-              </button>
-              <button
-                type="button"
-                onClick={handleClear}
-                className="bg-blue-500 text-white p-2 sm:p-3 md:px-4 py-2 rounded-lg font-bold hover:bg-blue-600 text-sm sm:text-base w-20 sm:w-auto"
-                style={{ width: "150px" }}
-              >
-                Clear Filters
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <div className="user-details bg-white p-4 sm:p-6 rounded-md shadow-md">
-        <div className="user-summary text-sm sm:text-lg font-bold mb-4">
-          <span>TOTAL AGENTS: ({data.length})</span>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="user-table w-full border-collapse text-sm sm:text-base">
-            <thead>
-              <tr>
-                <th
-                  onClick={() => handleSort("name")}
-                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-700"
-                >
-                  Agent Name
-                </th>
-                <th
-                  onClick={() => handleSort("chips")}
-                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white cursor-pointer hover:bg-blue-700"
-                >
-                  Total Play Points
-                </th>
-                <th
-                  onClick={() => handleSort("chips")}
-                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
-                >
-                  Total Won Points
-                </th>
-                <th
-                  onClick={() => handleSort("location")}
-                  className="px-2 sm:px-4 py-2 bg-blue-500 text-white"
-                >
-                  Total End Points
-                </th>
-                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
-                  Total Margin
-                </th>
-                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
-                  Total Net
-                </th>
-                <th className="px-2 sm:px-4 py-2 bg-blue-500 text-white">
-                  View Sub Agents
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {displayedData.map((row, index) => {
-                const subAgentId = row._id;
-                const subAgentHistory = backendData[subAgentId] || [];
-
-                // Check if the backend data is still being fetched
-                const isDataFetched = backendData.hasOwnProperty(subAgentId);
-
-                // Calculate totals for the individual sub-agent
-                const totalPlay = isDataFetched
-                  ? subAgentHistory
-                      .reduce((sum, item) => sum + item.play, 0)
-                      .toFixed(2)
-                  : "loading";
-                const totalWon = isDataFetched
-                  ? subAgentHistory
-                      .reduce((sum, item) => sum + item.won, 0)
-                      .toFixed(2)
-                  : "loading";
-                const totalEnd = isDataFetched
-                  ? subAgentHistory
-                      .reduce((sum, item) => sum + (item.play - item.won), 0)
-                      .toFixed(2)
-                  : "loading";
-                const totalMargin = isDataFetched
-                  ? subAgentHistory
-                      .reduce((sum, item) => sum + (2.5 / 100) * item.play, 0)
-                      .toFixed(2)
-                  : "loading";
-                const totalNet = isDataFetched
-                  ? subAgentHistory
-                      .reduce(
-                        (sum, item) =>
-                          sum +
-                          (item.play - item.won - (2.5 / 100) * item.play),
-                        0
-                      )
-                      .toFixed(2)
-                  : "loading";
-
-                return (
-                  <React.Fragment key={row._id}>
-                    <tr key={index} className="hover:bg-gray-100">
-                      <td className="px-2 sm:px-4 py-2">{row.name || "N/A"}</td>
-                      <td className="px-2 sm:px-4 py-2">{totalPlay}</td>
-                      <td className="px-2 sm:px-4 py-2">{totalWon}</td>
-                      <td className="px-2 sm:px-4 py-2">{totalEnd}</td>
-                      <td className="px-2 sm:px-4 py-2">{totalMargin}</td>
-                      <td className="px-2 sm:px-4 py-2">{totalNet}</td>
-                      <td className="border border-gray-300 px-4 py-2">
-                        <button
-                          onClick={() => toggleRow(row._id)}
-                          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                        >
-                          {expandedRow === row._id ? "Close" : "Show"}
-                        </button>
-                      </td>
-                    </tr>
-                    {expandedRow === row._id && (
-                      <tr className="bg-gray-100">
-                        <td
-                          colSpan="10"
-                          className="border border-gray-300 px-4 py-2"
-                        >
-                          <AdminAgentTurnover AgentId={row._id} />
+                          return (
+                            <React.Fragment key={item.uuid}>
+                              <tr
+                                key={index}
+                                className="odd:bg-white even:bg-gray-100"
+                              >
+                                {/* <td className="border border-gray-300 px-4 py-2">{item.userId}</td> */}
+                                <td className="border border-gray-300 px-4 py-2">
+                                  {item.agentName}
+                                </td>
+                                <td className="border border-gray-300 px-4 py-2">
+                                  {formatValue(playPoints)}
+                                </td>
+                                <td className="border border-gray-300 px-4 py-2">
+                                  {formatValue(wonPoints)}
+                                </td>
+                                <td className="border border-gray-300 px-4 py-2">
+                                  {formatValue(endPoints)}
+                                </td>
+                                <td className="border border-gray-300 px-4 py-2">
+                                  {formatValue(margin)}
+                                </td>
+                                <td className="border border-gray-300 px-4 py-2">
+                                  {formatValue(net)}
+                                </td>
+                                <td className="border border-gray-300 px-4 py-2">
+                                  <button
+                                    onClick={() =>
+                                      setSelectedAgentId(
+                                        selectedAgentId === item._id
+                                          ? null
+                                          : item._id
+                                      )
+                                    }
+                                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                                  >
+                                    {selectedAgentId === item._id
+                                      ? "Hide"
+                                      : "Show"}
+                                  </button>
+                                </td>
+                              </tr>
+                              {selectedAgentId === item._id && (
+                                <tr className="bg-gray-100">
+                                  <td
+                                    colSpan="10"
+                                    className="border border-gray-300 px-4 py-2"
+                                  >
+                                    <AdminAgentTurnover
+                                      AgentId={item._id}
+                                    />
+                                  </td>
+                                </tr>
+                              )}
+                            </React.Fragment>
+                          );
+                        })}
+                    </tbody>
+                    {/* Total row in tfoot */}
+                    <tfoot>
+                      <tr className="bg-gray-200 font-bold">
+                        <td className="border border-gray-300 px-4 py-2">
+                          Total
+                        </td>
+                        <td className="border border-gray-300 px-4 py-2">
+                          {filteredData
+                            .reduce(
+                              (sum, item) => sum + (item.totalPlayPoints ?? 0),
+                              0
+                            )
+                            .toFixed(2)}
+                        </td>
+                        <td className="border border-gray-300 px-4 py-2">
+                          {filteredData
+                            .reduce(
+                              (sum, item) => sum + (item.totalWonPoints ?? 0),
+                              0
+                            )
+                            .toFixed(2)}
+                        </td>
+                        <td className="border border-gray-300 px-4 py-2">
+                          {filteredData
+                            .reduce(
+                              (sum, item) => sum + (item.totalEndPoints ?? 0),
+                              0
+                            )
+                            .toFixed(2)}
+                        </td>
+                        <td className="border border-gray-300 px-4 py-2">
+                          {filteredData
+                            .reduce(
+                              (sum, item) =>
+                                sum + (2.5 / 100) * (item.totalPlayPoints ?? 0),
+                              0
+                            )
+                            .toFixed(2)}
+                        </td>
+                        <td className="border border-gray-300 px-4 py-2">
+                          {filteredData
+                            .reduce(
+                              (sum, item) =>
+                                sum +
+                                ((item.totalEndPoints ?? 0) -
+                                  (2.5 / 100) * (item.totalPlayPoints ?? 0)),
+                              0
+                            )
+                            .toFixed(2)}
                         </td>
                       </tr>
-                    )}
-                  </React.Fragment>
-                );
-              })}
-            </tbody>
-          </table>
+                    </tfoot>
+                  </table>
+                </div>
+                {/* Pagination controls */}
+                <div className="pagination flex justify-between items-center mt-6">
+                  <button
+                    className="prev px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    disabled={currentPage === 1}
+                    onClick={handlePrevious}
+                  >
+                    Previous
+                  </button>
+                  <span className="page-info text-blue-700 font-semibold">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <button
+                    className="next px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    disabled={currentPage === totalPages}
+                    onClick={handleNext}
+                  >
+                    Next
+                  </button>
+                </div>
+                {/* Go to Page + Clear */}
+                <div className="go-to-page ml-10 mr-10 mt-5 flex items-center">
+                  <input
+                    type="number"
+                    className="border border-gray-300 rounded-md px-2 py-1"
+                    value={inputPage}
+                    onChange={handlePageInputChange}
+                    placeholder="Enter Page Number"
+                  />
+                  <button
+                    className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                    onClick={handleGoToPage}
+                  >
+                    Go
+                  </button>
+                  <button
+                    className="ml-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                    onClick={handleClearInput}
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+            )
+          )}
         </div>
-      </div>
-
-      <div className="pagination flex justify-between items-center mt-6">
-        <button
-          className="prev px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-          disabled={currentPage === 1}
-          onClick={handlePrevious}
-        >
-          Previous
-        </button>
-        <span className="page-info text-blue-700 font-semibold">
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          className="next px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
-          disabled={currentPage === totalPages}
-          onClick={handleNext}
-        >
-          Next
-        </button>
       </div>
     </div>
   );
 };
-
 export default AdminTurnoverReport;

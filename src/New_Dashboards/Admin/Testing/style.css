@@ -93,6 +93,11 @@ button {
   color: white;
 }
 
+.middle{
+  background-color: rgb(79, 79, 219);
+  color: white;
+}
+
 .number49{
   position: absolute;
   z-index: 9;

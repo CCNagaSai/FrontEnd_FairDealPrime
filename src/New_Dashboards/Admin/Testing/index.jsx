@@ -6,6 +6,7 @@ import AGameHistory from "../../Agent/AgentGameHistory/AgentGameHistory";
 import Topbar from "../../Common/Topbar";
 import Testing from "./Testing";
 import TestPlayingTableData from "./TestPlayingTableData";
+import NeighbourBettingTable from "./RoulletteNeigbourTable";
 
 const TestingTable = () => {
   return (
@@ -19,6 +20,7 @@ const TestingTable = () => {
         </div>
         <div className="Right">
           <TestPlayingTableData />
+          {/* <NeighbourBettingTable /> */}
         </div>
       </div>
     </div>
